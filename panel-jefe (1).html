@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM VIDA — Panel Jefe</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0B1F4B;--blue:#1A3A8F;--sky:#2563EB;--accent:#38BDF8;
+  --white:#fff;--g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;
+  --g400:#94A3B8;--g600:#475569;--g800:#1E293B;
+  --green:#16A34A;--greenBg:#DCFCE7;--greenL:#86EFAC;
+  --yellow:#CA8A04;--yellowBg:#FEF9C3;
+  --orange:#EA580C;--orangeBg:#FFEDD5;
+  --red:#DC2626;--redBg:#FEE2E2;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--g50);color:var(--g800);min-height:100vh;}
+button,select,input{font-family:inherit;}
+
+/* TOPBAR */
+.topbar{background:linear-gradient(135deg,var(--navy),var(--blue));padding:13px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  box-shadow:0 2px 12px rgba(0,0,0,.25);flex-wrap:wrap;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-ico{width:34px;height:34px;border-radius:8px;
+  background:linear-gradient(135deg,var(--sky),var(--accent));
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.logo strong{color:#fff;font-size:14px;font-weight:800;display:block;line-height:1.1;}
+.logo span{color:rgba(255,255,255,.4);font-size:9px;letter-spacing:1px;}
+.zona-sel{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  border-radius:9px;padding:6px 14px;display:flex;align-items:center;gap:10px;}
+.zona-sel label{color:rgba(255,255,255,.6);font-size:11px;white-space:nowrap;}
+.zona-sel select{background:transparent;border:none;color:#fff;font-size:13px;
+  font-weight:700;cursor:pointer;outline:none;}
+.zona-sel select option{color:var(--g800);background:#fff;}
+.fecha-txt{font-size:11px;color:rgba(255,255,255,.4);}
+
+/* MAIN */
+.main{padding:20px 24px;display:flex;flex-direction:column;gap:16px;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy),#1e3a8a);border-radius:14px;padding:22px 26px;}
+.hero-top{display:flex;align-items:center;gap:20px;margin-bottom:16px;flex-wrap:wrap;}
+.pct-ring{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;border:4px solid #16A34A;background:var(--greenBg);}
+.pct-ring span{font-size:19px;font-weight:900;color:#16A34A;}
+.hero-txt .lbl{font-size:10px;color:rgba(255,255,255,.45);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.hero-txt .ttl{font-size:17px;font-weight:800;color:#fff;margin-bottom:6px;}
+.chips{display:flex;gap:12px;flex-wrap:wrap;}
+.chip{font-size:11px;color:rgba(255,255,255,.6);}
+.chip b{color:#fff;}
+
+/* BARRA TRICOLOR */
+.barra{height:22px;border-radius:7px;background:rgba(255,255,255,.1);display:flex;overflow:hidden;margin:12px 0 6px;}
+.barra-e{background:linear-gradient(90deg,#16A34A,#22c55e);display:flex;align-items:center;justify-content:center;transition:width .5s;}
+.barra-p{background:linear-gradient(90deg,#CA8A04,#eab308);display:flex;align-items:center;justify-content:center;transition:width .5s;}
+.barra-g{flex:1;background:rgba(255,255,255,.07);}
+.blbl{font-size:9px;color:#fff;font-weight:700;padding:0 4px;white-space:nowrap;}
+.leyenda{display:flex;gap:14px;flex-wrap:wrap;}
+.li{display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,.55);}
+.li b{color:#fff;}
+.lid{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+
+/* KPIS */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;}
+.kpi{background:#fff;border-radius:11px;padding:14px 16px;
+  box-shadow:0 1px 3px rgba(0,0,0,.07);border:1px solid var(--g200);}
+.kpi-l{font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px;}
+.kpi-v{font-size:22px;font-weight:900;color:var(--navy);}
+.kpi-s{font-size:11px;color:var(--g400);margin-top:3px;}
+
+/* PROYECCIÓN SEM */
+.card{background:#fff;border-radius:13px;padding:16px 20px;
+  box-shadow:0 1px 3px rgba(0,0,0,.07);border:1px solid var(--g200);}
+.sec{font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;}
+.sem-row{display:flex;gap:6px;margin-top:8px;}
+.sem-box{flex:1;text-align:center;border-radius:8px;padding:8px 4px;}
+.sem-s{font-size:9px;font-weight:700;margin-bottom:2px;}
+.sem-p{font-size:13px;font-weight:900;}
+.sem-t{font-size:8px;opacity:.7;margin-top:1px;}
+
+/* GRILLA ASESORES */
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.ac{background:#fff;border-radius:11px;padding:14px 16px;
+  border:1px solid var(--g200);box-shadow:0 1px 3px rgba(0,0,0,.06);
+  border-left:4px solid #16A34A;cursor:pointer;transition:box-shadow .15s;}
+.ac:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.ac-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.ac-n{font-size:12px;font-weight:800;color:var(--navy);line-height:1.2;}
+.ac-s{font-size:10px;color:var(--g400);margin-top:2px;}
+.ac-pct{font-size:18px;font-weight:900;}
+.ac-bar{height:7px;border-radius:3px;background:var(--g100);overflow:hidden;margin:8px 0;display:flex;}
+.ac-bar-e{height:100%;transition:width .4s;}
+.ac-bar-p{height:100%;}
+.ac-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:6px;}
+.ac-m{border-radius:6px;padding:5px 7px;}
+.ac-ml{font-size:9px;font-weight:600;}
+.ac-mv{font-size:11px;font-weight:800;}
+.ac-2{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px;}
+.ac-alerta{margin-top:7px;border-radius:5px;padding:4px 8px;font-size:10px;font-weight:600;}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
+
+/* TAG */
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap;}
+
+/* FOCO */
+.foco-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.foco-col{}
+.foco-tit{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  border-bottom-width:2px;border-bottom-style:solid;padding-bottom:4px;margin-bottom:8px;}
+.foco-acc{font-size:10px;font-style:italic;margin-bottom:8px;opacity:.75;}
+.foco-item{font-size:11px;padding:3px 0;border-bottom:1px dashed var(--g100);
+  display:flex;justify-content:space-between;color:var(--g800);}
+
+/* TABLA */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead th{padding:8px 10px;background:var(--navy);color:#fff;
+  font-size:10px;font-weight:700;text-align:left;white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--g100);}
+tbody tr:nth-child(even){background:var(--g50);}
+tbody td{padding:7px 10px;vertical-align:middle;}
+
+/* LOADING */
+#loading{position:fixed;inset:0;background:var(--navy);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .3s;}
+#loading.oculto{opacity:0;pointer-events:none;}
+.spin{width:36px;height:36px;border:3px solid rgba(255,255,255,.2);border-top-color:var(--accent);
+  border-radius:50%;animation:sp .8s linear infinite;margin-bottom:12px;}
+@keyframes sp{to{transform:rotate(360deg);}}
+
+@media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr);}.ag{grid-template-columns:1fr 1fr;}}
+@media(max-width:580px){.ag{grid-template-columns:1fr;}.kpis{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spin"></div>
+  <div style="color:rgba(255,255,255,.55);font-size:12px;">Cargando equipo...</div>
+</div>
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-ico">💎</div>
+    <div><strong>CRM VIDA</strong><span>SWISS MEDICAL</span></div>
+  </div>
+  <div class="zona-sel">
+    <label>Zona:</label>
+    <select id="zona-sel" onchange="cambiarZona()">
+      <option value="amba_centro">AMBA CENTRO (9 asesores)</option>
+      <option value="amba_metro">AMBA METRO (8 asesores)</option>
+      <option value="canales_digitales">CANALES DIGITALES (8 asesores)</option>
+      <option value="interior">INTERIOR (13 asesores)</option>
+      <option value="mixto">MIXTO (4 asesores)</option>
+    </select>
+  </div>
+  <div class="fecha-txt" id="fecha-top"></div>
+</div>
+
+<div class="main" id="main" style="display:none">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-top">
+      <div class="pct-ring" id="ring"><span id="ring-pct">—%</span></div>
+      <div class="hero-txt">
+        <div class="lbl">ZONA / CANAL · MAYO 2026</div>
+        <div class="ttl" id="hero-ttl">—</div>
+        <div class="chips" id="hero-chips"></div>
+      </div>
+    </div>
+    <div class="barra">
+      <div class="barra-e" id="be" style="width:0%"><span class="blbl" id="be-l"></span></div>
+      <div class="barra-p" id="bp" style="width:0%"><span class="blbl" id="bp-l"></span></div>
+      <div class="barra-g"></div>
+    </div>
+    <div class="leyenda">
+      <div class="li"><div class="lid" style="background:#16A34A"></div>Emitido: <b id="l-e">—</b></div>
+      <div class="li"><div class="lid" style="background:#CA8A04"></div>Pend. emisión: <b id="l-p">—</b></div>
+      <div class="li"><div class="lid" style="background:rgba(255,255,255,.15)"></div>Brecha: <b id="l-b">—</b></div>
+      <div class="li"><div class="lid" style="background:rgba(255,255,255,.35)"></div>Objetivo: <b id="l-o">—</b></div>
+    </div>
+  </div>
+
+  <!-- KPIS -->
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-l">Proyección</div><div class="kpi-v" id="k-proy">—</div><div class="kpi-s" id="k-proy-s"></div></div>
+    <div class="kpi"><div class="kpi-l">Pólizas</div><div class="kpi-v" id="k-pol">—</div><div class="kpi-s" id="k-pol-s"></div></div>
+    <div class="kpi"><div class="kpi-l">Prospectos activos</div><div class="kpi-v" id="k-pa">—</div><div class="kpi-s" id="k-pa-s"></div></div>
+    <div class="kpi"><div class="kpi-l">En cero</div><div class="kpi-v" id="k-cero" style="color:var(--red)">—</div><div class="kpi-s">sin emitido ni pend.</div></div>
+    <div class="kpi"><div class="kpi-l">Baja prospección</div><div class="kpi-v" id="k-bp" style="color:var(--orange)">—</div><div class="kpi-s">menos del 50% del obj.</div></div>
+  </div>
+
+  <!-- PROYECCIÓN SEMANAL -->
+  <div class="card">
+    <div class="sec">Proyección semanal — zona completa</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+      <div style="font-size:12px;color:var(--g600)">Fin de mes: <strong id="pf" style="font-size:16px;color:var(--navy)"></strong></div>
+      <span id="ptag" class="tag"></span>
+    </div>
+    <div class="sem-row" id="sems"></div>
+  </div>
+
+  <!-- ASESORES -->
+  <div>
+    <div class="sec" style="margin-bottom:12px">Alcance y Prospección — cada asesor</div>
+    <div class="ag" id="ag"></div>
+  </div>
+
+  <!-- FOCO -->
+  <div class="card">
+    <div class="sec">🎯 Foco de Gestión — Viernes</div>
+    <div class="foco-grid" id="foco"></div>
+  </div>
+
+  <!-- TABLA -->
+  <div class="card">
+    <div class="sec">Tabla completa del equipo</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr>
+        <th>Asesor</th><th>Ant.</th><th>Objetivo</th><th>Emitido</th>
+        <th>Pendiente</th><th>Proyectado</th><th>Alcance</th>
+        <th>Pólizas</th><th>Prosp. act.</th><th>Brecha</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table></div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// CONFIG — reemplazá esta URL con tu Apps Script deployado
+// ══════════════════════════════════════════════════════════════
+const APPS_URL = "https://script.google.com/macros/s/AKfycbxKs9Gsh7Dy36Sl2U_q_jFcUytD-bgq9Bin_le0kzS3Hqe5zq24YumftLMMq3XiTnjW/exec";
+
+// Parámetros del mes actual
+const DIAS_PAS = 16, DIAS_TOT = 21, SEM_ACT = 4, DIAS_SEM = [4,5,5,4,3];
+
+// ══════════════════════════════════════════════════════════════
+// DATOS DEMO — se usan si no hay Apps Script conectado
+// ══════════════════════════════════════════════════════════════
+const DEMO = {
+  amba_centro: { jefe:"AMBA CENTRO", region:"AMBA CENTRO", equipo:[
+    {id:"cuckovich",     nombre:"CUCKOVICH, VERONICA CECILIA",       ant:"Semi",obj:380000,emitido:210000,pendiente:45000, polizas:3,prospectosActivos:10,objPolizas:4,objProspectos:14},
+    {id:"aguilar",       nombre:"AGUILAR, ANALIA HAYDEE",            ant:"Sr",  obj:450000,emitido:380000,pendiente:60000, polizas:5,prospectosActivos:13,objPolizas:5,objProspectos:15},
+    {id:"sanchez_mc",    nombre:"SANCHEZ, MERCEDES CAMILA",          ant:"Jr",  obj:320000,emitido:0,     pendiente:0,     polizas:0,prospectosActivos:4, objPolizas:4,objProspectos:12},
+    {id:"manteiga",      nombre:"MANTEIGA, MIRIAM MABEL",            ant:"Sr",  obj:450000,emitido:420000,pendiente:50000, polizas:6,prospectosActivos:14,objPolizas:5,objProspectos:15},
+    {id:"rios",          nombre:"RIOS, ERICA ELIZABET",              ant:"Semi",obj:380000,emitido:195000,pendiente:40000, polizas:3,prospectosActivos:9, objPolizas:4,objProspectos:14},
+    {id:"quispe",        nombre:"QUISPE, NOELIA CARINA",             ant:"Jr",  obj:320000,emitido:85000, pendiente:20000, polizas:1,prospectosActivos:5, objPolizas:4,objProspectos:12},
+    {id:"witel",         nombre:"WITEL, LAURA DANIELA",              ant:"Semi",obj:380000,emitido:290000,pendiente:55000, polizas:4,prospectosActivos:11,objPolizas:4,objProspectos:14},
+    {id:"garcia_sanchez",nombre:"GARCIA SANCHEZ, BRENDA ELIZABETH",  ant:"Jr",  obj:320000,emitido:0,     pendiente:15000, polizas:0,prospectosActivos:3, objPolizas:4,objProspectos:12},
+    {id:"morello",       nombre:"MORELLO, MARCELO ROQUE",            ant:"Sr",  obj:450000,emitido:510000,pendiente:40000, polizas:7,prospectosActivos:15,objPolizas:5,objProspectos:15},
+  ]},
+  amba_metro: { jefe:"AMBA METRO", region:"AMBA METRO", equipo:[
+    {id:"flores_i",  nombre:"FLORES, IVANA CAROLINA NORMA",      ant:"Sr",  obj:450000,emitido:470000,pendiente:30000, polizas:7,prospectosActivos:15,objPolizas:5,objProspectos:15},
+    {id:"prieto",    nombre:"PRIETO, BLANCA",                    ant:"Sr",  obj:450000,emitido:390000,pendiente:70000, polizas:6,prospectosActivos:13,objPolizas:5,objProspectos:15},
+    {id:"barroso",   nombre:"BARROSO CARPINTERO, RAFAEL ARMANDO",ant:"Semi",obj:380000,emitido:220000,pendiente:55000, polizas:4,prospectosActivos:10,objPolizas:4,objProspectos:14},
+    {id:"briozzo",   nombre:"BRIOZZO, ANDREA LETICIA",           ant:"Semi",obj:380000,emitido:260000,pendiente:40000, polizas:4,prospectosActivos:11,objPolizas:4,objProspectos:14},
+    {id:"varela",    nombre:"VARELA, SOFIA AYLEN",               ant:"Jr",  obj:320000,emitido:0,     pendiente:0,     polizas:0,prospectosActivos:3, objPolizas:4,objProspectos:12},
+    {id:"salas",     nombre:"SALAS, MAGALI PAULA",               ant:"Jr",  obj:320000,emitido:145000,pendiente:30000, polizas:2,prospectosActivos:7, objPolizas:4,objProspectos:12},
+    {id:"perez_g",   nombre:"PEREZ, GUSTAVO MARCELO",            ant:"Semi",obj:380000,emitido:310000,pendiente:45000, polizas:5,prospectosActivos:12,objPolizas:4,objProspectos:14},
+    {id:"medina_g",  nombre:"MEDINA, GIULIANA BEATRIZ",          ant:"Jr",  obj:320000,emitido:90000, pendiente:20000, polizas:1,prospectosActivos:5, objPolizas:4,objProspectos:12},
+  ]},
+  canales_digitales: { jefe:"CANALES DIGITALES", region:"CANALES DIGITALES", equipo:[
+    {id:"magallanes", nombre:"MAGALLANES, MARIA LAURA",           ant:"Sr",  obj:450000,emitido:540000,pendiente:60000, polizas:9,prospectosActivos:15,objPolizas:5,objProspectos:15},
+    {id:"gomez_g",    nombre:"GOMEZ, GEORGINA FERNANDA",          ant:"Sr",  obj:450000,emitido:410000,pendiente:90000, polizas:7,prospectosActivos:13,objPolizas:5,objProspectos:15},
+    {id:"benitez",    nombre:"BENITEZ MOMBELLI, LEANDRO EZEQUIEL",ant:"Semi",obj:380000,emitido:220000,pendiente:55000, polizas:4,prospectosActivos:9, objPolizas:4,objProspectos:14},
+    {id:"bastidas",   nombre:"BASTIDAS HERRERA, CLAUDIA CECILIA", ant:"Semi",obj:380000,emitido:340000,pendiente:40000, polizas:5,prospectosActivos:12,objPolizas:4,objProspectos:14},
+    {id:"finocchiaro",nombre:"FINOCCHIARO, LAURA LORENA",         ant:"Jr",  obj:320000,emitido:0,     pendiente:12000, polizas:0,prospectosActivos:4, objPolizas:4,objProspectos:12},
+    {id:"carrasco",   nombre:"CARRASCO, SILVIA GRACIELA",         ant:"Sr",  obj:450000,emitido:490000,pendiente:35000, polizas:7,prospectosActivos:14,objPolizas:5,objProspectos:15},
+    {id:"avila",      nombre:"AVILA, JAVIER ALEJANDRO",           ant:"Semi",obj:380000,emitido:180000,pendiente:45000, polizas:3,prospectosActivos:8, objPolizas:4,objProspectos:14},
+    {id:"rosen",      nombre:"ROSEN, BARBARA DAIANA",             ant:"Jr",  obj:320000,emitido:0,     pendiente:0,     polizas:0,prospectosActivos:2, objPolizas:4,objProspectos:12},
+  ]},
+  interior: { jefe:"INTERIOR", region:"INTERIOR", equipo:[
+    {id:"berlocq",   nombre:"BERLOCQ, MARIA FLORENCIA",        ant:"Semi",obj:380000,emitido:220000,pendiente:55000,  polizas:4,prospectosActivos:9, objPolizas:4,objProspectos:14},
+    {id:"passeri",   nombre:"PASSERI, JOSE RAUL",              ant:"Semi",obj:380000,emitido:195000,pendiente:35000,  polizas:3,prospectosActivos:8, objPolizas:4,objProspectos:14},
+    {id:"armand",    nombre:"ARMAND, LUCAS",                   ant:"Sr",  obj:450000,emitido:410000,pendiente:90000,  polizas:7,prospectosActivos:13,objPolizas:5,objProspectos:15},
+    {id:"lopez_e",   nombre:"LOPEZ, ERNESTO MARTIN",           ant:"Sr",  obj:450000,emitido:380000,pendiente:70000,  polizas:6,prospectosActivos:12,objPolizas:5,objProspectos:15},
+    {id:"pierlucca", nombre:"PIERLUCCA, JULIA ELISABETH",      ant:"Sr",  obj:450000,emitido:512000,pendiente:48000,  polizas:8,prospectosActivos:15,objPolizas:5,objProspectos:15},
+    {id:"nunez",     nombre:"NUÑEZ, MIGUEL ANGEL",             ant:"Sr",  obj:450000,emitido:470000,pendiente:30000,  polizas:7,prospectosActivos:14,objPolizas:5,objProspectos:15},
+    {id:"rivero",    nombre:"RIVERO, NADIA",                   ant:"Semi",obj:380000,emitido:175000,pendiente:50000,  polizas:3,prospectosActivos:8, objPolizas:4,objProspectos:14},
+    {id:"flores_lg", nombre:"FLORES, LUCAS GASTON",            ant:"Sr",  obj:450000,emitido:290000,pendiente:120000, polizas:5,prospectosActivos:10,objPolizas:5,objProspectos:15},
+    {id:"blanco",    nombre:"BLANCO, RICARDO FABIAN",          ant:"Sr",  obj:450000,emitido:350000,pendiente:110000, polizas:6,prospectosActivos:12,objPolizas:5,objProspectos:15},
+    {id:"dominguez", nombre:"DOMINGUEZ, ANA LAURA",            ant:"Sr",  obj:450000,emitido:498000,pendiente:22000,  polizas:7,prospectosActivos:15,objPolizas:5,objProspectos:15},
+    {id:"beltran",   nombre:"BELTRAN, DELMA RINA",             ant:"Semi",obj:380000,emitido:305000,pendiente:75000,  polizas:5,prospectosActivos:11,objPolizas:4,objProspectos:14},
+    {id:"aguirre",   nombre:"AGUIRRE ALEN, AGUSTINA",          ant:"Jr",  obj:320000,emitido:0,     pendiente:18000,  polizas:0,prospectosActivos:4, objPolizas:4,objProspectos:12},
+    {id:"bagnasco",  nombre:"BAGNASCO GENTILE, KARINA PAOLA",  ant:"Semi",obj:380000,emitido:260000,pendiente:45000,  polizas:4,prospectosActivos:10,objPolizas:4,objProspectos:14},
+  ]},
+  mixto: { jefe:"MIXTO", region:"MIXTO", equipo:[
+    {id:"michellis", nombre:"MICHELLIS, SUSANA BEATRIZ", ant:"Sr",  obj:450000,emitido:460000,pendiente:40000, polizas:7,prospectosActivos:14,objPolizas:5,objProspectos:15},
+    {id:"bruno",     nombre:"BRUNO, MARIA SILVINA",      ant:"Sr",  obj:450000,emitido:320000,pendiente:80000, polizas:5,prospectosActivos:12,objPolizas:5,objProspectos:15},
+    {id:"gerez",     nombre:"GEREZ, CARLOS",             ant:"Semi",obj:380000,emitido:195000,pendiente:35000, polizas:3,prospectosActivos:8, objPolizas:4,objProspectos:14},
+    {id:"silva",     nombre:"SILVA, ANA ROSA",           ant:"Semi",obj:380000,emitido:240000,pendiente:30000, polizas:4,prospectosActivos:9, objPolizas:4,objProspectos:14},
+  ]},
+};
+
+// ══════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════
+const fmt   = n=>n>=1e6?`$${(n/1e6).toFixed(1)}M`:n>=1000?`$${(n/1000).toFixed(0)}K`:`$${n}`;
+const pct   = (v,t)=>t===0?0:Math.round(v/t*100);
+const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
+const proy  = (e,p)=>Math.round(e+(e/DIAS_PAS)*(DIAS_TOT-DIAS_PAS)+p);
+const sm    = p=>{
+  if(p>=100) return {c:"#16A34A",bg:"#DCFCE7",txt:"En objetivo"};
+  if(p>=80)  return {c:"#CA8A04",bg:"#FEF9C3",txt:"En riesgo"};
+  if(p>=55)  return {c:"#EA580C",bg:"#FFEDD5",txt:"Bajo"};
+  return           {c:"#DC2626",bg:"#FEE2E2",txt:"Crítico"};
+};
+const ucf = s=>s?s[0].toUpperCase()+s.slice(1):s;
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+let ZONA_ID = "";
+
+window.addEventListener("DOMContentLoaded", ()=>{
+  const p = new URLSearchParams(window.location.search);
+  ZONA_ID = p.get("id")||p.get("jefe")||"brunella";
+  const sel=document.getElementById("zona-sel");
+  for(let o of sel.options) if(o.value===ZONA_ID){sel.value=ZONA_ID;break;}
+  document.getElementById("fecha-top").textContent=
+    new Date().toLocaleDateString("es-AR",{weekday:"long",day:"numeric",month:"long"});
+  cargar();
+});
+
+function cambiarZona(){
+  ZONA_ID=document.getElementById("zona-sel").value;
+  document.getElementById("main").style.display="none";
+  const l=document.getElementById("loading");
+  l.style.display="flex"; l.classList.remove("oculto");
+  setTimeout(cargar,200);
+}
+
+async function cargar(){
+  let data;
+  // Intentar Apps Script; si falla o no está configurado, usar demo
+  if(APPS_URL && APPS_URL!=="https://script.google.com/macros/s/AKfycbxKs9Gsh7Dy36Sl2U_q_jFcUytD-bgq9Bin_le0kzS3Hqe5zq24YumftLMMq3XiTnjW/exec"){
+    try{
+      const r=await fetch(`${APPS_URL}?accion=getJefe&id=${ZONA_ID}`);
+      const d=await r.json();
+      if(d.ok && d.equipo){
+        data={jefe:d.jefe||ZONA_ID, region:"", equipo:d.equipo};
+      }
+    }catch(e){}
+  }
+  if(!data) data=DEMO[ZONA_ID]||DEMO.brunella;
+  render(data);
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════════════
+function render(data){
+  const eq  = data.equipo||[];
+  const tO  = eq.reduce((s,a)=>s+Number(a.obj||a.objPrima||350000),0);
+  const tE  = eq.reduce((s,a)=>s+Number(a.emitido||0),0);
+  const tP  = eq.reduce((s,a)=>s+Number(a.pendiente||0),0);
+  const tPol= eq.reduce((s,a)=>s+Number(a.polizas||0),0);
+  const tPA = eq.reduce((s,a)=>s+Number(a.prospectosActivos||0),0);
+  const tOPol=eq.reduce((s,a)=>s+Number(a.objPolizas||4),0);
+  const tOPA =eq.reduce((s,a)=>s+Number(a.objProspectos||15),0);
+  const tProy=proy(tE,tP);
+  const pp  = pct(tProy,tO);
+  const s   = sm(pp);
+  const enC = eq.filter(a=>!Number(a.emitido)&&!Number(a.pendiente)).length;
+  const bP  = eq.filter(a=>pct(Number(a.prospectosActivos||0),Number(a.objProspectos||15))<50).length;
+  const jLabel= ucf(data.jefe||ZONA_ID);
+  const reg   = data.region||"";
+
+  // Ring
+  const ring=document.getElementById("ring");
+  ring.style.borderColor=s.c; ring.style.background=s.bg;
+  const rp=document.getElementById("ring-pct");
+  rp.textContent=pp+"%"; rp.style.color=s.c;
+
+  // Título
+  document.getElementById("hero-ttl").textContent=
+    tProy>=tO?`✅ ${jLabel} — Sobre objetivo`:`${jLabel} — Brecha: ${fmt(tO-tProy)}`;
+
+  // Chips
+  document.getElementById("hero-chips").innerHTML=`
+    <div class="chip">${reg?`Zona: <b>${reg}</b>`:""}</div>
+    <div class="chip">Equipo: <b>${eq.length} asesores</b></div>
+    <div class="chip">Objetivo: <b>${fmt(tO)}</b></div>
+    <div class="chip">Proyección: <b style="color:${s.c}">${fmt(tProy)}</b></div>`;
+
+  // Barra
+  const pE=clamp(pct(tE,tO),0,100), pPp=clamp(pct(tP,tO),0,Math.max(0,100-pE));
+  document.getElementById("be").style.width=pE+"%";
+  document.getElementById("bp").style.width=pPp+"%";
+  document.getElementById("be-l").textContent=pE>8?fmt(tE):"";
+  document.getElementById("bp-l").textContent=pPp>6?fmt(tP):"";
+  document.getElementById("l-e").textContent=fmt(tE);
+  document.getElementById("l-p").textContent=fmt(tP);
+  document.getElementById("l-b").textContent=fmt(Math.max(0,tO-tE-tP));
+  document.getElementById("l-o").textContent=fmt(tO);
+
+  // KPIs
+  document.getElementById("k-proy").textContent=fmt(tProy);
+  document.getElementById("k-proy-s").textContent=`${pp}% — ${s.txt}`;
+  document.getElementById("k-proy-s").style.color=s.c;
+  document.getElementById("k-pol").textContent=tPol;
+  document.getElementById("k-pol-s").textContent=`Obj: ${tOPol}`;
+  document.getElementById("k-pa").textContent=tPA;
+  document.getElementById("k-pa-s").textContent=`Obj: ${tOPA}`;
+  document.getElementById("k-cero").textContent=enC;
+  document.getElementById("k-bp").textContent=bP;
+
+  // Proyección semanal
+  const ritmo=tE/DIAS_PAS;
+  let acum=0;
+  const semHtml=DIAS_SEM.map((dias,i)=>{
+    acum+=Math.round(ritmo*dias);
+    const objAc=Math.round(tO/DIAS_TOT*DIAS_SEM.slice(0,i+1).reduce((s,d)=>s+d,0));
+    const real=i<SEM_ACT;
+    const val=real?acum:Math.round(acum+tP*((i-SEM_ACT+1)/(DIAS_SEM.length-SEM_ACT)));
+    const p2=pct(val,objAc), ss=sm(p2);
+    return `<div class="sem-box" style="background:${real?ss.bg:ss.bg+'99'}">
+      <div class="sem-s" style="color:${ss.c}">S${i+1}</div>
+      <div class="sem-p" style="color:${ss.c}">${p2}%</div>
+      <div class="sem-t" style="color:${ss.c}">${real?"real":"est."}</div>
+    </div>`;
+  }).join("");
+  document.getElementById("pf").textContent=fmt(tProy);
+  const ptag=document.getElementById("ptag");
+  ptag.textContent=`${pp}% — ${s.txt}`;
+  ptag.style.color=s.c; ptag.style.background=s.bg;
+  document.getElementById("sems").innerHTML=semHtml;
+
+  // Grilla asesores
+  const eqSorted=[...eq].sort((a,b)=>{
+    const pa=pct(proy(Number(b.emitido||0),Number(b.pendiente||0)),Number(b.obj||b.objPrima||350000));
+    const pb=pct(proy(Number(a.emitido||0),Number(a.pendiente||0)),Number(a.obj||a.objPrima||350000));
+    return pa-pb;
+  });
+  document.getElementById("ag").innerHTML=eqSorted.map(a=>{
+    const obj=Number(a.obj||a.objPrima||350000);
+    const e=Number(a.emitido||0), p=Number(a.pendiente||0), pol=Number(a.polizas||0);
+    const pa=Number(a.prospectosActivos||0);
+    const oPol=Number(a.objPolizas||4), oPA=Number(a.objProspectos||15);
+    const pr=proy(e,p), pp2=pct(pr,obj), s2=sm(pp2);
+    const pE2=clamp(pct(e,obj),0,100), pP2=clamp(pct(p,obj),0,Math.max(0,100-pE2));
+    const brecha=Math.max(0,obj-pr);
+    const diasR=DIAS_TOT-DIAS_PAS;
+    const necDia=diasR>0?Math.round(brecha/diasR):0;
+    const alcPA=pct(pa,oPA), alcPol=pct(pol,oPol);
+    const sPA=sm(alcPA), sPol=sm(alcPol);
+    let alertas="";
+    if(!e&&!p)    alertas+=`<span class="tag" style="color:#DC2626;background:#FEE2E2">🚨 Sin venta</span>`;
+    if(alcPA<50)  alertas+=`<span class="tag" style="color:#EA580C;background:#FFEDD5">🔍 Baja prosp.</span>`;
+    if(pp2>=100)  alertas+=`<span class="tag" style="color:#16A34A;background:#DCFCE7">✅ Sobre obj.</span>`;
+    const aUrl=`panel-asesor.html?id=${a.id||""}`;
+    return `<div class="ac" style="border-left-color:${s2.c}" onclick="window.open('${aUrl}','_blank')">
+      <div class="ac-h">
+        <div><div class="ac-n">${a.nombre||"—"}</div>
+        <div class="ac-s">${a.ant||""} · ${pol}/${oPol} pól.</div></div>
+        <div class="ac-pct" style="color:${s2.c}">${pp2}%</div>
+      </div>
+      <div class="ac-bar">
+        <div class="ac-bar-e" style="width:${pE2}%;background:#16A34A;height:100%"></div>
+        <div class="ac-bar-p" style="width:${pP2}%;background:#CA8A04;height:100%"></div>
+      </div>
+      <div class="ac-3">
+        <div class="ac-m" style="background:#DCFCE7">
+          <div class="ac-ml" style="color:#16A34A">Emitido</div>
+          <div class="ac-mv" style="color:#16A34A">${fmt(e)}</div>
+        </div>
+        <div class="ac-m" style="background:#FEF9C3">
+          <div class="ac-ml" style="color:#CA8A04">Pendiente</div>
+          <div class="ac-mv" style="color:#CA8A04">${p>0?fmt(p):"—"}</div>
+        </div>
+        <div class="ac-m" style="background:${s2.bg}">
+          <div class="ac-ml" style="color:${s2.c}">Proyect.</div>
+          <div class="ac-mv" style="color:${s2.c}">${fmt(pr)}</div>
+        </div>
+      </div>
+      <div class="ac-2">
+        <div class="ac-m" style="background:${sPA.bg}">
+          <div class="ac-ml" style="color:${sPA.c}">Prosp. activos</div>
+          <div class="ac-mv" style="color:${sPA.c}">${pa}/${oPA} (${alcPA}%)</div>
+        </div>
+        <div class="ac-m" style="background:${sPol.bg}">
+          <div class="ac-ml" style="color:${sPol.c}">Pólizas</div>
+          <div class="ac-mv" style="color:${sPol.c}">${pol}/${oPol} (${alcPol}%)</div>
+        </div>
+      </div>
+      ${brecha>0?`<div class="ac-alerta" style="background:#FEE2E2;color:#DC2626">
+        Brecha: ${fmt(brecha)} · Necesita ${fmt(necDia)}/día laboral
+      </div>`:""}
+      ${alertas?`<div class="tags">${alertas}</div>`:""}
+    </div>`;
+  }).join("");
+
+  // Foco de gestión
+  const focoD=eq.filter(a=>pct(proy(Number(a.emitido||0),Number(a.pendiente||0)),Number(a.obj||350000))<50);
+  const focoC=eq.filter(a=>{const pp3=pct(proy(Number(a.emitido||0),Number(a.pendiente||0)),Number(a.obj||350000));return pp3>=50&&pp3<100&&Number(a.pendiente||0)>0;});
+  const focoR=eq.filter(a=>pct(proy(Number(a.emitido||0),Number(a.pendiente||0)),Number(a.obj||350000))>=100);
+  document.getElementById("foco").innerHTML=[
+    {t:"🚨 Seguimiento diario",acc:"Agenda + prospección + Fortalecimiento",items:focoD,c:"#DC2626"},
+    {t:"⏳ Empujar cierres",  acc:"Revisar pendientes, gestionar objeciones",items:focoC,c:"#EA580C"},
+    {t:"✅ Reconocer",         acc:"Compartir buenas prácticas",items:focoR,c:"#16A34A"},
+  ].map(f=>`<div class="foco-col">
+    <div class="foco-tit" style="color:${f.c};border-color:${f.c}">${f.t}</div>
+    <div class="foco-acc" style="color:${f.c}">${f.acc}</div>
+    ${f.items.length===0?`<div style="font-size:11px;color:#94A3B8">—</div>`
+    :f.items.map(a=>`<div class="foco-item">
+      <span style="font-weight:600">${(a.nombre||"—").split(",")[0]}</span>
+      <span style="color:${f.c};font-weight:700;font-size:10px">
+        ${pct(proy(Number(a.emitido||0),Number(a.pendiente||0)),Number(a.obj||350000))}%
+      </span></div>`).join("")}
+  </div>`).join("");
+
+  // Tabla
+  document.getElementById("tbody").innerHTML=[...eq]
+    .sort((a,b)=>pct(proy(Number(b.emitido||0),Number(b.pendiente||0)),Number(b.obj||350000))
+                -pct(proy(Number(a.emitido||0),Number(a.pendiente||0)),Number(a.obj||350000)))
+    .map((a,i)=>{
+      const obj=Number(a.obj||350000),e=Number(a.emitido||0),p=Number(a.pendiente||0);
+      const pol=Number(a.polizas||0),pa=Number(a.prospectosActivos||0);
+      const pr=proy(e,p),pp2=pct(pr,obj),s2=sm(pp2);
+      const brecha=Math.max(0,obj-pr);
+      const sPA=sm(pct(pa,Number(a.objProspectos||15)));
+      const bg=!e&&!p?"#FFF1F2":i%2===0?"#fff":"#F8FAFC";
+      return `<tr style="background:${bg}">
+        <td style="font-weight:700;color:#0B1F4B;white-space:nowrap">${a.nombre||"—"}</td>
+        <td><span class="tag" style="color:#2563EB;background:#EFF6FF">${a.ant||"—"}</span></td>
+        <td style="color:#94A3B8">${fmt(obj)}</td>
+        <td style="font-weight:700;color:#16A34A">${fmt(e)}</td>
+        <td style="color:#EA580C">${p>0?fmt(p):"—"}</td>
+        <td style="font-weight:700">${fmt(pr)}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px">
+            <div style="width:44px;height:5px;background:#F1F5F9;border-radius:2px">
+              <div style="width:${clamp(pp2,0,100)}%;height:100%;background:${s2.c};border-radius:2px"></div>
+            </div>
+            <span style="font-weight:800;color:${s2.c};font-size:11px">${pp2}%</span>
+          </div>
+        </td>
+        <td style="text-align:center">${pol}</td>
+        <td><span class="tag" style="color:${sPA.c};background:${sPA.bg}">${pa}</span></td>
+        <td style="font-weight:700;color:${brecha>0?"#DC2626":"#16A34A"}">
+          ${brecha>0?`-${fmt(brecha)}`:"✅"}
+        </td>
+      </tr>`;
+    }).join("");
+
+  // Mostrar
+  const l=document.getElementById("loading");
+  l.classList.add("oculto");
+  setTimeout(()=>l.style.display="none",350);
+  document.getElementById("main").style.display="flex";
+}
+</script>
+</body>
+</html>
