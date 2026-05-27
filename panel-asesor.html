@@ -209,6 +209,7 @@ textarea.finp{resize:vertical;min-height:60px;}
   </div>
   <div class="top-tabs">
     <button class="ttab active" onclick="showPanel('inicio')">🏠 Inicio</button>
+    <button class="ttab" onclick="showPanel('metricas')">📈 Métricas</button>
     <button class="ttab" onclick="showPanel('prospectos')">🔍 Prospectos</button>
     <button class="ttab" onclick="showPanel('cartera')">📂 Cartera</button>
     <button class="ttab" onclick="showPanel('whatsapp')">💬 WhatsApp</button>
@@ -303,9 +304,14 @@ textarea.finp{resize:vertical;min-height:60px;}
       <div><label class="flbl">Email</label><input class="finp" id="f-email" type="email"></div>
       <div><label class="flbl">Producto</label>
         <select class="finp" id="f-prod">
-          <option>Vida</option><option>Ahorro</option><option>AP</option>
-          <option>Retiro</option><option>Incremento</option>
-          <option>Life Planning ARS</option><option>Life Planning USD</option>
+          <option>Life Planning ARS</option>
+          <option>Life Planning USD</option>
+          <option>Amatista</option>
+          <option>Zafiro</option>
+          <option>AP — Accidentes Personales</option>
+          <option>Excellent Savings</option>
+          <option>Retiro</option>
+          <option>Incremento</option>
         </select></div>
       <div><label class="flbl">Origen</label>
         <select class="finp" id="f-origen2">
@@ -334,6 +340,58 @@ textarea.finp{resize:vertical;min-height:60px;}
 
   <div id="vista-kanban"><div class="kanban" id="kanban"></div></div>
   <div id="vista-tabla" style="display:none"><div class="card"><div class="tbl-wrap" id="tabla-prosp"></div></div></div>
+</div>
+
+<!-- MÉTRICAS -->
+<div class="panel" id="panel-metricas">
+
+  <div style="font-size:16px;font-weight:800;color:var(--navy);margin-bottom:4px">Mis Métricas</div>
+  <div style="font-size:11px;color:var(--g400);margin-bottom:14px" id="met-subtitle">Análisis de efectividad por origen y producto</div>
+
+  <!-- EVOLUCIÓN MENSUAL -->
+  <div class="card">
+    <div class="sec">Evolución mensual — mes anterior vs mes actual</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+      <div>
+        <div style="font-size:11px;color:var(--g600);margin-bottom:6px">Cargá tu producción del mes anterior para ver la evolución:</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div><label style="font-size:10px;color:var(--g400);display:block;margin-bottom:3px">Mes anterior</label>
+            <select id="mes-anterior" style="width:100%;border:1px solid var(--g200);border-radius:7px;padding:6px 8px;font-size:11px;outline:none" onchange="renderMetricas()">
+              <option value="4">Abril 2026</option><option value="3">Marzo 2026</option>
+              <option value="2">Febrero 2026</option><option value="1">Enero 2026</option>
+            </select></div>
+          <div><label style="font-size:10px;color:var(--g400);display:block;margin-bottom:3px">Prima emitida $</label>
+            <input type="number" id="prev-emit" placeholder="0" oninput="renderMetricas()"
+              style="width:100%;border:1px solid var(--g200);border-radius:7px;padding:6px 8px;font-size:11px;outline:none"></div>
+          <div><label style="font-size:10px;color:var(--g400);display:block;margin-bottom:3px">Pólizas</label>
+            <input type="number" id="prev-pol" placeholder="0" oninput="renderMetricas()"
+              style="width:100%;border:1px solid var(--g200);border-radius:7px;padding:6px 8px;font-size:11px;outline:none"></div>
+        </div>
+      </div>
+      <div id="evol-kpis" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+    </div>
+    <!-- Gráfico de línea SVG -->
+    <div id="evol-chart" style="overflow-x:auto;"></div>
+  </div>
+
+  <!-- TASA DE CIERRE POR ORIGEN -->
+  <div class="card">
+    <div class="sec">Efectividad por origen — volumen y tasa de conversión</div>
+    <div id="origen-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;"></div>
+  </div>
+
+  <!-- DISTRIBUCIÓN POR PRODUCTO -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+    <div class="card">
+      <div class="sec">Distribución por producto</div>
+      <div id="prod-chart"></div>
+    </div>
+    <div class="card">
+      <div class="sec">Pipeline — estado del embudo</div>
+      <div id="embudo-chart"></div>
+    </div>
+  </div>
+
 </div>
 
 <!-- CARTERA -->
@@ -483,7 +541,7 @@ const KAN_COLS=["Sin contactar","Contactado","Cotizado","Propuesta enviada","Pen
 // ════════════════════════════════════════════════════════════
 // ESTADO
 // ════════════════════════════════════════════════════════════
-let ST={id:"",asesor:{},prospectos:[],cartera:[],filtroEst:"Todos",vista:"kanban",editId:null,wa:{},waLog:[]};
+let ST={id:"",asesor:{},prospectos:[],cartera:[],historico:[],filtroEst:"Todos",vista:"kanban",editId:null,wa:{},waLog:[]};
 
 // ════════════════════════════════════════════════════════════
 // HELPERS
@@ -565,10 +623,29 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   ocultarLoading();
+  // Restaurar datos mes anterior
+  try{
+    const prev=JSON.parse(localStorage.getItem("prev_"+ST.id)||"{}");
+    if(prev.emit){document.getElementById("prev-emit").value=prev.emit;}
+    if(prev.pol) {document.getElementById("prev-pol").value=prev.pol;}
+    if(prev.mes) {document.getElementById("mes-anterior").value=prev.mes;}
+  }catch(e){}
+
   render();
   renderCartera();
   renderWALog();
   renderVencidos();
+});
+
+// Guardar datos mes anterior cuando se editan
+document.addEventListener("input",function(ev){
+  if(["prev-emit","prev-pol","mes-anterior"].includes(ev.target.id)){
+    try{localStorage.setItem("prev_"+ST.id,JSON.stringify({
+      emit:document.getElementById("prev-emit")?.value||"",
+      pol: document.getElementById("prev-pol")?.value||"",
+      mes: document.getElementById("mes-anterior")?.value||"4",
+    }));}catch(e){}
+  }
 });
 
 function setLoading(txt) { document.getElementById("loading-txt").textContent=txt; }
@@ -974,12 +1051,258 @@ function renderVencidos(){
 // ════════════════════════════════════════════════════════════
 function showPanel(id){
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
-  document.querySelectorAll(".ttab").forEach((b,i)=>b.classList.toggle("active",["inicio","prospectos","cartera","whatsapp"][i]===id));
+  document.querySelectorAll(".ttab").forEach((b,i)=>b.classList.toggle("active",["inicio","metricas","prospectos","cartera","whatsapp"][i]===id));
   document.getElementById("panel-"+id).classList.add("active");
   if(id==="prospectos")renderProsp();
   if(id==="cartera")renderCartera();
+  if(id==="metricas")renderMetricas();
   if(id==="whatsapp"){renderWALog();renderVencidos();}
 }
+// ════════════════════════════════════════════════════════════
+// MÉTRICAS
+// ════════════════════════════════════════════════════════════
+function renderMetricas(){
+  const a=ST.asesor;
+  const obj=Number(a.obj||a.obj_prima||350000);
+  const e=Number(a.e||a.emitido||0), p=Number(a.p||a.pendiente||0), pol=Number(a.pol||a.polizas||0);
+  const prevEmit=Number(document.getElementById("prev-emit")?.value||0);
+  const prevPol =Number(document.getElementById("prev-pol")?.value||0);
+  const mesAnt  =document.getElementById("mes-anterior")?.value||"4";
+  const MESES   =["","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+  // Combinar histórico del sheet con datos manuales del asesor
+  // Construir serie histórica: hasta 6 meses
+  const buildSerie = () => {
+    const serie = [];
+    // Datos del sheet (historico)
+    ST.historico.forEach(h => {
+      const mes   = Number(h.mes||h["mes"]||0);
+      const anio  = Number(h.ano||h["año"]||h.anio||2026);
+      const emit  = Number(h.emitido||0);
+      const pol   = Number(h.polizas||0);
+      if(mes>0) serie.push({mes, anio, emit, pol, fuente:"sheet"});
+    });
+    // Datos manuales del asesor (mes anterior ingresado)
+    if(prevEmit>0||prevPol>0) {
+      const mesN=Number(mesAnt);
+      const exists=serie.find(s=>s.mes===mesN&&s.anio===2026);
+      if(!exists) serie.push({mes:mesN, anio:2026, emit:prevEmit, pol:prevPol, fuente:"manual"});
+      else { exists.emit=prevEmit||exists.emit; exists.pol=prevPol||exists.pol; }
+    }
+    // Mes actual (Mayo=5)
+    const eMes=Number(a.e||a.emitido||0);
+    const exists5=serie.find(s=>s.mes===5&&s.anio===2026);
+    if(!exists5&&eMes>0) serie.push({mes:5,anio:2026,emit:eMes,pol:Number(a.pol||a.polizas||0),fuente:"actual"});
+    serie.sort((a,b)=>a.mes-b.mes);
+    return serie.slice(-6); // últimos 6 meses
+  };
+  const serie = buildSerie();
+
+  // ── Evolución kpis ─────────────────────────────────────────
+  const lastTwo = serie.slice(-2);
+  const varEmit = lastTwo.length>=2&&lastTwo[0].emit>0 ? Math.round((lastTwo[1].emit-lastTwo[0].emit)/lastTwo[0].emit*100) : null;
+  const varPol  = lastTwo.length>=2&&lastTwo[0].pol>0  ? Math.round((lastTwo[1].pol -lastTwo[0].pol) /lastTwo[0].pol *100) : null;
+  const varColor= v=>v===null?"var(--g400)":v>=0?"var(--green)":"var(--red)";
+  const varFmt  = v=>v===null?"—":(v>=0?"+":"")+v+"%";
+
+  document.getElementById("evol-kpis").innerHTML=[
+    {l:"Prima emitida este mes", v:fmt(e), sub:lastTwo.length>=2?`vs ${fmt(lastTwo[0].emit)} mes ant.`:"Sin dato mes anterior", c:"var(--green)", var:varEmit},
+    {l:"Pólizas este mes",       v:pol,    sub:lastTwo.length>=2?`vs ${lastTwo[0].pol} mes ant.`:"Sin dato mes anterior",       c:"var(--sky)",   var:varPol},
+  ].map(x=>`<div style="background:var(--g50);border-radius:9px;padding:12px 14px;border:1px solid var(--g200);">
+    <div style="font-size:10px;color:var(--g400);margin-bottom:4px">${x.l}</div>
+    <div style="font-size:22px;font-weight:900;color:${x.c}">${x.v}</div>
+    <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+      <span style="font-size:11px;color:var(--g400)">${x.sub}</span>
+      ${x.var!==null?`<span style="font-size:11px;font-weight:700;color:${varColor(x.var)}">Variación: ${varFmt(x.var)}</span>`:""}
+    </div>
+  </div>`).join("");
+
+  // ── Gráfico de línea SVG — usa serie completa ──────────────
+  const meses = serie.length>0 ? serie.map(s=>MESES[s.mes]?.slice(0,3)+".") : [MESES[Number(mesAnt)]?.slice(0,3)+".", "May."];
+  const vals  = serie.length>0 ? serie.map(s=>s.emit) : [prevEmit, e];
+  const objV  = vals.map(()=>obj);
+  const W=400, H=140, PAD={t:20,r:20,b:30,l:60};
+  const maxV=Math.max(...vals,...objV,1)*1.15;
+  const xStep=(W-PAD.l-PAD.r)/Math.max(meses.length-1,1);
+  const yScale=v=>H-PAD.b-(v/maxV)*(H-PAD.t-PAD.b);
+  const xPos  =i=>PAD.l+i*xStep;
+
+  const linePoints=vals.map((v,i)=>`${xPos(i)},${yScale(v)}`).join(" ");
+  const objPoints =objV.map((v,i)=>`${xPos(i)},${yScale(v)}`).join(" ");
+  const areaPoints=`${xPos(0)},${H-PAD.b} ${linePoints} ${xPos(vals.length-1)},${H-PAD.b}`;
+
+  let svgLines="";
+  // Grid lines
+  [0,.25,.5,.75,1].forEach(pct=>{
+    const y=yScale(maxV*pct);
+    svgLines+=`<line x1="${PAD.l}" y1="${y}" x2="${W-PAD.r}" y2="${y}" stroke="#F1F5F9" stroke-width="1"/>`;
+    svgLines+=`<text x="${PAD.l-4}" y="${y+4}" text-anchor="end" font-size="9" fill="#94A3B8">${fmt(maxV*pct)}</text>`;
+  });
+
+  let svg=`<svg width="100%" viewBox="0 0 ${W} ${H}" style="max-width:${W}px">
+    ${svgLines}
+    <!-- Area fill -->
+    <polygon points="${areaPoints}" fill="#16A34A" opacity=".08"/>
+    <!-- Línea objetivo -->
+    <polyline points="${objPoints}" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <!-- Línea emitido -->
+    <polyline points="${linePoints}" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linejoin="round"/>
+    <!-- Puntos -->
+    ${vals.map((v,i)=>`
+      <circle cx="${xPos(i)}" cy="${yScale(v)}" r="5" fill="#16A34A" stroke="white" stroke-width="2"/>
+      <text x="${xPos(i)}" y="${yScale(v)-10}" text-anchor="middle" font-size="10" font-weight="700" fill="#16A34A">${fmt(v)}</text>
+    `).join("")}
+    <!-- Eje X -->
+    ${meses.map((m,i)=>`<text x="${xPos(i)}" y="${H-4}" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">${m}</text>`).join("")}
+    <!-- Leyenda -->
+    <line x1="${PAD.l+20}" y1="10" x2="${PAD.l+35}" y2="10" stroke="#16A34A" stroke-width="2.5"/>
+    <text x="${PAD.l+38}" y="14" font-size="9" fill="#475569">Emitido</text>
+    <line x1="${PAD.l+80}" y1="10" x2="${PAD.l+95}" y2="10" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="${PAD.l+98}" y="14" font-size="9" fill="#475569">Objetivo</text>
+  </svg>`;
+
+  document.getElementById("evol-chart").innerHTML=svg;
+  // Botón guardar en sheet
+  const saveDiv = document.createElement("div");
+  saveDiv.style.cssText="display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap;";
+  saveDiv.innerHTML = (prevEmit>0||prevPol>0) ? `
+    <button onclick="guardarHistoricoSheet()" style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer">
+      💾 Guardar historial en Sheet
+    </button>
+    <span style="font-size:10px;color:var(--g400)">Esto guarda el mes anterior en tu historial permanente</span>` :
+    `<div style="font-size:11px;color:var(--g400)">💡 Ingresá tu producción del mes anterior para ver la evolución comparativa.</div>`;
+  document.getElementById("evol-chart").appendChild(saveDiv);
+
+  // ── Tasa de cierre por ORIGEN ──────────────────────────────
+  const ORIGENES_LIST=["Dato propio","Referido","Dato web","Venta mixta","Sinergia","RRSS","PyME","Empleado"];
+  const ORIG_COLS={"Dato propio":"var(--sky)","Referido":"var(--green)","Dato web":"var(--purple)",
+    "Venta mixta":"var(--orange)","Sinergia":"#06B6D4","RRSS":"#EC4899","PyME":"#8B5CF6","Empleado":"var(--yellow)"};
+
+  const origData=ORIGENES_LIST.map(org=>{
+    const todos=ST.prospectos.filter(p=>p.origen===org);
+    const vendidos=todos.filter(p=>p.estado==="Vendido");
+    const activos=todos.filter(p=>!["Vendido","No interesado"].includes(p.estado));
+    const tasa=todos.length>0?pct(vendidos.length,todos.length):0;
+    return {org,todos:todos.length,vendidos:vendidos.length,activos:activos.length,tasa,c:ORIG_COLS[org]||"var(--g400)"};
+  }).filter(o=>o.todos>0);
+
+  document.getElementById("origen-grid").innerHTML=origData.length===0
+    ?`<div style="grid-column:1/-1;font-size:12px;color:var(--g400);text-align:center;padding:20px">
+        Los datos de origen aparecen aquí cuando cargues prospectos en tu panel.
+      </div>`
+    :origData.map(o=>{
+      const r=60,cx=50,cy=50,sw=16,circ=2*Math.PI*r;
+      const vendPct=o.todos>0?o.vendidos/o.todos:0;
+      const dash=circ*vendPct;
+      return `<div style="background:var(--g50);border-radius:10px;padding:12px 14px;border:1px solid var(--g200)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <svg width="100" height="100">
+            <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--g200)" stroke-width="${sw}"/>
+            <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${o.c}" stroke-width="${sw}"
+              stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${circ/4}"
+              transform="rotate(-90 ${cx} ${cy})"/>
+            <text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="14" font-weight="900" fill="${o.c}">${o.tasa}%</text>
+          </svg>
+          <div>
+            <div style="font-size:12px;font-weight:800;color:var(--navy)">${o.org}</div>
+            <div style="font-size:10px;color:var(--g400);margin-top:2px">Conversión</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;">
+          <div style="background:#fff;border-radius:6px;padding:5px 7px;text-align:center">
+            <div style="font-size:9px;color:var(--g400)">Total</div>
+            <div style="font-size:14px;font-weight:900;color:var(--navy)">${o.todos}</div>
+          </div>
+          <div style="background:var(--gBg);border-radius:6px;padding:5px 7px;text-align:center">
+            <div style="font-size:9px;color:var(--green)">Vendidos</div>
+            <div style="font-size:14px;font-weight:900;color:var(--green)">${o.vendidos}</div>
+          </div>
+          <div style="background:#EFF6FF;border-radius:6px;padding:5px 7px;text-align:center">
+            <div style="font-size:9px;color:var(--sky)">Activos</div>
+            <div style="font-size:14px;font-weight:900;color:var(--sky)">${o.activos}</div>
+          </div>
+        </div>
+      </div>`;
+    }).join("");
+
+  // ── Distribución por PRODUCTO ──────────────────────────────
+  const PRODS=["Life Planning ARS","Life Planning USD","Amatista","Zafiro","AP — Accidentes Personales","Excellent Savings","Retiro","Incremento"];
+  const PROD_COLS={"Life Planning ARS":"#2563EB","Life Planning USD":"#7C3AED","Amatista":"#DB2777",
+    "Zafiro":"#06B6D4","AP — Accidentes Personales":"#EA580C","Excellent Savings":"#16A34A",
+    "Retiro":"#CA8A04","Incremento":"#94A3B8"};
+
+  const prodData=PRODS.map(prod=>{
+    const cnt=ST.prospectos.filter(p=>p.producto===prod).length;
+    return {prod,cnt,c:PROD_COLS[prod]||"var(--g400)"};
+  }).filter(p=>p.cnt>0);
+  const totalP=prodData.reduce((s,p)=>s+p.cnt,0)||1;
+
+  const r=70,cx=80,cy=80,sw=20,circ=2*Math.PI*r;
+  let offset=0;
+  const segs=prodData.map(p=>{
+    const dash=circ*p.cnt/totalP;
+    const seg=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${p.c}" stroke-width="${sw}"
+      stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
+    offset+=dash; return seg;
+  }).join("");
+
+  document.getElementById("prod-chart").innerHTML=prodData.length===0
+    ?`<div style="font-size:12px;color:var(--g400);text-align:center;padding:20px">Cargá prospectos para ver la distribución por producto.</div>`
+    :`<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+      <svg width="160" height="160" style="flex-shrink:0">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--g100)" stroke-width="${sw}"/>
+        ${segs}
+        <text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="14" font-weight="900" fill="var(--navy)">${totalP}</text>
+        <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="9" fill="var(--g400)">prosp.</text>
+      </svg>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        ${prodData.map(p=>`<div style="display:flex;align-items:center;gap:6px;">
+          <div style="width:9px;height:9px;border-radius:50%;background:${p.c};flex-shrink:0"></div>
+          <span style="font-size:11px;color:var(--g600)">${p.prod.replace("AP — Accidentes Personales","AP")}</span>
+          <b style="margin-left:auto;font-size:11px;color:${p.c}">${p.cnt} (${pct(p.cnt,totalP)}%)</b>
+        </div>`).join("")}
+      </div>
+    </div>`;
+
+  // ── Embudo ─────────────────────────────────────────────────
+  const ESTADOS_FUNNEL=["Sin contactar","Contactado","Entrevista agendada","Cotizado","Propuesta enviada","Pendiente de emisión","Vendido"];
+  const EC_F={"Sin contactar":"#94A3B8","Contactado":"#CA8A04","Entrevista agendada":"#7C3AED",
+    "Cotizado":"#2563EB","Propuesta enviada":"#1A3A8F","Pendiente de emisión":"#EA580C","Vendido":"#16A34A"};
+  const maxFunnel=Math.max(...ESTADOS_FUNNEL.map(e=>ST.prospectos.filter(p=>p.estado===e).length),1);
+
+  document.getElementById("embudo-chart").innerHTML=ESTADOS_FUNNEL.map(e=>{
+    const cnt=ST.prospectos.filter(p=>p.estado===e).length;
+    const w=maxFunnel>0?Math.round(cnt/maxFunnel*100):0;
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+      <div style="width:110px;font-size:10px;color:var(--g600);text-align:right;flex-shrink:0">${e.replace("Pendiente de emisión","Pend. emis.")}</div>
+      <div style="flex:1;height:20px;background:var(--g100);border-radius:4px;overflow:hidden;">
+        <div style="width:${w}%;height:100%;background:${EC_F[e]};display:flex;align-items:center;padding:0 6px;">
+          ${cnt>0?`<span style="font-size:10px;color:#fff;font-weight:700">${cnt}</span>`:""}
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+async function guardarHistoricoSheet(){
+  const prevEmit=Number(document.getElementById("prev-emit")?.value||0);
+  const prevPol =Number(document.getElementById("prev-pol")?.value||0);
+  const mesAnt  =Number(document.getElementById("mes-anterior")?.value||4);
+  if(!prevEmit&&!prevPol){toast("⚠ No hay datos para guardar");return;}
+  try{
+    const data={asesor:ST.asesor.nombre,emitido:prevEmit,polizas:prevPol,mes:mesAnt,anio:2026};
+    const d=await jsonp(`${APPS_URL}?accion=saveHistoricoAsesor&data=${encodeURIComponent(JSON.stringify(data))}`);
+    if(d.ok){
+      // Update local historico
+      const exists=ST.historico.find(h=>Number(h.mes)===mesAnt&&Number(h.ano||h.anio||h["año"])===2026);
+      if(exists){exists.emitido=prevEmit;exists.polizas=prevPol;}
+      else ST.historico.push({mes:mesAnt,anio:2026,emitido:prevEmit,polizas:prevPol,asesor:ST.asesor.nombre});
+      toast("✅ Historial guardado en Sheet");
+      renderMetricas();
+    } else toast("❌ Error: "+(d.error||"desconocido"));
+  }catch(e){toast("❌ "+e.message);}
+}
+
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000);}
 </script>
 </body>
