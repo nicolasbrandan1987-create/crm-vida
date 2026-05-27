@@ -897,15 +897,9 @@ function subirExcel(input){
     let cargados=0;
     rows.forEach(r=>{
       // Detectar nombre del asesor en cualquier columna que diga "asesor" o sea la primera columna con nombre
-      // Buscar nombre en varias columnas posibles
-      const nombre=String(
-        r.ASESOR||r.Asesor||r.asesor||r["ASESOR
-"]||
-        r["ASESOR "]||r[" ASESOR"]||
-        // Fallback: buscar cualquier clave que diga "asesor"
-        (()=>{const k=Object.keys(r).find(x=>norm(x)==="asesor"||norm(x).includes("asesor"));return k?r[k]:""})()
-        ||Object.values(r)[2]||""
-      ).trim();
+      // Buscar nombre del asesor
+      const kAsesor=Object.keys(r).find(x=>norm(x).includes("asesor"));
+      const nombre=String(r.ASESOR||r.Asesor||r.asesor||(kAsesor?r[kAsesor]:"")||Object.values(r)[2]||"").trim();
       if(!nombre||nombre.length<3)return;
       // Buscar asesor por nombre normalizado
       const a=ASESORES.find(x=>{
@@ -915,35 +909,18 @@ function subirExcel(input){
       if(!a)return;
       // Detectar columnas de producción — buscar la más parecida al formato del Excel
       // Detección flexible de columnas — busca por nombre normalizado
-      const findCol=(keys,obj)=>{
-        for(const k of keys){
-          const v=Number(obj[k]);
-          if(v>0)return v;
-        }
-        // Búsqueda fuzzy: cualquier clave que contenga alguna palabra clave
-        const ks=Object.keys(obj);
-        for(const k of keys){
-          const kn=norm(k);
-          const match=ks.find(x=>norm(x).includes(kn.slice(0,6)));
-          if(match&&Number(obj[match])>0)return Number(obj[match]);
+      const buscarCol=(palabras,obj)=>{
+        const keys=Object.keys(obj);
+        for(const palabra of palabras){
+          const pn=norm(palabra).replace(/[^a-z0-9]/g,"");
+          const k=keys.find(x=>norm(x).replace(/[^a-z0-9]/g,"").includes(pn.slice(0,6)));
+          if(k&&Number(obj[k])>0) return Number(obj[k]);
         }
         return 0;
       };
-      const emit=findCol([
-        "PROD. MES $
-(última sem.)","PROD. MES $","PRODUCCION $","Producción $ acum.",
-        "Prima emitida","Emitido","EMITIDO","produccion","Produccion"
-      ],r);
-      const pol=findCol([
-        "TOTAL MES
-(última sem.)","TOTAL MES","Pólizas acum.","POLIZAS","Polizas",
-        "Pólizas","polizas","TOTAL","Total"
-      ],r);
-      const pend=findCol([
-        "PENDIENTE EMISION","Pendiente emisión","Pend. Emisión","Pendiente",
-        "pendiente","PENDIENTE","pend emision"
-      ],r);
-      if(!DATA[a.id])DATA[a.id]={};
+      const emit = buscarCol(["prodmes","produccion","primaemitida","emitido"], r);
+      const pol  = buscarCol(["totalmes","polizas","poliza"], r);
+      const pend = buscarCol(["pendienteemision","pendiente","pendemis"], r);      if(!DATA[a.id])DATA[a.id]={};
       DATA[a.id].e=emit;
       DATA[a.id].p=pend;
       DATA[a.id].pol=pol;
