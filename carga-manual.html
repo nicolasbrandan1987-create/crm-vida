@@ -484,7 +484,8 @@ window.addEventListener("DOMContentLoaded",()=>{
     if(cfg.diasTot)   document.getElementById("cfg-dias-tot").value=cfg.diasTot;
   }catch(e){}
 
-  DATA=HIST[MES_ACT]||{};
+  // Cargar datos del mes activo (copia para no mutar el historial)
+  DATA=JSON.parse(JSON.stringify(HIST[MES_ACT]||{}));
 
   // Build canal tabs
   const tabsDiv=document.getElementById("canal-tabs");
@@ -514,8 +515,10 @@ window.addEventListener("DOMContentLoaded",()=>{
 // CAMBIAR MES
 // ════════════════════════════════════════════════════════════
 function cambiarMes(){
-  // Guardar mes actual
+  // Guardar mes actual ANTES de cambiar
   HIST[MES_ACT]={...DATA};
+  try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){}
+  // Ahora cambiar
   MES_ACT=Number(document.getElementById("mes-sel").value);
   DATA=HIST[MES_ACT]||{};
   guardarCfg();
@@ -712,6 +715,8 @@ function setDato(id,campo,val){
   const inp=document.getElementById(`${campo}-${id}`);
   if(inp&&campo==="e") inp.className="inp-emit "+(DATA[id].e>0?"filled":"");
   if(inp&&campo==="p") inp.className="inp-pend "+(DATA[id].p>0?"filled":"");
+  // Actualizar HIST en tiempo real para no perder datos al cambiar mes
+  HIST[MES_ACT]=JSON.parse(JSON.stringify(DATA));
   recalcular();
   autoGuardar();
 }
@@ -950,8 +955,11 @@ function autoGuardar(){
 }
 
 function guardarTodo(silencioso=false){
-  HIST[MES_ACT]={...DATA};
-  try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){}
+  // Guardar mes actual en histórico (copia profunda)
+  HIST[MES_ACT]=JSON.parse(JSON.stringify(DATA));
+  try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){
+    console.error("Error guardando historial:",e);
+  }
   // Sincronizar con panel-gerencia
   const ventasGerencia={};
   ASESORES.forEach(a=>{
