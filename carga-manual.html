@@ -442,14 +442,14 @@ const ABRIL_2026={
 const MAYO_2026={
   cuckovich:    {e:540166,  p:87500,   pol:7},
   aguilar:      {e:326100,  p:155000,  pol:7},
-  sanchez_mc:   {e:55800,   p:150000,  pol:1},
-  manteiga:     {e:624000,  p:0,       pol:6},
+  sanchez_mc:   {e:65000,   p:210000,  pol:1},
+  manteiga:     {e:624000,  p:65000,   pol:6},
   rios:         {e:402000,  p:80000,   pol:6},
-  quispe:       {e:200000,  p:0,       pol:3},
+  quispe:       {e:200000,  p:50000,   pol:3},
   witel:        {e:99787,   p:138210,  pol:1},
   garcia_sanchez:{e:55800,  p:150000,  pol:1},
   morello:      {e:449000,  p:200000,  pol:5},
-  flores_i:     {e:958380,  p:0,       pol:9},
+  flores_i:     {e:958380,  p:150000,  pol:9},
   prieto:       {e:322000,  p:115000,  pol:3},
   barroso:      {e:999999,  p:0,       pol:8},
   briozzo:      {e:1700000, p:0,       pol:7},
@@ -460,27 +460,27 @@ const MAYO_2026={
   magallanes:   {e:285579,  p:0,       pol:6},
   gomez_g:      {e:125000,  p:100000,  pol:2},
   benitez:      {e:170000,  p:0,       pol:3},
-  bastidas:     {e:30000,   p:0,       pol:1},
-  finocchiaro:  {e:420000,  p:0,       pol:8},
-  carrasco:     {e:409000,  p:0,       pol:5},
+  bastidas:     {e:30000,   p:60000,   pol:1},
+  finocchiaro:  {e:420000,  p:340000,  pol:8},
+  carrasco:     {e:409000,  p:47000,   pol:5},
   avila:        {e:110000,  p:0,       pol:2},
-  rosen:        {e:259573,  p:0,       pol:4},
+  rosen:        {e:259573,  p:47000,   pol:4},
   berlocq:      {e:135200,  p:401795,  pol:2},
   passeri:      {e:320000,  p:140000,  pol:3},
   armand:       {e:278000,  p:200000,  pol:2},
-  lopez_e:      {e:179000,  p:200000,  pol:3},
-  pierlucca:    {e:428000,  p:350000,  pol:5},
+  lopez_e:      {e:320000,  p:200000,  pol:3},
+  pierlucca:    {e:450000,  p:350000,  pol:5},
   nunez:        {e:834000,  p:50000,   pol:9},
   rivero:       {e:402191,  p:74241,   pol:9},
-  flores_lg:    {e:132131,  p:0,       pol:3},
+  flores_lg:    {e:132131,  p:112638,  pol:3},
   blanco:       {e:923622,  p:139349,  pol:10},
   dominguez:    {e:443973,  p:0,       pol:8},
-  beltran:      {e:26000,   p:0,       pol:1},
+  beltran:      {e:28300,   p:0,       pol:1},
   aguirre:      {e:208000,  p:100000,  pol:4},
   bagnasco:     {e:50000,   p:0,       pol:1},
-  michellis:    {e:385000,  p:0,       pol:4},
+  michellis:    {e:385000,  p:325000,  pol:4},
   bruno:        {e:206533,  p:87900,   pol:3},
-  gerez:        {e:213751,  p:0,       pol:3},
+  gerez:        {e:213751,  p:142000,  pol:3},
   silva:        {e:313253,  p:0,       pol:6},
 };
 
@@ -542,10 +542,9 @@ window.addEventListener("DOMContentLoaded",()=>{
 
   // Cargar datos del mes activo (copia para no mutar el historial)
   // Si Mayo no tiene datos, precargar con datos reales del Excel
-  if(!HIST[5]||Object.keys(HIST[5]).length===0){
-    HIST[5]=JSON.parse(JSON.stringify(MAYO_2026));
-    try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){}
-  }
+  // Siempre actualizar Mayo con datos correctos del Excel
+  HIST[5]=JSON.parse(JSON.stringify(MAYO_2026));
+  try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){}
   DATA=JSON.parse(JSON.stringify(HIST[MES_ACT]||{}));
 
   // Build canal tabs
