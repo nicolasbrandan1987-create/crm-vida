@@ -296,21 +296,23 @@ tbody td{padding:6px 7px;vertical-align:middle;font-size:12px;}
   </div>
 
   <div class="card" style="padding:0;overflow:hidden;margin-top:14px;">
-    <table>
+    <table style="font-size:11px;">
       <thead>
         <tr>
-          <th style="min-width:180px">Asesor</th>
-          <th>Canal</th><th>Zona</th><th>Ant.</th>
+          <th style="min-width:160px">Asesor</th>
+          <th style="min-width:55px">Canal</th>
+          <th style="min-width:80px">Zona</th>
+          <th style="min-width:50px">Ant.</th>
           <th class="center" style="min-width:95px">Obj. Prima $<br><span style="font-size:9px;font-weight:400;opacity:.7">editable ↓</span></th>
-          <th class="center" style="min-width:95px">Obj. Pólizas<br><span style="font-size:9px;font-weight:400;opacity:.7">editable ↓</span></th>
-          <th class="center" style="min-width:100px;background:#16A34A">✅ Prima Emitida $</th>
-          <th class="center" style="min-width:100px;background:#CA8A04">⏳ Pend. Emisión $</th>
-          <th class="center" style="min-width:60px">🏆 Pólizas</th>
-          <th class="center">Cuad. / Alcance</th>
-          <th class="center">Proyectado</th>
-          <th class="center">Brecha</th>
-          <th class="center">vs Mes Ant.</th>
-          <th class="center">Part. Canal</th>
+          <th class="center" style="min-width:45px">Obj. Pol.</th>
+          <th class="center" style="min-width:110px;background:#16A34A">✅ Prima Emitida $</th>
+          <th class="center" style="min-width:110px;background:#CA8A04">⏳ Pend. Emisión $</th>
+          <th class="center" style="min-width:45px">🏆 Pol.</th>
+          <th class="center" style="min-width:110px">Cuad. / Alcance</th>
+          <th class="center" style="min-width:90px">Proyectado</th>
+          <th class="center" style="min-width:80px">Brecha</th>
+          <th class="center" style="min-width:90px">vs Mes Ant.</th>
+          <th class="center" style="min-width:60px">Part.</th>
         </tr>
       </thead>
       <tbody id="tbody-carga"></tbody>
@@ -502,7 +504,10 @@ let autoTimer=null;
 // ════════════════════════════════════════════════════════════
 // HELPERS
 // ════════════════════════════════════════════════════════════
-const fmt=n=>n>=1e6?`$${(n/1e6).toFixed(2)}M`:n>=1000?`$${(n/1000).toFixed(0)}K`:`$${n||0}`;
+const fmt=n=>{
+  if(!n||n===0) return "$0";
+  return "$"+Math.round(n).toLocaleString("es-AR");
+};
 const pct=(v,t)=>t===0?0:Math.round(v/t*100);
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const sm=p=>{
@@ -553,7 +558,13 @@ window.addEventListener("DOMContentLoaded",()=>{
     const b=document.createElement("button");
     b.className="ctab"+(c==="TODOS"?" active":"");
     b.textContent=c==="CANALES DIGITALES"?"C.Digital":c==="AMBA CENTRO"?"A.Centro":c==="AMBA METRO"?"A.Metro":c;
-    b.onclick=()=>{CANAL_SEL=c;document.querySelectorAll(".ctab").forEach(x=>x.classList.toggle("active",x===b));renderTabla();};
+    (function(canal, btn){
+      btn.onclick=function(){
+        CANAL_SEL=canal;
+        document.querySelectorAll(".ctab").forEach(function(x){x.classList.toggle("active",x===btn);});
+        renderTabla();
+      };
+    })(c, b);
     tabsDiv.appendChild(b);
   });
 
@@ -563,7 +574,13 @@ window.addEventListener("DOMContentLoaded",()=>{
     const b=document.createElement("button");
     b.className="ltab"+(c==="TODOS"?" active":"");
     b.textContent=c==="CANALES DIGITALES"?"C.Dig":c==="AMBA CENTRO"?"A.Cen":c==="AMBA METRO"?"A.Met":c;
-    b.onclick=()=>{OBJ_CANAL=c;document.querySelectorAll(".ltab").forEach(x=>x.classList.toggle("active",x===b));renderLinea();};
+    (function(canal, btn){
+      btn.onclick=function(){
+        OBJ_CANAL=canal;
+        document.querySelectorAll(".ltab").forEach(function(x){x.classList.toggle("active",x===btn);});
+        renderLinea();
+      };
+    })(c, b);
     lTabsDiv.appendChild(b);
   });
 
@@ -795,9 +812,9 @@ function renderLinea(){
   const m2=meses[meses.length-3]||null;
   const m1=meses[meses.length-2]||null;
   const m0=meses[meses.length-1]||MES_ACT;
-  document.getElementById("col-m2").textContent=m2?MESES[m2]:"—";
-  document.getElementById("col-m1").textContent=m1?MESES[m1]:"—";
-  document.getElementById("col-m0").textContent=MESES[m0]+" (actual)";
+  document.getElementById("col-m2").textContent=m2?MESES[m2]:"(sin dato)";
+  document.getElementById("col-m1").textContent=m1?MESES[m1]:"(sin dato)";
+  document.getElementById("col-m0").textContent=MESES[m0]+" ← actual";
 
   // Función para obtener emitido de un mes
   const getE=(m,id)=>{
