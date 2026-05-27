@@ -429,6 +429,55 @@ const ABRIL_2026={
   silva:        {e:513000,  p:0,       pol:9},
 };
 
+
+// ════════════════════════════════════════════════════════════
+// DATOS REALES MAYO 2026 — cargados desde Excel
+// ════════════════════════════════════════════════════════════
+const MAYO_2026={
+  cuckovich:    {e:540166,  p:87500,   pol:7},
+  aguilar:      {e:326100,  p:155000,  pol:7},
+  sanchez_mc:   {e:55800,   p:150000,  pol:1},
+  manteiga:     {e:624000,  p:0,       pol:6},
+  rios:         {e:402000,  p:80000,   pol:6},
+  quispe:       {e:200000,  p:0,       pol:3},
+  witel:        {e:99787,   p:138210,  pol:1},
+  garcia_sanchez:{e:55800,  p:150000,  pol:1},
+  morello:      {e:449000,  p:200000,  pol:5},
+  flores_i:     {e:958380,  p:0,       pol:9},
+  prieto:       {e:322000,  p:115000,  pol:3},
+  barroso:      {e:999999,  p:0,       pol:8},
+  briozzo:      {e:1700000, p:0,       pol:7},
+  varela:       {e:0,       p:0,       pol:0},
+  salas:        {e:537000,  p:0,       pol:6},
+  perez_g:      {e:90000,   p:300000,  pol:1},
+  medina_g:     {e:202000,  p:0,       pol:4},
+  magallanes:   {e:285579,  p:0,       pol:6},
+  gomez_g:      {e:125000,  p:100000,  pol:2},
+  benitez:      {e:170000,  p:0,       pol:3},
+  bastidas:     {e:30000,   p:0,       pol:1},
+  finocchiaro:  {e:420000,  p:0,       pol:8},
+  carrasco:     {e:409000,  p:0,       pol:5},
+  avila:        {e:110000,  p:0,       pol:2},
+  rosen:        {e:259573,  p:0,       pol:4},
+  berlocq:      {e:135200,  p:401795,  pol:2},
+  passeri:      {e:320000,  p:140000,  pol:3},
+  armand:       {e:278000,  p:200000,  pol:2},
+  lopez_e:      {e:179000,  p:200000,  pol:3},
+  pierlucca:    {e:428000,  p:350000,  pol:5},
+  nunez:        {e:834000,  p:50000,   pol:9},
+  rivero:       {e:402191,  p:74241,   pol:9},
+  flores_lg:    {e:132131,  p:0,       pol:3},
+  blanco:       {e:923622,  p:139349,  pol:10},
+  dominguez:    {e:443973,  p:0,       pol:8},
+  beltran:      {e:26000,   p:0,       pol:1},
+  aguirre:      {e:208000,  p:100000,  pol:4},
+  bagnasco:     {e:50000,   p:0,       pol:1},
+  michellis:    {e:385000,  p:0,       pol:4},
+  bruno:        {e:206533,  p:87900,   pol:3},
+  gerez:        {e:213751,  p:0,       pol:3},
+  silva:        {e:313253,  p:0,       pol:6},
+};
+
 const CANALES=["AMBA CENTRO","AMBA METRO","CANALES DIGITALES","INTERIOR","MIXTO"];
 const MESES=["","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const ANT_C={"Sr":"#2563EB","Semi":"#CA8A04","Jr":"#EA580C"};
@@ -485,6 +534,11 @@ window.addEventListener("DOMContentLoaded",()=>{
   }catch(e){}
 
   // Cargar datos del mes activo (copia para no mutar el historial)
+  // Si Mayo no tiene datos, precargar con datos reales del Excel
+  if(!HIST[5]||Object.keys(HIST[5]).length===0){
+    HIST[5]=JSON.parse(JSON.stringify(MAYO_2026));
+    try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){}
+  }
   DATA=JSON.parse(JSON.stringify(HIST[MES_ACT]||{}));
 
   // Build canal tabs
@@ -893,9 +947,56 @@ function subirExcel(input){
   reader.onload=ev=>{
     const wb=XLSX.read(ev.target.result,{type:"binary"});
     const ws=wb.Sheets[wb.SheetNames[0]];
-    const rows=XLSX.utils.sheet_to_json(ws,{defval:"",raw:true});
+
+    // Intentar parsear como sheet con headers en fila 3-4 (formato BU)
+    // Leer datos brutos (sin headers) para acceso por índice de columna
+    const rawRows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null,raw:true});
+
     let cargados=0;
-    rows.forEach(r=>{
+    // El formato BU: fila 1=título, 2=nota, 3=headers grupo, 4=sub-headers, 5+=datos
+    // Col 0=Canal, 1=Zona, 2=Asesor
+    // Columnas de producción (0-indexed):
+    // Sem1: D=3,E=4 | Sem2: H=7,I=8 | Sem3: L=11,M=12
+    // Sem4: P=15,Q=16 | Sem5: T=19,U=20
+    // Total: Z=25,AA=26
+    // Pendiente Sem4: R=17,S=18 | Sem5: V=21,W=22
+
+    const dataRows=rawRows.filter((r,i)=>i>=4&&r[2]&&typeof r[2]==="string"&&r[2].length>3&&!r[2].startsWith("▶"));
+
+    dataRows.forEach(r=>{
+      const nombreRaw=String(r[2]||"").trim();
+      if(!nombreRaw)return;
+
+      // Buscar asesor
+      const a=ASESORES.find(x=>{
+        const an=norm(x.n).replace(/[^a-z]/g,"");
+        const rn=norm(nombreRaw).replace(/[^a-z]/g,"");
+        const primerApellidoA=an.split("")[0]||"";
+        return an.slice(0,8)===rn.slice(0,8)||rn.includes(an.slice(0,6))||an.includes(rn.slice(0,6));
+      });
+      if(!a)return;
+
+      // Tomar el mayor valor entre todas las semanas (último acumulado)
+      const getPol=(...cols)=>Math.max(0,...cols.map(c=>Number(r[c])||0));
+      const getProd=(...cols)=>Math.max(0,...cols.map(c=>Number(r[c])||0));
+
+      const pol  = getPol(3,7,11,15,19);   // D,H,L,P,T
+      const prod = getProd(4,8,12,16,20);   // E,I,M,Q,U
+      // Pendiente: tomar el de la última semana con dato
+      const pendPol  = Number(r[21]||r[17]||r[13]||r[9]||r[5])||0;
+      const pendProd = Number(r[22]||r[18]||r[14]||r[10]||r[6])||0;
+
+      if(!DATA[a.id])DATA[a.id]={};
+      DATA[a.id].e  =Math.round(prod);
+      DATA[a.id].p  =Math.round(pendProd>0&&typeof pendProd==="number"?pendProd:0);
+      DATA[a.id].pol=Math.round(pol);
+      cargados++;
+    });
+
+    // Fallback: intentar con json headers si no hubo resultados
+    if(cargados===0){
+      const jsonRows=XLSX.utils.sheet_to_json(ws,{defval:"",raw:true});
+      jsonRows.forEach(r=>{
       // Detectar nombre del asesor en cualquier columna que diga "asesor" o sea la primera columna con nombre
       // Buscar nombre del asesor
       const kAsesor=Object.keys(r).find(x=>norm(x).includes("asesor"));
@@ -925,7 +1026,9 @@ function subirExcel(input){
       DATA[a.id].p=pend;
       DATA[a.id].pol=pol;
       cargados++;
-    });
+      });
+    } // end fallback json
+
     if(cargados>0){
       // Guardar en el mes actualmente seleccionado
       HIST[MES_ACT]=JSON.parse(JSON.stringify(DATA));
