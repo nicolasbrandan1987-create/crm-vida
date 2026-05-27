@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRM VIDA — Carga Manual Mayo 2026</title>
+<title>CRM VIDA — Carga Manual</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --navy:#0B1F4B;--blue:#1A3A8F;--sky:#2563EB;
+  --navy:#0B1F4B;--blue:#1A3A8F;--sky:#2563EB;--accent:#38BDF8;
   --g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;--g400:#94A3B8;--g600:#475569;--g800:#1E293B;
-  --green:#16A34A;--gBg:#DCFCE7;
+  --green:#16A34A;--gBg:#DCFCE7;--gL:#86EFAC;
   --yellow:#CA8A04;--yBg:#FEF9C3;
   --orange:#EA580C;--oBg:#FFEDD5;
   --red:#DC2626;--rBg:#FEE2E2;
@@ -17,105 +18,123 @@
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--g50);min-height:100vh;}
 button,select,input{font-family:inherit;}
 
+/* TOPBAR */
 .topbar{background:linear-gradient(135deg,var(--navy),var(--blue));padding:12px 20px;
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
   box-shadow:0 2px 12px rgba(0,0,0,.25);position:sticky;top:0;z-index:100;}
 .logo{display:flex;align-items:center;gap:9px;}
-.logo-ico{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--sky),#38BDF8);
+.logo-ico{width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,var(--sky),var(--accent));
   display:flex;align-items:center;justify-content:center;font-size:16px;}
-.logo strong{color:#fff;font-size:14px;font-weight:800;display:block;}
+.logo strong{color:#fff;font-size:14px;font-weight:800;}
 .logo small{color:rgba(255,255,255,.4);font-size:9px;letter-spacing:1px;}
-.top-actions{display:flex;gap:8px;align-items:center;}
-.btn{border:none;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+.top-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.btn{border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;
+  cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
 .btn-primary{background:var(--sky);color:#fff;}
 .btn-success{background:var(--green);color:#fff;}
 .btn-ghost{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);}
+.btn-orange{background:var(--orange);color:#fff;}
 
-.main{padding:18px 20px;display:flex;flex-direction:column;gap:16px;max-width:1400px;margin:0 auto;}
+.main{padding:18px 20px;display:flex;flex-direction:column;gap:16px;max-width:1500px;margin:0 auto;}
 
-/* HERO TOTALES */
+/* HERO */
 .hero{background:linear-gradient(135deg,var(--navy),#1e3a8a);border-radius:14px;padding:20px 24px;}
-.hero-title{color:rgba(255,255,255,.5);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
-.hero-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
-.hk{text-align:center;}
-.hk-v{font-size:26px;font-weight:900;color:#fff;}
-.hk-l{font-size:10px;color:rgba(255,255,255,.45);margin-top:3px;}
-.hk-sub{font-size:11px;margin-top:2px;font-weight:700;}
-
-/* BARRA TOTAL */
-.barra-wrap{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1);}
-.barra-lbl{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-.barra-lbl span{font-size:11px;color:rgba(255,255,255,.6);}
-.barra-lbl strong{font-size:18px;font-weight:900;}
-.barra{height:24px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;overflow:hidden;}
+.hero-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
+.hero-ttl{font-size:16px;font-weight:800;color:#fff;}
+.hero-sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
+.hero-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:14px;}
+.hk{background:rgba(255,255,255,.08);border-radius:10px;padding:11px 13px;text-align:center;}
+.hk-v{font-size:22px;font-weight:900;color:#fff;}
+.hk-l{font-size:10px;color:rgba(255,255,255,.45);margin-top:2px;}
+.hk-sub{font-size:11px;font-weight:700;margin-top:2px;}
+.barra{height:22px;border-radius:7px;background:rgba(255,255,255,.1);display:flex;overflow:hidden;margin-bottom:6px;}
 .barra-e{background:linear-gradient(90deg,#16A34A,#22c55e);display:flex;align-items:center;justify-content:center;transition:width .5s;}
 .barra-p{background:linear-gradient(90deg,#CA8A04,#eab308);display:flex;align-items:center;justify-content:center;transition:width .5s;}
 .barra-gap{flex:1;background:rgba(255,255,255,.07);}
-.barra-txt{font-size:10px;color:#fff;font-weight:700;padding:0 6px;white-space:nowrap;}
-.ley{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;}
-.li{display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(255,255,255,.55);}
-.li b{color:#fff;} .lid{width:8px;height:8px;border-radius:2px;}
+.barra-txt{font-size:9px;color:#fff;font-weight:700;padding:0 5px;white-space:nowrap;}
+.ley{display:flex;gap:12px;flex-wrap:wrap;}
+.li{display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,.55);}
+.li b{color:#fff;} .lid{width:7px;height:7px;border-radius:2px;}
 
-/* OBJETIVOS GLOBALES */
+/* CARD */
 .card{background:#fff;border-radius:13px;padding:18px 22px;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid var(--g200);}
 .sec{font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;}
-.obj-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
-.obj-item{display:flex;flex-direction:column;gap:4px;}
-.obj-lbl{font-size:11px;color:var(--g600);font-weight:600;}
-.obj-inp{border:1px solid var(--g200);border-radius:8px;padding:9px 12px;font-size:16px;font-weight:800;
-  text-align:center;outline:none;width:100%;color:var(--navy);}
-.obj-inp:focus{border-color:var(--sky);box-shadow:0 0 0 2px rgba(37,99,235,.1);}
 
-/* FILTROS CANAL */
+/* CONFIGURACIÓN */
+.cfg-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end;}
+.cfg-item{display:flex;flex-direction:column;gap:4px;}
+.cfg-lbl{font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;letter-spacing:.5px;}
+.cfg-inp{border:1.5px solid var(--g200);border-radius:8px;padding:8px 11px;font-size:14px;
+  font-weight:800;text-align:center;outline:none;width:100%;color:var(--navy);}
+.cfg-inp:focus{border-color:var(--sky);}
+
+/* CANAL TABS */
 .canal-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
 .ctab{border:1px solid var(--g200);background:#fff;color:var(--g600);border-radius:8px;
   padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;}
 .ctab.active{background:var(--navy);color:#fff;border-color:var(--navy);}
 
-/* TABLA CARGA */
+/* RESUMEN CANAL */
+.canal-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;}
+.cz{border-radius:10px;padding:12px 14px;border:1px solid var(--g200);}
+.cz-name{font-size:11px;font-weight:800;color:var(--navy);margin-bottom:4px;}
+.cz-pct{font-size:20px;font-weight:900;margin-bottom:4px;}
+.cz-bar{height:6px;border-radius:3px;background:var(--g100);overflow:hidden;display:flex;margin-bottom:5px;}
+.cz-det{font-size:10px;color:var(--g400);line-height:1.5;}
+
+/* TABLA */
 .tbl-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-thead th{padding:10px 10px;background:var(--navy);color:#fff;font-size:10px;font-weight:700;
-  text-align:left;white-space:nowrap;position:sticky;top:48px;}
+table{width:100%;border-collapse:collapse;}
+thead th{padding:9px 8px;background:var(--navy);color:#fff;font-size:10px;font-weight:700;
+  text-align:left;white-space:nowrap;position:sticky;top:56px;z-index:5;}
+thead th.center{text-align:center;}
 tbody tr{border-bottom:1px solid var(--g100);transition:background .1s;}
 tbody tr:hover{background:#F0F7FF!important;}
 tbody tr:nth-child(even){background:var(--g50);}
-tbody td{padding:6px 8px;vertical-align:middle;}
-.td-nombre{font-weight:700;color:var(--navy);white-space:nowrap;font-size:12px;}
-.td-zona{font-size:10px;color:var(--g400);}
-.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;}
+tbody tr.cero{background:#FFF1F2!important;}
+tbody tr.sobre{background:#F0FDF4!important;}
+tbody td{padding:6px 7px;vertical-align:middle;font-size:12px;}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
 
-/* INPUTS DE CARGA */
-.inp-num{border:1.5px solid var(--g200);border-radius:7px;padding:6px 8px;
-  font-size:13px;font-weight:700;text-align:center;outline:none;width:100%;
-  min-width:80px;color:var(--g800);transition:border-color .15s;}
-.inp-num:focus{border-color:var(--sky);}
-.inp-num.has-value{border-color:var(--green);background:var(--gBg);}
-.inp-num.has-pend{border-color:var(--yellow);background:var(--yBg);}
+/* INPUTS CARGA — más grandes para tipear rápido */
+.inp-emit{border:1.5px solid var(--g200);border-radius:6px;padding:5px 7px;
+  font-size:13px;font-weight:700;text-align:right;outline:none;width:95px;color:var(--g800);}
+.inp-emit:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(22,163,74,.1);}
+.inp-emit.filled{border-color:var(--green);background:var(--gBg);}
+.inp-pend{border:1.5px solid var(--g200);border-radius:6px;padding:5px 7px;
+  font-size:13px;font-weight:700;text-align:right;outline:none;width:95px;color:var(--g800);}
+.inp-pend:focus{border-color:var(--yellow);box-shadow:0 0 0 2px rgba(202,138,4,.1);}
+.inp-pend.filled{border-color:var(--yellow);background:var(--yBg);}
+.inp-pol{border:1.5px solid var(--g200);border-radius:6px;padding:5px 7px;
+  font-size:13px;font-weight:700;text-align:center;outline:none;width:55px;color:var(--g800);}
+.inp-pol:focus{border-color:var(--sky);}
+.inp-obj{border:1.5px solid var(--g200);border-radius:6px;padding:5px 7px;
+  font-size:12px;font-weight:700;text-align:right;outline:none;width:90px;color:var(--blue);}
+.inp-obj:focus{border-color:var(--sky);background:#EFF6FF;}
+.inp-obj.modificado{border-color:var(--sky);background:#EFF6FF;}
 
-/* SEMAFORO INLINE */
-.sm-bar{width:50px;height:5px;background:var(--g100);border-radius:3px;overflow:hidden;margin-top:3px;}
-.sm-bar-f{height:100%;border-radius:3px;}
-.alcance-pct{font-size:11px;font-weight:800;}
+/* SEMAFORO */
+.sm-wrap{display:flex;align-items:center;gap:5px;}
+.sm-bar{width:46px;height:5px;background:var(--g100);border-radius:3px;overflow:hidden;}
+.sm-fill{height:100%;border-radius:3px;}
+.sm-pct{font-size:11px;font-weight:800;}
 
-/* RESUMEN POR CANAL */
-.canal-resumen{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
-.cr{border-radius:10px;padding:12px 14px;border:1px solid var(--g200);}
-.cr-nombre{font-size:11px;font-weight:800;color:var(--navy);margin-bottom:6px;}
-.cr-pct{font-size:20px;font-weight:900;margin-bottom:4px;}
-.cr-bar{height:6px;border-radius:3px;background:var(--g100);overflow:hidden;display:flex;margin-bottom:4px;}
-.cr-stats{font-size:10px;color:var(--g400);}
+/* VARIACION */
+.var-up{color:var(--green);font-weight:700;}
+.var-dn{color:var(--red);font-weight:700;}
+.var-eq{color:var(--g400);}
 
-/* LÍNEA DE TIEMPO */
-.linea-wrap{overflow-x:auto;}
-.mes-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-right:4px;cursor:pointer;}
-.mes-badge.activo{border:2px solid currentColor;}
-.hist-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px;}
-.hist-table th{padding:7px 10px;background:var(--g50);font-size:10px;font-weight:700;color:var(--g400);text-align:left;border-bottom:2px solid var(--g200);}
-.hist-table td{padding:6px 10px;border-bottom:1px solid var(--g100);}
-.comp-mejor{color:var(--green);font-weight:700;}
-.comp-peor{color:var(--red);font-weight:700;}
-.comp-igual{color:var(--g400);}
+/* LINEA DE TIEMPO */
+.linea-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.ltab{border:1px solid var(--g200);background:#fff;color:var(--g600);border-radius:20px;
+  padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer;}
+.ltab.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--g200);border-radius:11px;padding:24px;text-align:center;cursor:pointer;transition:all .15s;}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--sky);background:#EFF6FF;}
+.upload-zone input{display:none;}
 
 /* TOAST */
 .toast{position:fixed;bottom:20px;right:20px;background:var(--navy);color:#fff;
@@ -123,10 +142,10 @@ tbody td{padding:6px 8px;vertical-align:middle;}
   box-shadow:0 4px 20px rgba(0,0,0,.3);opacity:0;transition:opacity .25s;z-index:999;pointer-events:none;}
 .toast.show{opacity:1;}
 
-@media(max-width:900px){
+@media(max-width:1000px){
   .hero-kpis{grid-template-columns:repeat(3,1fr);}
-  .obj-grid{grid-template-columns:1fr 1fr;}
-  .canal-resumen{grid-template-columns:1fr 1fr;}
+  .cfg-grid{grid-template-columns:repeat(3,1fr);}
+  .canal-grid{grid-template-columns:1fr 1fr;}
 }
 </style>
 </head>
@@ -136,718 +155,848 @@ tbody td{padding:6px 8px;vertical-align:middle;}
 <div class="topbar">
   <div class="logo">
     <div class="logo-ico">💎</div>
-    <div><strong>CRM VIDA</strong><small>CARGA MANUAL · MAYO 2026</small></div>
+    <div><strong>CRM VIDA</strong><small>BOCA DE URNA · SWISS MEDICAL</small></div>
   </div>
   <div class="top-actions">
-    <span style="color:rgba(255,255,255,.5);font-size:11px;" id="ultima-guarda"></span>
-    <button class="btn btn-ghost" onclick="exportarExcel()">⬇ Exportar Excel</button>
-    <button class="btn btn-ghost" onclick="window.open('panel-gerencia.html','_blank')">📊 Ver Panel Gerencia</button>
-    <button class="btn btn-success" onclick="guardarTodo()">💾 Guardar todo</button>
+    <span style="color:rgba(255,255,255,.45);font-size:11px;" id="lbl-guardado"></span>
+    <button class="btn btn-ghost" onclick="document.getElementById('file-excel').click()">📂 Subir Excel</button>
+    <input id="file-excel" type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="subirExcel(this)">
+    <button class="btn btn-ghost" onclick="exportarCSV()">⬇ Exportar</button>
+    <button class="btn btn-ghost" onclick="window.open('panel-gerencia.html','_blank')">📊 Gerencia</button>
+    <button class="btn btn-success" onclick="guardarTodo()">💾 Guardar</button>
   </div>
 </div>
 
 <div class="main">
 
-  <!-- HERO TOTALES -->
-  <div class="hero">
-    <div class="hero-title">RESUMEN TOTAL EQUIPO — MAYO 2026</div>
-    <div class="hero-kpis" id="hero-kpis"></div>
-    <div class="barra-wrap">
-      <div class="barra-lbl">
-        <span>Alcance proyectado (emitido + pendiente de emisión)</span>
-        <strong id="hero-pct" style="color:#fff">0%</strong>
-      </div>
-      <div class="barra">
-        <div class="barra-e" id="b-emit" style="width:0%"><span class="barra-txt" id="b-emit-txt"></span></div>
-        <div class="barra-p" id="b-pend" style="width:0%"><span class="barra-txt" id="b-pend-txt"></span></div>
-        <div class="barra-gap"></div>
-      </div>
-      <div class="ley">
-        <div class="li"><div class="lid" style="background:#16A34A"></div>Emitido: <b id="l-emit">$0</b></div>
-        <div class="li"><div class="lid" style="background:#CA8A04"></div>Pend. emisión: <b id="l-pend">$0</b></div>
-        <div class="li"><div class="lid" style="background:rgba(255,255,255,.15)"></div>Brecha: <b id="l-brecha">$0</b></div>
-        <div class="li"><div class="lid" style="background:rgba(255,255,255,.3)"></div>Objetivo: <b id="l-obj">$0</b></div>
-      </div>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-top">
+    <div>
+      <div class="hero-ttl" id="hero-ttl">División VIDA — Mayo 2026</div>
+      <div class="hero-sub" id="hero-sub">Equipo completo · 42 asesores</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:11px;color:rgba(255,255,255,.5)">Mes:</span>
+      <select id="mes-sel" onchange="cambiarMes()"
+        style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+        color:#fff;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:700;outline:none;">
+        <option value="1">Enero 2026</option><option value="2">Febrero 2026</option>
+        <option value="3">Marzo 2026</option><option value="4">Abril 2026</option>
+        <option value="5" selected>Mayo 2026</option><option value="6">Junio 2026</option>
+        <option value="7">Julio 2026</option><option value="8">Agosto 2026</option>
+        <option value="9">Septiembre 2026</option><option value="10">Octubre 2026</option>
+        <option value="11">Noviembre 2026</option><option value="12">Diciembre 2026</option>
+      </select>
     </div>
   </div>
-
-  <!-- OBJETIVOS GLOBALES -->
-  <div class="card">
-    <div class="sec">🎯 Objetivo global del equipo — editá para recalcular todo</div>
-    <div class="obj-grid">
-      <div class="obj-item">
-        <label class="obj-lbl">📅 Mes en curso</label>
-        <select class="obj-inp" id="mes-sel" onchange="cambiarMes()" style="font-size:13px;padding:8px 10px;">
-          <option value="1">Enero 2026</option>
-          <option value="2">Febrero 2026</option>
-          <option value="3">Marzo 2026</option>
-          <option value="4">Abril 2026</option>
-          <option value="5" selected>Mayo 2026</option>
-          <option value="6">Junio 2026</option>
-          <option value="7">Julio 2026</option>
-          <option value="8">Agosto 2026</option>
-          <option value="9">Septiembre 2026</option>
-          <option value="10">Octubre 2026</option>
-          <option value="11">Noviembre 2026</option>
-          <option value="12">Diciembre 2026</option>
-        </select>
-      </div>
-      <div class="obj-item">
-        <label class="obj-lbl">Objetivo total Prima $</label>
-        <input class="obj-inp" id="obj-prima" type="number" value="16000000" oninput="recalcular()">
-        <div style="font-size:10px;color:var(--g400);margin-top:2px">Suma de todos los asesores</div>
-      </div>
-      <div class="obj-item">
-        <label class="obj-lbl">Objetivo total Pólizas</label>
-        <input class="obj-inp" id="obj-pol" type="number" value="180" oninput="recalcular()">
-        <div style="font-size:10px;color:var(--g400);margin-top:2px">Unidades del mes</div>
-      </div>
-      <div class="obj-item">
-        <label class="obj-lbl">Días laborales transcurridos</label>
-        <input class="obj-inp" id="dias-pas" type="number" value="16" oninput="recalcular()">
-      </div>
-      <div class="obj-item">
-        <label class="obj-lbl">Días laborales del mes</label>
-        <input class="obj-inp" id="dias-tot" type="number" value="21" oninput="recalcular()">
-      </div>
-    </div>
+  <div class="hero-kpis" id="hero-kpis"></div>
+  <div class="barra">
+    <div class="barra-e" id="b-e" style="width:0%"><span class="barra-txt" id="b-e-txt"></span></div>
+    <div class="barra-p" id="b-p" style="width:0%"><span class="barra-txt" id="b-p-txt"></span></div>
+    <div class="barra-gap"></div>
   </div>
-
-  <!-- RESUMEN POR CANAL -->
-  <div class="card">
-    <div class="sec">Alcance por Canal</div>
-    <div class="canal-resumen" id="canal-resumen"></div>
+  <div class="ley">
+    <div class="li"><div class="lid" style="background:#16A34A"></div>Emitido: <b id="l-e">$0</b></div>
+    <div class="li"><div class="lid" style="background:#CA8A04"></div>Pend. emisión: <b id="l-p">$0</b></div>
+    <div class="li"><div class="lid" style="background:rgba(255,255,255,.15)"></div>Brecha: <b id="l-br">$0</b></div>
+    <div class="li"><div class="lid" style="background:rgba(255,255,255,.3)"></div>Objetivo: <b id="l-o">$0</b></div>
   </div>
-
-  <!-- LÍNEA DE TIEMPO MENSUAL -->
-  <div class="card">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
-      <div class="sec" style="margin-bottom:0">📈 Línea de tiempo — evolución mensual del equipo</div>
-      <div style="font-size:11px;color:var(--g400)">Cada mes que cargás queda guardado automáticamente</div>
-    </div>
-    <!-- SVG gráfico de línea -->
-    <div class="linea-wrap" id="linea-chart" style="margin-bottom:16px;"></div>
-    <!-- Tabla comparativa -->
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
-      <div style="font-size:11px;font-weight:700;color:var(--navy)">Comparación mensual:</div>
-      <div id="mes-badges"></div>
-    </div>
-    <div style="overflow-x:auto;"><table class="hist-table" id="hist-table">
-      <thead><tr>
-        <th>Asesor</th><th>Canal</th>
-        <th id="col-mes-ant2">—</th>
-        <th id="col-mes-ant1">—</th>
-        <th id="col-mes-act">—</th>
-        <th>Variación</th>
-      </tr></thead>
-      <tbody id="hist-tbody"></tbody>
-    </table></div>
-  </div>
-
-  <!-- FILTRO POR CANAL -->
-  <div>
-    <div class="canal-tabs" id="canal-tabs"></div>
-
-    <!-- TABLA -->
-    <div class="card" style="padding:0;overflow:hidden;">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:200px">Asesor</th>
-            <th>Canal</th>
-            <th>Zona</th>
-            <th>Ant.</th>
-            <th>Obj. Prima</th>
-            <th>Prima emitida $</th>
-            <th>Pend. emisión $</th>
-            <th>Pólizas</th>
-            <th>Alcance</th>
-            <th>Proyección</th>
-            <th>Brecha</th>
-          </tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </div>
-  </div>
-
 </div>
 
+<!-- CONFIG -->
+<div class="card">
+  <div class="sec">⚙ Parámetros del mes</div>
+  <div class="cfg-grid">
+    <div class="cfg-item">
+      <div class="cfg-lbl">Objetivo total Prima $</div>
+      <input class="cfg-inp" id="cfg-obj" type="number" value="18675000" oninput="recalcular()">
+    </div>
+    <div class="cfg-item">
+      <div class="cfg-lbl">Objetivo total Pólizas</div>
+      <input class="cfg-inp" id="cfg-pol" type="number" value="215" oninput="recalcular()">
+    </div>
+    <div class="cfg-item">
+      <div class="cfg-lbl">Días laborales transcurridos</div>
+      <input class="cfg-inp" id="cfg-dias-pas" type="number" value="16" oninput="recalcular()">
+    </div>
+    <div class="cfg-item">
+      <div class="cfg-lbl">Días laborales del mes</div>
+      <input class="cfg-inp" id="cfg-dias-tot" type="number" value="21" oninput="recalcular()">
+    </div>
+    <div class="cfg-item">
+      <div class="cfg-lbl">Sem 1 (fecha)</div>
+      <input class="cfg-inp" id="cfg-s1" type="text" value="03/05" style="font-size:12px;font-weight:600;">
+    </div>
+    <div class="cfg-item">
+      <div class="cfg-lbl">Sem 4 / última cargada</div>
+      <select class="cfg-inp" id="cfg-sem-act" onchange="recalcular()" style="font-size:12px;padding:7px 8px;">
+        <option value="1">Semana 1</option><option value="2">Semana 2</option>
+        <option value="3">Semana 3</option><option value="4" selected>Semana 4</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- RESUMEN POR CANAL -->
+<div class="card">
+  <div class="sec">Alcance por Canal — participación en el total del equipo</div>
+  <div class="canal-grid" id="canal-grid"></div>
+</div>
+
+<!-- LÍNEA DE TIEMPO -->
+<div class="card">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+    <div class="sec" style="margin-bottom:0">📈 Evolución mensual del equipo</div>
+    <div class="linea-tabs" id="linea-tabs"></div>
+  </div>
+  <div id="linea-chart" style="overflow-x:auto;min-height:60px;"></div>
+  <!-- Tabla comparativa -->
+  <div style="overflow-x:auto;margin-top:14px;">
+    <table style="font-size:11px;">
+      <thead>
+        <tr id="comp-header">
+          <th>Asesor</th><th>Canal</th>
+          <th id="col-m2" style="min-width:90px">—</th>
+          <th id="col-m1" style="min-width:90px">—</th>
+          <th id="col-m0" style="min-width:100px">— (actual)</th>
+          <th>Var.</th>
+        </tr>
+      </thead>
+      <tbody id="comp-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CARGA TABLA -->
+<div>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+    <div style="font-size:14px;font-weight:800;color:var(--navy)">
+      Carga de datos — <span id="lbl-mes-tabla">Mayo 2026</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <div style="font-size:11px;color:var(--g400)">Filtrar:</div>
+      <div class="canal-tabs" id="canal-tabs"></div>
+    </div>
+  </div>
+
+  <!-- Upload zone -->
+  <div class="upload-zone card" id="upload-zone" onclick="document.getElementById('file-excel').click()"
+    ondragover="event.preventDefault();this.classList.add('drag')"
+    ondragleave="this.classList.remove('drag')"
+    ondrop="onDrop(event)">
+    <div style="font-size:28px;margin-bottom:8px">📂</div>
+    <div style="font-size:13px;font-weight:700;color:var(--navy)">Subí tu Excel de Boca de Urna</div>
+    <div style="font-size:11px;color:var(--g400);margin-top:4px">
+      Arrastrá el archivo o hacé click · Formato: el mismo Excel que usabas (col. Asesor, Producción, Pólizas)
+    </div>
+    <div style="margin-top:10px;font-size:10px;color:var(--g400)">
+      Columnas detectadas automáticamente: <b>ASESOR · PÓLIZAS ACUM · PRODUCCIÓN ACUM · PENDIENTE EMISIÓN $</b>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden;margin-top:14px;">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width:180px">Asesor</th>
+          <th>Canal</th><th>Zona</th><th>Ant.</th>
+          <th class="center" style="min-width:95px">Obj. Prima $<br><span style="font-size:9px;font-weight:400;opacity:.7">editable ↓</span></th>
+          <th class="center" style="min-width:95px">Obj. Pólizas<br><span style="font-size:9px;font-weight:400;opacity:.7">editable ↓</span></th>
+          <th class="center" style="min-width:100px;background:#16A34A">✅ Prima Emitida $</th>
+          <th class="center" style="min-width:100px;background:#CA8A04">⏳ Pend. Emisión $</th>
+          <th class="center" style="min-width:60px">🏆 Pólizas</th>
+          <th class="center">Alcance</th>
+          <th class="center">Proyectado</th>
+          <th class="center">Brecha</th>
+          <th class="center">Part. Canal</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-carga"></tbody>
+      <tfoot>
+        <tr id="tfoot-total" style="background:var(--navy);color:#fff;font-weight:700;">
+          <td colspan="4" style="padding:9px 10px;font-size:12px">TOTAL EQUIPO</td>
+          <td id="tf-obj" style="padding:9px 8px;text-align:right;font-size:11px"></td>
+          <td id="tf-obj-pol" style="padding:9px 8px;text-align:center"></td>
+          <td id="tf-emit" style="padding:9px 8px;text-align:right;color:#86EFAC;font-size:13px;font-weight:900"></td>
+          <td id="tf-pend" style="padding:9px 8px;text-align:right;color:#FCD34D"></td>
+          <td id="tf-pol" style="padding:9px 8px;text-align:center;color:#38BDF8"></td>
+          <td id="tf-alc" style="padding:9px 8px;text-align:center;font-size:13px;font-weight:900"></td>
+          <td id="tf-proy" style="padding:9px 8px;text-align:right"></td>
+          <td id="tf-brecha" style="padding:9px 8px;text-align:right;color:#FCA5A5"></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
 // ════════════════════════════════════════════════════════════
-// 42 ASESORES REALES
+// 42 ASESORES REALES — con objetivos por defecto
 // ════════════════════════════════════════════════════════════
-const ASESORES = [
-  {id:"cuckovich",     n:"CUCKOVICH, VERONICA CECILIA",       c:"AMBA CENTRO",       z:"Caballito",      a:"Semi", obj:380000, objPol:4},
-  {id:"aguilar",       n:"AGUILAR, ANALIA HAYDEE",            c:"AMBA CENTRO",       z:"La Plata",       a:"Sr",   obj:450000, objPol:5},
-  {id:"sanchez_mc",    n:"SANCHEZ, MERCEDES CAMILA",          c:"AMBA CENTRO",       z:"La Plata",       a:"Jr",   obj:320000, objPol:4},
-  {id:"manteiga",      n:"MANTEIGA, MIRIAM MABEL",            c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Sr",   obj:450000, objPol:5},
-  {id:"rios",          n:"RIOS, ERICA ELIZABET",              c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Semi", obj:380000, objPol:4},
-  {id:"quispe",        n:"QUISPE, NOELIA CARINA",             c:"AMBA CENTRO",       z:"Microcentro",    a:"Jr",   obj:320000, objPol:4},
-  {id:"witel",         n:"WITEL, LAURA DANIELA",              c:"AMBA CENTRO",       z:"Microcentro",    a:"Semi", obj:380000, objPol:4},
-  {id:"garcia_sanchez",n:"GARCIA SANCHEZ, BRENDA ELIZABETH",  c:"AMBA CENTRO",       z:"San Isidro",     a:"Jr",   obj:320000, objPol:4},
-  {id:"morello",       n:"MORELLO, MARCELO ROQUE",            c:"AMBA CENTRO",       z:"San Isidro",     a:"Sr",   obj:450000, objPol:5},
-  {id:"flores_i",      n:"FLORES, IVANA CAROLINA NORMA",      c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",   obj:450000, objPol:5},
-  {id:"prieto",        n:"PRIETO, BLANCA",                    c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",   obj:450000, objPol:5},
-  {id:"barroso",       n:"BARROSO CARPINTERO, RAFAEL ARMANDO",c:"AMBA METRO",        z:"Nordelta",       a:"Semi", obj:380000, objPol:4},
-  {id:"briozzo",       n:"BRIOZZO, ANDREA LETICIA",           c:"AMBA METRO",        z:"Nordelta",       a:"Semi", obj:380000, objPol:4},
-  {id:"varela",        n:"VARELA, SOFIA AYLEN",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Jr",   obj:320000, objPol:4},
-  {id:"salas",         n:"SALAS, MAGALI PAULA",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Jr",   obj:320000, objPol:4},
-  {id:"perez_g",       n:"PEREZ, GUSTAVO MARCELO",            c:"AMBA METRO",        z:"Zárate",         a:"Semi", obj:380000, objPol:4},
-  {id:"medina_g",      n:"MEDINA, GIULIANA BEATRIZ",          c:"AMBA METRO",        z:"Zárate",         a:"Jr",   obj:320000, objPol:4},
-  {id:"magallanes",    n:"MAGALLANES, MARIA LAURA",           c:"CANALES DIGITALES", z:"Brigada 1",      a:"Sr",   obj:450000, objPol:5},
-  {id:"gomez_g",       n:"GOMEZ, GEORGINA FERNANDA",          c:"CANALES DIGITALES", z:"Brigada 8",      a:"Sr",   obj:450000, objPol:5},
-  {id:"benitez",       n:"BENITEZ MOMBELLI, LEANDRO EZEQUIEL",c:"CANALES DIGITALES", z:"Brigada 2",      a:"Semi", obj:380000, objPol:4},
-  {id:"bastidas",      n:"BASTIDAS HERRERA, CLAUDIA CECILIA", c:"CANALES DIGITALES", z:"Brigada 4",      a:"Semi", obj:380000, objPol:4},
-  {id:"finocchiaro",   n:"FINOCCHIARO, LAURA LORENA",         c:"CANALES DIGITALES", z:"Brigada 4",      a:"Jr",   obj:320000, objPol:4},
-  {id:"carrasco",      n:"CARRASCO, SILVIA GRACIELA",         c:"CANALES DIGITALES", z:"Brigada 5",      a:"Sr",   obj:450000, objPol:5},
-  {id:"avila",         n:"AVILA, JAVIER ALEJANDRO",           c:"CANALES DIGITALES", z:"Brigada 6",      a:"Semi", obj:380000, objPol:4},
-  {id:"rosen",         n:"ROSEN, BARBARA DAIANA",             c:"CANALES DIGITALES", z:"Brigada 7",      a:"Jr",   obj:320000, objPol:4},
-  {id:"berlocq",       n:"BERLOCQ, MARIA FLORENCIA",          c:"INTERIOR",          z:"Bs As Sur",      a:"Semi", obj:380000, objPol:4},
-  {id:"passeri",       n:"PASSERI, JOSE RAUL",                c:"INTERIOR",          z:"Bs As Sur",      a:"Semi", obj:380000, objPol:4},
-  {id:"armand",        n:"ARMAND, LUCAS",                     c:"INTERIOR",          z:"Chaco",          a:"Sr",   obj:450000, objPol:5},
-  {id:"lopez_e",       n:"LOPEZ, ERNESTO MARTIN",             c:"INTERIOR",          z:"Chaco",          a:"Sr",   obj:450000, objPol:5},
-  {id:"pierlucca",     n:"PIERLUCCA, JULIA ELISABETH",        c:"INTERIOR",          z:"Chaco",          a:"Sr",   obj:450000, objPol:5},
-  {id:"nunez",         n:"NUÑEZ, MIGUEL ANGEL",               c:"INTERIOR",          z:"Córdoba",        a:"Sr",   obj:450000, objPol:5},
-  {id:"rivero",        n:"RIVERO, NADIA",                     c:"INTERIOR",          z:"Córdoba",        a:"Semi", obj:380000, objPol:4},
-  {id:"flores_lg",     n:"FLORES, LUCAS GASTON",              c:"INTERIOR",          z:"Mendoza",        a:"Sr",   obj:450000, objPol:5},
-  {id:"blanco",        n:"BLANCO, RICARDO FABIAN",            c:"INTERIOR",          z:"Neuquén",        a:"Sr",   obj:450000, objPol:5},
-  {id:"dominguez",     n:"DOMINGUEZ, ANA LAURA",              c:"INTERIOR",          z:"Neuquén",        a:"Sr",   obj:450000, objPol:5},
-  {id:"beltran",       n:"BELTRAN, DELMA RINA",               c:"INTERIOR",          z:"Salta",          a:"Semi", obj:380000, objPol:4},
-  {id:"aguirre",       n:"AGUIRRE ALEN, AGUSTINA",            c:"INTERIOR",          z:"Salta",          a:"Jr",   obj:320000, objPol:4},
-  {id:"bagnasco",      n:"BAGNASCO GENTILE, KARINA PAOLA",    c:"INTERIOR",          z:"Salta",          a:"Semi", obj:380000, objPol:4},
-  {id:"michellis",     n:"MICHELLIS, SUSANA BEATRIZ",         c:"MIXTO",             z:"Brigada 9",      a:"Sr",   obj:450000, objPol:5},
-  {id:"bruno",         n:"BRUNO, MARIA SILVINA",              c:"MIXTO",             z:"Rosario 1",      a:"Sr",   obj:450000, objPol:5},
-  {id:"gerez",         n:"GEREZ, CARLOS",                     c:"MIXTO",             z:"Brigada 3",      a:"Semi", obj:380000, objPol:4},
-  {id:"silva",         n:"SILVA, ANA ROSA",                   c:"MIXTO",             z:"Equipo Pyme",    a:"Semi", obj:380000, objPol:4},
+const ASESORES=[
+  {id:"cuckovich",     n:"CUCKOVICH, VERONICA CECILIA",       c:"AMBA CENTRO",       z:"Caballito",      a:"Semi",objPrima:450000,objPol:5},
+  {id:"aguilar",       n:"AGUILAR, ANALIA HAYDEE",            c:"AMBA CENTRO",       z:"La Plata",       a:"Sr",  objPrima:450000,objPol:5},
+  {id:"sanchez_mc",    n:"SANCHEZ, MERCEDES CAMILA",          c:"AMBA CENTRO",       z:"La Plata",       a:"Jr",  objPrima:450000,objPol:5},
+  {id:"manteiga",      n:"MANTEIGA, MIRIAM MABEL",            c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Sr",  objPrima:450000,objPol:5},
+  {id:"rios",          n:"RIOS, ERICA ELIZABET",              c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Semi",objPrima:450000,objPol:5},
+  {id:"quispe",        n:"QUISPE, NOELIA CARINA",             c:"AMBA CENTRO",       z:"Microcentro",    a:"Jr",  objPrima:450000,objPol:5},
+  {id:"witel",         n:"WITEL, LAURA DANIELA",              c:"AMBA CENTRO",       z:"Microcentro",    a:"Semi",objPrima:450000,objPol:5},
+  {id:"garcia_sanchez",n:"GARCIA SANCHEZ, BRENDA ELIZABETH",  c:"AMBA CENTRO",       z:"San Isidro",     a:"Jr",  objPrima:450000,objPol:5},
+  {id:"morello",       n:"MORELLO, MARCELO ROQUE",            c:"AMBA CENTRO",       z:"San Isidro",     a:"Sr",  objPrima:450000,objPol:5},
+  {id:"flores_i",      n:"FLORES, IVANA CAROLINA NORMA",      c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",  objPrima:450000,objPol:5},
+  {id:"prieto",        n:"PRIETO, BLANCA",                    c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",  objPrima:450000,objPol:5},
+  {id:"barroso",       n:"BARROSO CARPINTERO, RAFAEL ARMANDO",c:"AMBA METRO",        z:"Nordelta",       a:"Semi",objPrima:450000,objPol:5},
+  {id:"briozzo",       n:"BRIOZZO, ANDREA LETICIA",           c:"AMBA METRO",        z:"Nordelta",       a:"Semi",objPrima:450000,objPol:5},
+  {id:"varela",        n:"VARELA, SOFIA AYLEN",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Jr",  objPrima:450000,objPol:5},
+  {id:"salas",         n:"SALAS, MAGALI PAULA",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Jr",  objPrima:450000,objPol:5},
+  {id:"perez_g",       n:"PEREZ, GUSTAVO MARCELO",            c:"AMBA METRO",        z:"Zárate",         a:"Semi",objPrima:450000,objPol:5},
+  {id:"medina_g",      n:"MEDINA, GIULIANA BEATRIZ",          c:"AMBA METRO",        z:"Zárate",         a:"Jr",  objPrima:450000,objPol:5},
+  {id:"magallanes",    n:"MAGALLANES, MARIA LAURA",           c:"CANALES DIGITALES", z:"Brigada 1",      a:"Sr",  objPrima:450000,objPol:5},
+  {id:"gomez_g",       n:"GOMEZ, GEORGINA FERNANDA",          c:"CANALES DIGITALES", z:"Brigada 8",      a:"Sr",  objPrima:315000,objPol:5},
+  {id:"benitez",       n:"BENITEZ MOMBELLI, LEANDRO EZEQUIEL",c:"CANALES DIGITALES", z:"Brigada 2",      a:"Semi",objPrima:450000,objPol:5},
+  {id:"bastidas",      n:"BASTIDAS HERRERA, CLAUDIA CECILIA", c:"CANALES DIGITALES", z:"Brigada 4",      a:"Semi",objPrima:450000,objPol:5},
+  {id:"finocchiaro",   n:"FINOCCHIARO, LAURA LORENA",         c:"CANALES DIGITALES", z:"Brigada 4",      a:"Jr",  objPrima:315000,objPol:5},
+  {id:"carrasco",      n:"CARRASCO, SILVIA GRACIELA",         c:"CANALES DIGITALES", z:"Brigada 5",      a:"Sr",  objPrima:450000,objPol:5},
+  {id:"avila",         n:"AVILA, JAVIER ALEJANDRO",           c:"CANALES DIGITALES", z:"Brigada 6",      a:"Semi",objPrima:450000,objPol:5},
+  {id:"rosen",         n:"ROSEN, BARBARA DAIANA",             c:"CANALES DIGITALES", z:"Brigada 7",      a:"Jr",  objPrima:450000,objPol:5},
+  {id:"berlocq",       n:"BERLOCQ, MARIA FLORENCIA",          c:"INTERIOR",          z:"Bs As Sur",      a:"Semi",objPrima:450000,objPol:5},
+  {id:"passeri",       n:"PASSERI, JOSE RAUL",                c:"INTERIOR",          z:"Bs As Sur",      a:"Semi",objPrima:315000,objPol:5},
+  {id:"armand",        n:"ARMAND, LUCAS",                     c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:450000,objPol:5},
+  {id:"lopez_e",       n:"LOPEZ, ERNESTO MARTIN",             c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:450000,objPol:5},
+  {id:"pierlucca",     n:"PIERLUCCA, JULIA ELISABETH",        c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:450000,objPol:5},
+  {id:"nunez",         n:"NUÑEZ, MIGUEL ANGEL",               c:"INTERIOR",          z:"Córdoba",        a:"Sr",  objPrima:450000,objPol:5},
+  {id:"rivero",        n:"RIVERO, NADIA",                     c:"INTERIOR",          z:"Córdoba",        a:"Semi",objPrima:450000,objPol:5},
+  {id:"flores_lg",     n:"FLORES, LUCAS GASTON",              c:"INTERIOR",          z:"Mendoza",        a:"Sr",  objPrima:450000,objPol:5},
+  {id:"blanco",        n:"BLANCO, RICARDO FABIAN",            c:"INTERIOR",          z:"Neuquén",        a:"Sr",  objPrima:450000,objPol:5},
+  {id:"dominguez",     n:"DOMINGUEZ, ANA LAURA",              c:"INTERIOR",          z:"Neuquén",        a:"Sr",  objPrima:450000,objPol:5},
+  {id:"beltran",       n:"BELTRAN, DELMA RINA",               c:"INTERIOR",          z:"Salta",          a:"Semi",objPrima:450000,objPol:5},
+  {id:"aguirre",       n:"AGUIRRE ALEN, AGUSTINA",            c:"INTERIOR",          z:"Salta",          a:"Jr",  objPrima:315000,objPol:5},
+  {id:"bagnasco",      n:"BAGNASCO GENTILE, KARINA PAOLA",    c:"INTERIOR",          z:"Salta",          a:"Semi",objPrima:450000,objPol:5},
+  {id:"michellis",     n:"MICHELLIS, SUSANA BEATRIZ",         c:"MIXTO",             z:"Brigada 9",      a:"Sr",  objPrima:450000,objPol:5},
+  {id:"bruno",         n:"BRUNO, MARIA SILVINA",              c:"MIXTO",             z:"Rosario 1",      a:"Sr",  objPrima:450000,objPol:5},
+  {id:"gerez",         n:"GEREZ, CARLOS",                     c:"MIXTO",             z:"Brigada 3",      a:"Semi",objPrima:450000,objPol:5},
+  {id:"silva",         n:"SILVA, ANA ROSA",                   c:"MIXTO",             z:"Equipo Pyme",    a:"Semi",objPrima:450000,objPol:5},
 ];
 
+// DATOS ABRIL 2026 (del Excel real que me pasaron)
+const ABRIL_2026={
+  cuckovich:    {e:311083,  p:0,       pol:6},
+  aguilar:      {e:90100,   p:300000,  pol:2},
+  sanchez_mc:   {e:531000,  p:0,       pol:3},
+  manteiga:     {e:428622,  p:0,       pol:6},
+  rios:         {e:299000,  p:0,       pol:4},
+  quispe:       {e:767000,  p:0,       pol:8},
+  witel:        {e:262000,  p:90010,   pol:5},
+  garcia_sanchez:{e:256000, p:126000,  pol:4},
+  morello:      {e:802000,  p:225000,  pol:8},
+  flores_i:     {e:1674000, p:0,       pol:12},
+  prieto:       {e:200000,  p:0,       pol:2},
+  barroso:      {e:1135000, p:0,       pol:5},
+  briozzo:      {e:3700000, p:0,       pol:9},
+  varela:       {e:100000,  p:0,       pol:1},
+  salas:        {e:1383000, p:0,       pol:14},
+  perez_g:      {e:600000,  p:0,       pol:3},
+  medina_g:     {e:250000,  p:0,       pol:1},
+  magallanes:   {e:145200,  p:0,       pol:3},
+  gomez_g:      {e:190000,  p:0,       pol:4},
+  benitez:      {e:598000,  p:60000,   pol:10},
+  bastidas:     {e:0,       p:0,       pol:0},
+  finocchiaro:  {e:554000,  p:0,       pol:7},
+  carrasco:     {e:211000,  p:0,       pol:6},
+  avila:        {e:308000,  p:0,       pol:5},
+  rosen:        {e:282600,  p:0,       pol:5},
+  berlocq:      {e:178000,  p:0,       pol:5},
+  passeri:      {e:180000,  p:0,       pol:3},
+  armand:       {e:80000,   p:120000,  pol:1},
+  lopez_e:      {e:420000,  p:100000,  pol:4},
+  pierlucca:    {e:635000,  p:100000,  pol:7},
+  nunez:        {e:549000,  p:0,       pol:4},
+  rivero:       {e:888800,  p:647800,  pol:6},
+  flores_lg:    {e:502270,  p:0,       pol:4},
+  blanco:       {e:509000,  p:0,       pol:5},
+  dominguez:    {e:150000,  p:0,       pol:4},
+  beltran:      {e:106000,  p:0,       pol:3},
+  aguirre:      {e:290000,  p:0,       pol:6},
+  bagnasco:     {e:376000,  p:0,       pol:4},
+  michellis:    {e:1010000, p:250000,  pol:5},
+  bruno:        {e:481000,  p:0,       pol:4},
+  gerez:        {e:887000,  p:29800,   pol:7},
+  silva:        {e:513000,  p:0,       pol:9},
+};
+
 const CANALES=["AMBA CENTRO","AMBA METRO","CANALES DIGITALES","INTERIOR","MIXTO"];
-const ANT_COLS={"Sr":"#2563EB","Semi":"#CA8A04","Jr":"#EA580C"};
-const ANT_BGS ={"Sr":"#EFF6FF","Semi":"#FEF9C3","Jr":"#FFEDD5"};
-const MESES_N=["","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const MESES=["","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const ANT_C={"Sr":"#2563EB","Semi":"#CA8A04","Jr":"#EA580C"};
+const ANT_B={"Sr":"#EFF6FF","Semi":"#FEF9C3","Jr":"#FFEDD5"};
 
 // ════════════════════════════════════════════════════════════
 // ESTADO
 // ════════════════════════════════════════════════════════════
-let DATA = {};       // datos del mes en curso {id:{emit,pend,pol}}
-let HISTORICO_CM={}; // histórico por mes: {5:{id:{emit,pol}}, 4:{...}, ...}
-let CANAL_SEL = "TODOS";
-let MES_ACT = 5;     // mes actualmente seleccionado
+let MES_ACT=5;
+let DATA={};        // datos mes actual {id:{e,p,pol,objPrima,objPol}}
+let HIST={};        // histórico {mes:{id:{e,p,pol}}}
+let CANAL_SEL="TODOS";
+let OBJ_CANAL="TODOS"; // para línea de tiempo
+let autoTimer=null;
 
 // ════════════════════════════════════════════════════════════
 // HELPERS
 // ════════════════════════════════════════════════════════════
-const fmt  = n=>n>=1e6?`$${(n/1e6).toFixed(2)}M`:n>=1000?`$${(n/1000).toFixed(0)}K`:`$${n}`;
-const pct  = (v,t)=>t===0?0:Math.round(v/t*100);
-const clamp= (v,a,b)=>Math.min(b,Math.max(a,v));
-const sm   = p=>{
-  if(p>=100) return {c:"#16A34A",bg:"#DCFCE7",txt:"En objetivo"};
-  if(p>=75)  return {c:"#CA8A04",bg:"#FEF9C3",txt:"En riesgo"};
-  if(p>=50)  return {c:"#EA580C",bg:"#FFEDD5",txt:"Bajo"};
-  return           {c:"#DC2626",bg:"#FEE2E2",txt:"Crítico"};
+const fmt=n=>n>=1e6?`$${(n/1e6).toFixed(2)}M`:n>=1000?`$${(n/1000).toFixed(0)}K`:`$${n||0}`;
+const pct=(v,t)=>t===0?0:Math.round(v/t*100);
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const sm=p=>{
+  if(p>=100)return{c:"#16A34A",bg:"#DCFCE7",txt:"Objetivo ✅"};
+  if(p>=75) return{c:"#CA8A04",bg:"#FEF9C3",txt:"En riesgo"};
+  if(p>=50) return{c:"#EA580C",bg:"#FFEDD5",txt:"Bajo"};
+  return         {c:"#DC2626",bg:"#FEE2E2",txt:"Crítico"};
 };
-const proyS = (emit,diasPas,diasTot) => {
-  const ritmo = diasPas>0 ? emit/diasPas : 0;
-  return Math.round(emit + ritmo*(diasTot-diasPas));
-};
-const hoy = ()=>new Date().toISOString().slice(0,10);
+const proyS=(e,dp,dt)=>Math.round(e+(dp>0?e/dp:0)*(dt-dp));
+const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+
+function getObj(id){
+  const d=DATA[id]||{};
+  const base=ASESORES.find(a=>a.id===id)||{};
+  return{prima:Number(d.objPrima||base.objPrima||450000),pol:Number(d.objPol||base.objPol||5)};
+}
 
 // ════════════════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════════════════
 window.addEventListener("DOMContentLoaded",()=>{
-  // Cargar histórico completo
-  try{HISTORICO_CM=JSON.parse(localStorage.getItem("crm_hist_manual")||"{}");}catch(e){}
+  // Cargar histórico
+  try{HIST=JSON.parse(localStorage.getItem("bocaurna_hist")||"{}");}catch(e){}
+  // Pre-cargar Abril si no existe
+  if(!HIST[4]){HIST[4]=ABRIL_2026;try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){}}
 
-  // Cargar mes activo
+  // Cargar config
   try{
-    const cfg=JSON.parse(localStorage.getItem("carga_cfg")||"{}");
-    if(cfg.mes) { MES_ACT=Number(cfg.mes); document.getElementById("mes-sel").value=MES_ACT; }
-    if(cfg.obj)     document.getElementById("obj-prima").value=cfg.obj;
-    if(cfg.pol)     document.getElementById("obj-pol").value=cfg.pol;
-    if(cfg.diasPas) document.getElementById("dias-pas").value=cfg.diasPas;
-    if(cfg.diasTot) document.getElementById("dias-tot").value=cfg.diasTot;
+    const cfg=JSON.parse(localStorage.getItem("bocaurna_cfg")||"{}");
+    if(cfg.mes){MES_ACT=Number(cfg.mes);document.getElementById("mes-sel").value=MES_ACT;}
+    if(cfg.obj)       document.getElementById("cfg-obj").value=cfg.obj;
+    if(cfg.pol)       document.getElementById("cfg-pol").value=cfg.pol;
+    if(cfg.diasPas)   document.getElementById("cfg-dias-pas").value=cfg.diasPas;
+    if(cfg.diasTot)   document.getElementById("cfg-dias-tot").value=cfg.diasTot;
   }catch(e){}
 
-  // Cargar datos del mes activo
-  DATA = HISTORICO_CM[MES_ACT] || {};
+  DATA=HIST[MES_ACT]||{};
 
-  // Tabs canal
+  // Build canal tabs
   const tabsDiv=document.getElementById("canal-tabs");
   ["TODOS",...CANALES].forEach(c=>{
     const b=document.createElement("button");
     b.className="ctab"+(c==="TODOS"?" active":"");
-    b.textContent=c.replace("CANALES DIGITALES","C. Digital");
-    b.onclick=()=>setCanalSel(c);
+    b.textContent=c==="CANALES DIGITALES"?"C.Digital":c==="AMBA CENTRO"?"A.Centro":c==="AMBA METRO"?"A.Metro":c;
+    b.onclick=()=>{CANAL_SEL=c;document.querySelectorAll(".ctab").forEach(x=>x.classList.toggle("active",x===b));renderTabla();};
     tabsDiv.appendChild(b);
+  });
+
+  // Build linea tabs
+  const lTabsDiv=document.getElementById("linea-tabs");
+  ["TODOS",...CANALES].forEach(c=>{
+    const b=document.createElement("button");
+    b.className="ltab"+(c==="TODOS"?" active":"");
+    b.textContent=c==="CANALES DIGITALES"?"C.Dig":c==="AMBA CENTRO"?"A.Cen":c==="AMBA METRO"?"A.Met":c;
+    b.onclick=()=>{OBJ_CANAL=c;document.querySelectorAll(".ltab").forEach(x=>x.classList.toggle("active",x===b));renderLinea();};
+    lTabsDiv.appendChild(b);
   });
 
   recalcular();
   renderLinea();
-  actualizarUltimaGuarda();
 });
 
 // ════════════════════════════════════════════════════════════
-// RENDER
+// CAMBIAR MES
+// ════════════════════════════════════════════════════════════
+function cambiarMes(){
+  // Guardar mes actual
+  HIST[MES_ACT]={...DATA};
+  MES_ACT=Number(document.getElementById("mes-sel").value);
+  DATA=HIST[MES_ACT]||{};
+  guardarCfg();
+  document.getElementById("lbl-mes-tabla").textContent=MESES[MES_ACT]+" 2026";
+  document.getElementById("hero-ttl").textContent=`División VIDA — ${MESES[MES_ACT]} 2026`;
+  recalcular();
+  renderLinea();
+  toast(`📅 ${MESES[MES_ACT]} 2026`);
+}
+
+// ════════════════════════════════════════════════════════════
+// RECALCULAR + RENDER HERO + CANAL GRID
 // ════════════════════════════════════════════════════════════
 function recalcular(){
-  const objTotal  = Number(document.getElementById("obj-prima").value)||0;
-  const objPolTot = Number(document.getElementById("obj-pol").value)||0;
-  const diasPas   = Number(document.getElementById("dias-pas").value)||16;
-  const diasTot   = Number(document.getElementById("dias-tot").value)||21;
+  const objT=Number(document.getElementById("cfg-obj").value)||0;
+  const objPT=Number(document.getElementById("cfg-pol").value)||0;
+  const dp=Number(document.getElementById("cfg-dias-pas").value)||16;
+  const dt=Number(document.getElementById("cfg-dias-tot").value)||21;
 
-  // Totales
-  let tEmit=0,tPend=0,tPol=0;
+  let tE=0,tP=0,tPol=0,tObj=0,tOPol=0;
   ASESORES.forEach(a=>{
     const d=DATA[a.id]||{};
-    tEmit+=Number(d.emit||0);
-    tPend+=Number(d.pend||0);
-    tPol +=Number(d.pol ||0);
+    const o=getObj(a.id);
+    tE+=Number(d.e||0); tP+=Number(d.p||0); tPol+=Number(d.pol||0);
+    tObj+=o.prima; tOPol+=o.pol;
   });
-  const tProy=tEmit+tPend;
-  const pp=pct(tProy,objTotal), ppE=pct(tEmit,objTotal), ppP=pct(tPend,objTotal);
-  const s=sm(pp);
+
+  const tProy=tE+tP, pp=pct(tProy,objT||tObj), s=sm(pp);
+  const proyRitmo=proyS(tE,dp,dt)+tP;
 
   // Hero KPIs
-  const proyRitmo=proyS(tEmit,diasPas,diasTot)+tPend;
-  const proyRitmoSin=proyS(tEmit,diasPas,diasTot);
   document.getElementById("hero-kpis").innerHTML=[
-    {l:"Objetivo prima",   v:fmt(objTotal),    c:"rgba(255,255,255,.9)",sub:""},
-    {l:"Emitido",          v:fmt(tEmit),       c:"#86EFAC",             sub:`${ppE}% del obj.`},
-    {l:"Pend. de emisión", v:fmt(tPend),       c:"#FCD34D",             sub:`${ppP}% del obj.`},
-    {l:"Proyectado total", v:fmt(proyRitmo),   c:s.c,                   sub:`${pct(proyRitmo,objTotal)}% — ${s.txt}`},
-    {l:"Pólizas",          v:`${tPol}/${objPolTot}`, c:"#38BDF8",       sub:`${pct(tPol,objPolTot)}% del obj.`},
+    {l:"Objetivo Total",v:fmt(objT||tObj),c:"rgba(255,255,255,.9)",sub:""},
+    {l:"Prima Emitida",v:fmt(tE),c:"#86EFAC",sub:`${pct(tE,objT||tObj)}% del obj.`},
+    {l:"Pend. de Emisión",v:fmt(tP),c:"#FCD34D",sub:`${pct(tP,objT||tObj)}% del obj.`},
+    {l:"Proy. con Pend.",v:fmt(tProy),c:s.c,sub:`${pp}% — ${s.txt}`},
+    {l:"Proy. al Fin de Mes",v:fmt(proyRitmo),c:sm(pct(proyRitmo,objT||tObj)).c,sub:`Ritmo actual extrapolado`},
+    {l:"Pólizas",v:`${tPol}/${objPT||tOPol}`,c:"#38BDF8",sub:`${pct(tPol,objPT||tOPol)}% del obj.`},
   ].map(x=>`<div class="hk">
     <div class="hk-v" style="color:${x.c}">${x.v}</div>
     <div class="hk-l">${x.l}</div>
-    <div class="hk-sub" style="color:${x.c}">${x.sub}</div>
+    ${x.sub?`<div class="hk-sub" style="color:${x.c}">${x.sub}</div>`:""}
   </div>`).join("");
 
   // Barra
-  const pE=clamp(ppE,0,100), pP=clamp(ppP,0,Math.max(0,100-pE));
-  document.getElementById("b-emit").style.width=pE+"%";
-  document.getElementById("b-pend").style.width=pP+"%";
-  document.getElementById("b-emit-txt").textContent=pE>8?fmt(tEmit):"";
-  document.getElementById("b-pend-txt").textContent=pP>6?fmt(tPend):"";
-  document.getElementById("hero-pct").textContent=pp+"% "+s.txt;
-  document.getElementById("hero-pct").style.color=s.c;
-  document.getElementById("l-emit").textContent=fmt(tEmit);
-  document.getElementById("l-pend").textContent=fmt(tPend);
-  document.getElementById("l-brecha").textContent=fmt(Math.max(0,objTotal-tProy));
-  document.getElementById("l-obj").textContent=fmt(objTotal);
+  const pE=clamp(pct(tE,objT||tObj),0,100), pP=clamp(pct(tP,objT||tObj),0,Math.max(0,100-pE));
+  document.getElementById("b-e").style.width=pE+"%";
+  document.getElementById("b-p").style.width=pP+"%";
+  document.getElementById("b-e-txt").textContent=pE>8?fmt(tE):"";
+  document.getElementById("b-p-txt").textContent=pP>6?fmt(tP):"";
+  document.getElementById("l-e").textContent=fmt(tE);
+  document.getElementById("l-p").textContent=fmt(tP);
+  document.getElementById("l-br").textContent=fmt(Math.max(0,(objT||tObj)-tProy));
+  document.getElementById("l-o").textContent=fmt(objT||tObj);
 
-  // Resumen por canal
-  document.getElementById("canal-resumen").innerHTML=CANALES.map(c=>{
+  // Canal grid
+  document.getElementById("canal-grid").innerHTML=CANALES.map(c=>{
     const aa=ASESORES.filter(a=>a.c===c);
-    const cObj=aa.reduce((s,a)=>s+a.obj,0);
-    const cE  =aa.reduce((s,a)=>s+Number((DATA[a.id]||{}).emit||0),0);
-    const cP  =aa.reduce((s,a)=>s+Number((DATA[a.id]||{}).pend||0),0);
-    const cPol=aa.reduce((s,a)=>s+Number((DATA[a.id]||{}).pol ||0),0);
-    const cPPct=pct(cE+cP,cObj), cSm=sm(cPPct);
-    const pCE=clamp(pct(cE,cObj),0,100), pCP=clamp(pct(cP,cObj),0,Math.max(0,100-pCE));
-    const enCero=aa.filter(a=>!(DATA[a.id]||{}).emit&&!(DATA[a.id]||{}).pend).length;
-    // Participación en el total del equipo
-    const partTotal=tEmit>0?pct(cE,tEmit):0;
-    return `<div class="cr" style="background:${cSm.bg};border-color:${cSm.c}40">
-      <div class="cr-nombre" style="color:${cSm.c}">${c.replace("CANALES DIGITALES","C.Digital")}</div>
-      <div class="cr-pct" style="color:${cSm.c}">${cPPct}%</div>
-      <div class="cr-bar">
+    const cO=aa.reduce((s,a)=>s+getObj(a.id).prima,0);
+    const cE=aa.reduce((s,a)=>s+Number((DATA[a.id]||{}).e||0),0);
+    const cP=aa.reduce((s,a)=>s+Number((DATA[a.id]||{}).p||0),0);
+    const cPol=aa.reduce((s,a)=>s+Number((DATA[a.id]||{}).pol||0),0);
+    const cOPol=aa.reduce((s,a)=>s+getObj(a.id).pol,0);
+    const cPPct=pct(cE+cP,cO), cSm=sm(cPPct);
+    const pCE=clamp(pct(cE,cO),0,100), pCP=clamp(pct(cP,cO),0,Math.max(0,100-pCE));
+    const partTotal=tE>0?pct(cE,tE):0;
+    const enCero=aa.filter(a=>!Number((DATA[a.id]||{}).e)&&!Number((DATA[a.id]||{}).p)).length;
+    return `<div class="cz" style="background:${cSm.bg};border-color:${cSm.c}40;cursor:pointer"
+      onclick="CANAL_SEL='${c}';document.querySelectorAll('.ctab').forEach(b=>b.classList.toggle('active',b.textContent.includes('${c.slice(0,5)}')));renderTabla()">
+      <div class="cz-name" style="color:${cSm.c}">${c.replace("CANALES DIGITALES","C.Digital")}</div>
+      <div class="cz-pct" style="color:${cSm.c}">${cPPct}%</div>
+      <div class="cz-bar">
         <div style="width:${pCE}%;height:100%;background:#16A34A"></div>
         <div style="width:${pCP}%;height:100%;background:#CA8A04"></div>
       </div>
-      <div class="cr-stats">
+      <div class="cz-det">
         ${fmt(cE)} emit · ${fmt(cP)} pend<br>
-        ${cPol} pólizas · ${enCero} en cero<br>
-        <span style="font-weight:700;color:${cSm.c}">Particip: ${partTotal}% del total</span>
+        ${cPol}/${cOPol} pólizas · ${enCero} en cero<br>
+        <b style="color:${cSm.c}">Part. equipo: ${partTotal}%</b>
       </div>
     </div>`;
   }).join("");
 
-  // Tabla
-  renderTabla(diasPas,diasTot);
+  renderTabla();
 }
 
-function renderTabla(diasPas,diasTot){
+// ════════════════════════════════════════════════════════════
+// TABLA CARGA
+// ════════════════════════════════════════════════════════════
+function renderTabla(){
+  const dp=Number(document.getElementById("cfg-dias-pas").value)||16;
+  const dt=Number(document.getElementById("cfg-dias-tot").value)||21;
   const filtrados=CANAL_SEL==="TODOS"?ASESORES:ASESORES.filter(a=>a.c===CANAL_SEL);
-  const objTotal=Number(document.getElementById("obj-prima").value)||1;
 
-  // Participación por canal para cada asesor
-  const emitPorCanal={};
-  CANALES.forEach(c=>{
-    emitPorCanal[c]=ASESORES.filter(a=>a.c===c).reduce((s,a)=>s+Number((DATA[a.id]||{}).emit||0),0);
-  });
+  // Emitido por canal para calcular participación
+  const emitCanal={};
+  CANALES.forEach(c=>{emitCanal[c]=ASESORES.filter(a=>a.c===c).reduce((s,a)=>s+Number((DATA[a.id]||{}).e||0),0);});
 
-  document.getElementById("tbody").innerHTML=filtrados.map((a,i)=>{
+  let tE=0,tP=0,tPol=0,tObj=0,tOPol=0;
+
+  document.getElementById("tbody-carga").innerHTML=filtrados.map((a,i)=>{
     const d=DATA[a.id]||{};
-    const emit=Number(d.emit||0), pend=Number(d.pend||0), pol=Number(d.pol||0);
-    const proy=emit+pend;
-    const proyRitmo=proyS(emit,diasPas,diasTot)+pend;
-    const alcPct=pct(proy,a.obj);
-    const alcSm=sm(alcPct);
-    const brecha=Math.max(0,a.obj-proy);
-    // Participación en su canal
-    const partCanal=emitPorCanal[a.c]>0?pct(emit,emitPorCanal[a.c]):0;
-    // Participación en total equipo
-    const tEmitTotal=ASESORES.reduce((s,x)=>s+Number((DATA[x.id]||{}).emit||0),0);
-    const partTotal=tEmitTotal>0?pct(emit,tEmitTotal):0;
-    const bg=emit===0&&pend===0?"#FFF1F2":alcPct>=100?"#F0FDF4":i%2===0?"#fff":"#F8FAFC";
+    const e=Number(d.e||0), p=Number(d.p||0), pol=Number(d.pol||0);
+    const o=getObj(a.id);
+    tE+=e; tP+=p; tPol+=pol; tObj+=o.prima; tOPol+=o.pol;
 
-    return `<tr style="background:${bg}" id="row-${a.id}">
+    const proy=e+p;
+    const proyR=proyS(e,dp,dt)+p;
+    const alc=pct(proy,o.prima), ss=sm(alc);
+    const brecha=Math.max(0,o.prima-proy);
+    const partCanal=emitCanal[a.c]>0?pct(e,emitCanal[a.c]):0;
+    const rowCls=e===0&&p===0?"cero":alc>=100?"sobre":"";
+
+    return `<tr class="${rowCls}" id="tr-${a.id}">
       <td>
-        <div class="td-nombre">${a.n}</div>
-        <div class="td-zona">${a.z}</div>
+        <div style="font-weight:700;color:var(--navy);font-size:12px">${a.n}</div>
+        <div style="font-size:10px;color:var(--g400)">${a.z}</div>
       </td>
       <td style="font-size:10px;color:var(--g600)">${a.c.replace("CANALES DIGITALES","C.Dig")}</td>
       <td style="font-size:10px;color:var(--g600)">${a.z}</td>
-      <td><span class="tag" style="color:${ANT_COLS[a.a]};background:${ANT_BGS[a.a]}">${a.a}</span></td>
-      <td style="color:var(--g400);font-size:11px">${fmt(a.obj)}</td>
+      <td><span class="tag" style="color:${ANT_C[a.a]};background:${ANT_B[a.a]}">${a.a}</span></td>
       <td>
-        <input class="inp-num ${emit>0?'has-value':''}" type="number" min="0" placeholder="0"
-          value="${emit||''}" id="emit-${a.id}"
-          oninput="setVal('${a.id}','emit',this.value)"
-          onfocus="this.select()"
-          style="max-width:110px">
+        <input class="inp-obj ${o.prima!==a.objPrima?"modificado":""}" type="number"
+          value="${o.prima}" id="obj-${a.id}"
+          onchange="setObjPrima('${a.id}',this.value)"
+          onfocus="this.select()" title="Objetivo prima individual — editá para personalizar">
       </td>
       <td>
-        <input class="inp-num ${pend>0?'has-pend':''}" type="number" min="0" placeholder="0"
-          value="${pend||''}" id="pend-${a.id}"
-          oninput="setVal('${a.id}','pend',this.value)"
-          onfocus="this.select()"
-          style="max-width:110px">
+        <input class="inp-obj inp-pol" type="number"
+          value="${o.pol}" id="objpol-${a.id}"
+          onchange="setObjPol('${a.id}',this.value)"
+          onfocus="this.select()" style="width:50px" title="Objetivo pólizas individual">
       </td>
       <td>
-        <input class="inp-num" type="number" min="0" placeholder="0"
-          value="${pol||''}" id="pol-${a.id}"
-          oninput="setVal('${a.id}','pol',this.value)"
-          onfocus="this.select()"
-          style="max-width:60px">
+        <input class="inp-emit ${e>0?"filled":""}" type="number" min="0" placeholder="0"
+          value="${e||""}" id="e-${a.id}"
+          oninput="setDato('${a.id}','e',this.value)"
+          onfocus="this.select()">
       </td>
       <td>
-        <div class="alcance-pct" style="color:${alcSm.c}">${alcPct}%</div>
-        <div class="sm-bar"><div class="sm-bar-f" style="width:${clamp(alcPct,0,100)}%;background:${alcSm.c}"></div></div>
-        <div style="font-size:9px;color:${alcSm.c}">${alcSm.txt}</div>
+        <input class="inp-pend ${p>0?"filled":""}" type="number" min="0" placeholder="0"
+          value="${p||""}" id="p-${a.id}"
+          oninput="setDato('${a.id}','p',this.value)"
+          onfocus="this.select()">
       </td>
       <td>
-        <div style="font-size:12px;font-weight:700;color:var(--navy)">${fmt(proyRitmo)}</div>
-        <div style="font-size:10px;color:var(--g400)">${pct(proyRitmo,a.obj)}% del obj.</div>
-        ${!emit&&!pend?'<div style="font-size:9px;color:var(--red);font-weight:700">⚠ Sin datos</div>':''}
+        <input class="inp-pol" type="number" min="0" placeholder="0"
+          value="${pol||""}" id="pol-${a.id}"
+          oninput="setDato('${a.id}','pol',this.value)"
+          onfocus="this.select()" style="width:55px">
       </td>
       <td>
-        <div style="font-size:12px;font-weight:700;color:${brecha>0?'var(--red)':'var(--green)'}">
-          ${brecha>0?`-${fmt(brecha)}`:"✅"}
+        <div class="sm-wrap">
+          <div class="sm-bar"><div class="sm-fill" style="width:${clamp(alc,0,100)}%;background:${ss.c}"></div></div>
+          <span class="sm-pct" style="color:${ss.c}">${alc}%</span>
         </div>
-        ${emit>0||pend>0?`<div style="font-size:9px;color:var(--g400)">Part: ${partCanal}% canal · ${partTotal}% equipo</div>`:''}
+        <div style="font-size:9px;color:${ss.c}">${ss.txt}</div>
+      </td>
+      <td style="text-align:right">
+        <div style="font-size:12px;font-weight:700;color:var(--navy)">${fmt(proyR)}</div>
+        <div style="font-size:9px;color:var(--g400)">${pct(proyR,o.prima)}% obj.</div>
+      </td>
+      <td style="text-align:right">
+        <div style="font-size:12px;font-weight:700;color:${brecha>0?"var(--red)":"var(--green)"}">
+          ${brecha>0?`-${fmt(brecha)}`:"✅ Logrado"}
+        </div>
+      </td>
+      <td style="text-align:center">
+        ${e>0?`<div style="font-size:11px;font-weight:700;color:var(--sky)">${partCanal}%</div>
+          <div style="font-size:9px;color:var(--g400)">de su canal</div>`:"—"}
       </td>
     </tr>`;
   }).join("");
+
+  // Totales footer
+  const tProy=tE+tP, tProyR=proyS(tE,dp,dt)+tP;
+  const tAlc=pct(tProy,tObj), ts=sm(tAlc);
+  document.getElementById("tf-obj").textContent=fmt(tObj);
+  document.getElementById("tf-obj-pol").textContent=tOPol;
+  document.getElementById("tf-emit").textContent=fmt(tE);
+  document.getElementById("tf-pend").textContent=tP>0?fmt(tP):"—";
+  document.getElementById("tf-pol").textContent=tPol;
+  document.getElementById("tf-alc").innerHTML=`<span style="color:${ts.c}">${tAlc}%</span>`;
+  document.getElementById("tf-proy").textContent=fmt(tProyR);
+  document.getElementById("tf-brecha").textContent=`-${fmt(Math.max(0,tObj-tProy))}`;
 }
 
 // ════════════════════════════════════════════════════════════
-// ACCIONES
+// SETTERS
 // ════════════════════════════════════════════════════════════
-// ════════════════════════════════════════════════════════════
-// GESTIÓN DE MESES
-// ════════════════════════════════════════════════════════════
-function cambiarMes(){
-  const nuevoMes=Number(document.getElementById("mes-sel").value);
-  // Guardar mes actual antes de cambiar
-  HISTORICO_CM[MES_ACT]={...DATA};
-  try{localStorage.setItem("crm_hist_manual",JSON.stringify(HISTORICO_CM));}catch(e){}
-  // Cambiar al nuevo mes
-  MES_ACT=nuevoMes;
-  DATA=HISTORICO_CM[MES_ACT]||{};
-  // Recargar tabla con datos del nuevo mes
-  const diasPas=Number(document.getElementById("dias-pas").value)||16;
-  const diasTot=Number(document.getElementById("dias-tot").value)||21;
-  renderTabla(diasPas,diasTot);
+function setDato(id,campo,val){
+  if(!DATA[id])DATA[id]={};
+  DATA[id][campo]=Number(val)||0;
+  const inp=document.getElementById(`${campo}-${id}`);
+  if(inp&&campo==="e") inp.className="inp-emit "+(DATA[id].e>0?"filled":"");
+  if(inp&&campo==="p") inp.className="inp-pend "+(DATA[id].p>0?"filled":"");
   recalcular();
-  renderLinea();
-  toast(`📅 Cambiado a ${MESES_N[MES_ACT]} 2026`);
+  autoGuardar();
+}
+
+function setObjPrima(id,val){
+  if(!DATA[id])DATA[id]={};
+  DATA[id].objPrima=Number(val)||0;
+  const inp=document.getElementById("obj-"+id);
+  const base=ASESORES.find(a=>a.id===id)?.objPrima||450000;
+  if(inp) inp.className="inp-obj "+(DATA[id].objPrima!==base?"modificado":"");
+  recalcular();
+  autoGuardar();
+}
+
+function setObjPol(id,val){
+  if(!DATA[id])DATA[id]={};
+  DATA[id].objPol=Number(val)||0;
+  recalcular();
+  autoGuardar();
 }
 
 // ════════════════════════════════════════════════════════════
 // LÍNEA DE TIEMPO
 // ════════════════════════════════════════════════════════════
 function renderLinea(){
-  const mesesConDatos=Object.keys(HISTORICO_CM)
-    .map(Number)
-    .filter(m=>Object.values(HISTORICO_CM[m]||{}).some(d=>d.emit||d.pol))
-    .sort((a,b)=>a-b);
-
+  const meses=Object.keys(HIST).map(Number).filter(m=>{
+    const d=HIST[m]||{};
+    return Object.values(d).some(x=>Number(x.e||0)>0||Number(x.pol||0)>0);
+  }).sort((a,b)=>a-b);
   // Incluir mes actual si tiene datos
-  const mesActTotEmit=Object.values(DATA||{}).reduce((s,d)=>s+Number(d.emit||0),0);
-  if(mesActTotEmit>0&&!mesesConDatos.includes(MES_ACT)) mesesConDatos.push(MES_ACT);
-  mesesConDatos.sort((a,b)=>a-b);
+  const tActual=Object.values(DATA||{}).reduce((s,d)=>s+Number(d.e||0),0);
+  if(tActual>0&&!meses.includes(MES_ACT))meses.push(MES_ACT);
+  meses.sort((a,b)=>a-b);
 
-  // Calcular totales por mes
-  const serieEmit=mesesConDatos.map(m=>{
-    const d=m===MES_ACT?DATA:(HISTORICO_CM[m]||{});
-    return Object.values(d).reduce((s,x)=>s+Number(x.emit||0),0);
-  });
-  const seriePend=mesesConDatos.map(m=>{
-    const d=m===MES_ACT?DATA:(HISTORICO_CM[m]||{});
-    return Object.values(d).reduce((s,x)=>s+Number(x.pend||0),0);
-  });
-  const serieObj=mesesConDatos.map(()=>Number(document.getElementById("obj-prima").value)||0);
-  const seriePol=mesesConDatos.map(m=>{
-    const d=m===MES_ACT?DATA:(HISTORICO_CM[m]||{});
-    return Object.values(d).reduce((s,x)=>s+Number(x.pol||0),0);
-  });
+  // Actualizar headers tabla comparativa
+  const m2=meses[meses.length-3]||null;
+  const m1=meses[meses.length-2]||null;
+  const m0=meses[meses.length-1]||MES_ACT;
+  document.getElementById("col-m2").textContent=m2?MESES[m2]:"—";
+  document.getElementById("col-m1").textContent=m1?MESES[m1]:"—";
+  document.getElementById("col-m0").textContent=MESES[m0]+" (actual)";
 
-  if(mesesConDatos.length<2){
+  // Función para obtener emitido de un mes
+  const getE=(m,id)=>{
+    if(!m)return 0;
+    const d=m===MES_ACT?(DATA[id]||{}):(HIST[m]||{})[id]||{};
+    return Number(d.e||0);
+  };
+
+  if(meses.length<2){
     document.getElementById("linea-chart").innerHTML=
       `<div style="text-align:center;padding:24px;color:var(--g400);font-size:12px">
-        📊 Cargá datos de al menos 2 meses para ver la línea de evolución.<br>
-        <span style="font-size:10px">Cada mes que guardás queda registrado automáticamente.</span>
+        Cargá al menos 2 meses para ver la evolución. Abril 2026 ya está precargado.
       </div>`;
-    renderTablaComparativa(mesesConDatos);
+    renderComparativa(meses,m2,m1,m0,getE);
     return;
   }
 
-  const W=580,H=200,PAD={t:24,r:30,b:40,l:70};
-  const maxV=Math.max(...serieEmit,...seriePend.map((p,i)=>serieEmit[i]+p),...serieObj,1)*1.15;
-  const xStep=(W-PAD.l-PAD.r)/Math.max(mesesConDatos.length-1,1);
+  // Calcular series
+  const serie=meses.map(m=>{
+    const aa=OBJ_CANAL==="TODOS"?ASESORES:ASESORES.filter(a=>a.c===OBJ_CANAL);
+    const d=m===MES_ACT?DATA:(HIST[m]||{});
+    const e=aa.reduce((s,a)=>s+Number((d[a.id]||{}).e||0),0);
+    const p=aa.reduce((s,a)=>s+Number((d[a.id]||{}).p||0),0);
+    const pol=aa.reduce((s,a)=>s+Number((d[a.id]||{}).pol||0),0);
+    const objT=aa.reduce((s,a)=>s+getObj(a.id).prima,0);
+    return{m,e,p,pol,objT};
+  });
+
+  const W=600,H=200,PAD={t:28,r:30,b:38,l:72};
+  const allE=serie.map(s=>s.e), allEC=serie.map(s=>s.e+s.p), allO=serie.map(s=>s.objT);
+  const maxV=Math.max(...allE,...allEC,...allO,1)*1.15;
+  const xS=(W-PAD.l-PAD.r)/Math.max(serie.length-1,1);
   const yS=v=>H-PAD.b-(v/maxV)*(H-PAD.t-PAD.b);
-  const xP=i=>PAD.l+i*xStep;
+  const xP=i=>PAD.l+i*xS;
 
   let svg="";
-
-  // Grid horizontal
+  // Grid
   [0,.25,.5,.75,1].forEach(p=>{
     const y=yS(maxV*p);
     svg+=`<line x1="${PAD.l}" y1="${y}" x2="${W-PAD.r}" y2="${y}" stroke="#F1F5F9" stroke-width="1"/>`;
     svg+=`<text x="${PAD.l-6}" y="${y+4}" text-anchor="end" font-size="9" fill="#94A3B8">${fmt(maxV*p)}</text>`;
   });
-
   // Eje X
-  mesesConDatos.forEach((m,i)=>{
-    const isAct=m===MES_ACT;
-    svg+=`<text x="${xP(i)}" y="${H-8}" text-anchor="middle" font-size="10"
-      fill="${isAct?"var(--navy)":"#475569"}" font-weight="${isAct?700:400}">${MESES_N[m].slice(0,3)}</text>`;
-    if(isAct) svg+=`<line x1="${xP(i)}" y1="${PAD.t}" x2="${xP(i)}" y2="${H-PAD.b}" stroke="var(--sky)" stroke-width="1" stroke-dasharray="3 2"/>`;
+  serie.forEach((s,i)=>{
+    const isAct=s.m===MES_ACT;
+    if(isAct) svg+=`<line x1="${xP(i)}" y1="${PAD.t}" x2="${xP(i)}" y2="${H-PAD.b}" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+    svg+=`<text x="${xP(i)}" y="${H-6}" text-anchor="middle" font-size="10"
+      fill="${isAct?"#0B1F4B":"#475569"}" font-weight="${isAct?700:400}">${MESES[s.m].slice(0,3)}</text>`;
+    if(isAct) svg+=`<text x="${xP(i)}" y="${PAD.t-6}" text-anchor="middle" font-size="9" fill="#2563EB" font-weight="700">← actual</text>`;
   });
-
   // Área emitido
-  const areaEmit=`${xP(0)},${H-PAD.b} ${serieEmit.map((v,i)=>`${xP(i)},${yS(v)}`).join(" ")} ${xP(mesesConDatos.length-1)},${H-PAD.b}`;
-  svg+=`<polygon points="${areaEmit}" fill="#16A34A" opacity=".1"/>`;
-
+  const areaP=`${xP(0)},${H-PAD.b} ${allE.map((v,i)=>`${xP(i)},${yS(v)}`).join(" ")} ${xP(serie.length-1)},${H-PAD.b}`;
+  svg+=`<polygon points="${areaP}" fill="#16A34A" opacity=".08"/>`;
   // Línea objetivo
-  const objPts=serieObj.map((v,i)=>`${xP(i)},${yS(v)}`).join(" ");
-  svg+=`<polyline points="${objPts}" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5 4"/>`;
-
-  // Línea emitido+pendiente (proyectado)
-  const proyPts=serieEmit.map((v,i)=>`${xP(i)},${yS(v+seriePend[i])}`).join(" ");
-  svg+=`<polyline points="${proyPts}" fill="none" stroke="#CA8A04" stroke-width="2" stroke-dasharray="4 3" stroke-linejoin="round"/>`;
-
+  const objPts=serie.map((s,i)=>`${xP(i)},${yS(s.objT)}`).join(" ");
+  svg+=`<polyline points="${objPts}" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+  // Línea con pendientes
+  const conPPts=allEC.map((v,i)=>`${xP(i)},${yS(v)}`).join(" ");
+  svg+=`<polyline points="${conPPts}" fill="none" stroke="#CA8A04" stroke-width="2" stroke-dasharray="5 3" stroke-linejoin="round"/>`;
   // Línea emitido
-  const emitPts=serieEmit.map((v,i)=>`${xP(i)},${yS(v)}`).join(" ");
-  svg+=`<polyline points="${emitPts}" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linejoin="round"/>`;
-
-  // Puntos y valores
-  serieEmit.forEach((v,i)=>{
-    const isAct=mesesConDatos[i]===MES_ACT;
-    svg+=`<circle cx="${xP(i)}" cy="${yS(v)}" r="${isAct?6:4}" fill="#16A34A" stroke="white" stroke-width="2"/>`;
-    svg+=`<text x="${xP(i)}" y="${yS(v)-10}" text-anchor="middle" font-size="9" font-weight="700" fill="#16A34A">${fmt(v)}</text>`;
-    if(seriePend[i]>0){
-      svg+=`<circle cx="${xP(i)}" cy="${yS(v+seriePend[i])}" r="3" fill="#CA8A04" stroke="white" stroke-width="1.5"/>`;
+  const ePts=allE.map((v,i)=>`${xP(i)},${yS(v)}`).join(" ");
+  svg+=`<polyline points="${ePts}" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linejoin="round"/>`;
+  // Puntos
+  allE.forEach((v,i)=>{
+    const isAct=serie[i].m===MES_ACT;
+    const ss=sm(pct(v+serie[i].p,serie[i].objT));
+    svg+=`<circle cx="${xP(i)}" cy="${yS(v)}" r="${isAct?6:4}" fill="${ss.c}" stroke="white" stroke-width="2"/>`;
+    svg+=`<text x="${xP(i)}" y="${yS(v)-11}" text-anchor="middle" font-size="9" font-weight="700" fill="${ss.c}">${fmt(v)}</text>`;
+    if(serie[i].p>0){
+      svg+=`<circle cx="${xP(i)}" cy="${yS(v+serie[i].p)}" r="3" fill="#CA8A04" stroke="white" stroke-width="1.5"/>`;
     }
   });
-
   // Leyenda
-  const leyItems=[
-    {c:"#16A34A",dash:"",lbl:"Prima emitida"},
-    {c:"#CA8A04",dash:"4 3",lbl:"Con pendientes"},
-    {c:"#94A3B8",dash:"5 4",lbl:"Objetivo"},
-  ];
-  leyItems.forEach((l,i)=>{
-    svg+=`<line x1="${PAD.l+i*110}" y1="10" x2="${PAD.l+i*110+20}" y2="10" stroke="${l.c}" stroke-width="2" stroke-dasharray="${l.dash}"/>`;
-    svg+=`<text x="${PAD.l+i*110+24}" y="14" font-size="9" fill="#475569">${l.lbl}</text>`;
+  [[`#16A34A`,"","Prima emitida"],[`#CA8A04`,"5 3","Con pendientes"],[`#94A3B8`,"6 4","Objetivo"]].forEach(([c,d,l],i)=>{
+    svg+=`<line x1="${PAD.l+i*130}" y1="14" x2="${PAD.l+i*130+18}" y2="14" stroke="${c}" stroke-width="2" stroke-dasharray="${d}"/>`;
+    svg+=`<text x="${PAD.l+i*130+22}" y="18" font-size="9" fill="#475569">${l}</text>`;
   });
 
-  document.getElementById("linea-chart").innerHTML=
-    `<svg width="100%" viewBox="0 0 ${W} ${H}" style="max-width:${W}px">${svg}</svg>`;
-
-  // Badges de mes
-  document.getElementById("mes-badges").innerHTML=mesesConDatos.map(m=>`
-    <span class="mes-badge ${m===MES_ACT?"activo":""}"
-      style="color:${m===MES_ACT?"var(--navy)":"var(--g400)"};background:${m===MES_ACT?"var(--g100)":"transparent"};border-color:${m===MES_ACT?"var(--navy)":"transparent"}">
-      ${MESES_N[m]}
-    </span>`).join("");
-
-  renderTablaComparativa(mesesConDatos);
+  document.getElementById("linea-chart").innerHTML=`<svg width="100%" viewBox="0 0 ${W} ${H}">${svg}</svg>`;
+  renderComparativa(meses,m2,m1,m0,getE);
 }
 
-function renderTablaComparativa(meses){
+function renderComparativa(meses,m2,m1,m0,getE){
   if(meses.length<2){
-    document.getElementById("hist-tbody").innerHTML=
-      `<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--g400);font-size:11px">Cargá al menos 2 meses para ver la comparación</td></tr>`;
+    document.getElementById("comp-tbody").innerHTML=
+      `<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--g400);font-size:11px">Cargá al menos 2 meses</td></tr>`;
     return;
   }
-  const m1=meses[meses.length-3]||null; // 2 meses atrás
-  const m2=meses[meses.length-2];       // mes anterior
-  const m3=meses[meses.length-1];       // mes actual (o más reciente)
-
-  // Headers
-  document.getElementById("col-mes-ant2").textContent=m1?MESES_N[m1]:"—";
-  document.getElementById("col-mes-ant1").textContent=MESES_N[m2];
-  document.getElementById("col-mes-act").textContent=MESES_N[m3]+" (actual)";
-
-  const getEmit=(m,id)=>{
-    if(!m) return 0;
-    const d=m===MES_ACT?DATA:(HISTORICO_CM[m]||{});
-    return Number((d[id]||{}).emit||0);
-  };
-
-  // Filtrar solo asesores con algún dato en los últimos meses
   const filas=ASESORES.map(a=>{
-    const e1=getEmit(m1,a.id), e2=getEmit(m2,a.id), e3=getEmit(m3,a.id);
-    if(!e1&&!e2&&!e3) return null;
-    const var1=e2>0&&e1>0?Math.round((e2-e1)/e1*100):null;
-    const var2=e3>0&&e2>0?Math.round((e3-e2)/e2*100):null;
-    const tendencia=var2===null?"—":var2>0?`▲ +${var2}%`:var2<0?`▼ ${var2}%`:"= 0%";
-    const tendCls=var2===null?"comp-igual":var2>0?"comp-mejor":var2<0?"comp-peor":"comp-igual";
-    return {a,e1,e2,e3,tendencia,tendCls};
-  }).filter(Boolean).sort((a,b)=>b.e3-a.e3);
+    const e2=getE(m2,a.id), e1=getE(m1,a.id), e0=getE(m0,a.id);
+    if(!e2&&!e1&&!e0)return null;
+    const varia=e1>0&&e0>0?Math.round((e0-e1)/e1*100):null;
+    return{a,e2,e1,e0,varia};
+  }).filter(Boolean).sort((a,b)=>b.e0-a.e0);
 
-  if(!filas.length){
-    document.getElementById("hist-tbody").innerHTML=
-      `<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--g400);font-size:11px">Sin datos de producción todavía</td></tr>`;
-    return;
-  }
+  // Totales
+  const t2=filas.reduce((s,f)=>s+f.e2,0);
+  const t1=filas.reduce((s,f)=>s+f.e1,0);
+  const t0=filas.reduce((s,f)=>s+f.e0,0);
+  const tVar=t1>0&&t0>0?Math.round((t0-t1)/t1*100):null;
 
-  // Fila de totales
-  const tot1=filas.reduce((s,f)=>s+f.e1,0);
-  const tot2=filas.reduce((s,f)=>s+f.e2,0);
-  const tot3=filas.reduce((s,f)=>s+f.e3,0);
-  const varT=tot2>0&&tot3>0?Math.round((tot3-tot2)/tot2*100):null;
-
-  document.getElementById("hist-tbody").innerHTML=
-    // Fila totales sticky
-    `<tr style="background:var(--navy);font-weight:700;">
-      <td style="color:#fff;font-weight:800;padding:8px 10px">TOTAL EQUIPO</td>
-      <td style="color:#94A3B8"></td>
-      <td style="color:rgba(255,255,255,.7)">${tot1>0?fmt(tot1):"—"}</td>
-      <td style="color:rgba(255,255,255,.7)">${tot2>0?fmt(tot2):"—"}</td>
-      <td style="color:#86EFAC">${tot3>0?fmt(tot3):"—"}</td>
-      <td style="color:${varT===null?"#94A3B8":varT>=0?"#86EFAC":"#FCA5A5"};font-weight:800">
-        ${varT===null?"—":varT>=0?`▲ +${varT}%`:`▼ ${varT}%`}
+  document.getElementById("comp-tbody").innerHTML=
+    `<tr style="background:var(--navy)">
+      <td style="padding:8px 10px;font-weight:800;color:#fff;font-size:12px">TOTAL EQUIPO</td>
+      <td></td>
+      <td style="padding:8px;color:rgba(255,255,255,.7);font-weight:700">${t2>0?fmt(t2):"—"}</td>
+      <td style="padding:8px;color:rgba(255,255,255,.7);font-weight:700">${t1>0?fmt(t1):"—"}</td>
+      <td style="padding:8px;color:#86EFAC;font-size:13px;font-weight:900">${t0>0?fmt(t0):"—"}</td>
+      <td style="padding:8px;font-weight:800;color:${tVar===null?"#94A3B8":tVar>=0?"#86EFAC":"#FCA5A5"}">
+        ${tVar===null?"—":tVar>=0?`▲ +${tVar}%`:`▼ ${tVar}%`}
       </td>
     </tr>`+
     filas.map((f,i)=>{
-      const bg=i%2===0?"#fff":"#F8FAFC";
-      return `<tr style="background:${bg}">
-        <td style="font-weight:700;color:var(--navy);font-size:11px">${f.a.n.split(",")[0]}</td>
-        <td style="font-size:10px;color:var(--g400)">${f.a.c.replace("CANALES DIGITALES","C.Dig")}</td>
-        <td style="color:var(--g600)">${f.e1>0?fmt(f.e1):"—"}</td>
-        <td style="color:var(--g600)">${f.e2>0?fmt(f.e2):"—"}</td>
-        <td style="font-weight:700;color:var(--green)">${f.e3>0?fmt(f.e3):"—"}</td>
-        <td class="${f.tendCls}">${f.tendencia}</td>
+      const vC=f.varia===null?"var-eq":f.varia>0?"var-up":"var-dn";
+      const vT=f.varia===null?"—":f.varia>=0?`▲ +${f.varia}%`:`▼ ${f.varia}%`;
+      return `<tr style="background:${i%2?"#F8FAFC":"#fff"}">
+        <td style="font-weight:700;color:var(--navy);padding:6px 10px;font-size:11px">${f.a.n.split(",")[0]}</td>
+        <td style="font-size:10px;color:var(--g400);padding:6px 8px">${f.a.c.replace("CANALES DIGITALES","C.Dig")}</td>
+        <td style="padding:6px 8px;color:var(--g600)">${f.e2>0?fmt(f.e2):"—"}</td>
+        <td style="padding:6px 8px;color:var(--g600)">${f.e1>0?fmt(f.e1):"—"}</td>
+        <td style="padding:6px 8px;font-weight:700;color:var(--green)">${f.e0>0?fmt(f.e0):"—"}</td>
+        <td style="padding:6px 8px" class="${vC}">${vT}</td>
       </tr>`;
     }).join("");
 }
 
-function setVal(id,campo,val){
-  if(!DATA[id]) DATA[id]={};
-  DATA[id][campo]=Number(val)||0;
-  // Update input style
-  const inp=document.getElementById(`${campo}-${id}`);
-  if(inp){
-    if(campo==="emit") inp.className="inp-num "+(DATA[id][campo]>0?"has-value":"");
-    if(campo==="pend") inp.className="inp-num "+(DATA[id][campo]>0?"has-pend":"");
-  }
-  recalcular();
-  autoguardar();
+// ════════════════════════════════════════════════════════════
+// SUBIR EXCEL
+// ════════════════════════════════════════════════════════════
+function subirExcel(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const wb=XLSX.read(ev.target.result,{type:"binary"});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws,{defval:"",raw:true});
+    let cargados=0;
+    rows.forEach(r=>{
+      // Detectar nombre del asesor en cualquier columna que diga "asesor" o sea la primera columna con nombre
+      const nombre=String(r.ASESOR||r.Asesor||r.asesor||r["ASESOR\n"]||Object.values(r)[2]||"").trim();
+      if(!nombre||nombre.length<3)return;
+      // Buscar asesor por nombre normalizado
+      const a=ASESORES.find(x=>{
+        const an=norm(x.n), rn=norm(nombre);
+        return an.includes(rn.split(" ")[0])||rn.includes(an.split(",")[0]);
+      });
+      if(!a)return;
+      // Detectar columnas de producción — buscar la más parecida al formato del Excel
+      const emit=Number(
+        r["PROD. MES $\n(última sem.)"]||r["PROD. MES $"]||r["Producción $ acum."]||
+        r["PRODUCCION"]||r["Produccion"]||r["Prima emitida"]||r["Emitido"]||0
+      )||0;
+      const pol=Number(
+        r["TOTAL MES\n(última sem.)"]||r["TOTAL MES"]||r["Pólizas acum."]||
+        r["POLIZAS"]||r["Polizas"]||r["Pólizas"]||0
+      )||0;
+      const pend=Number(
+        r["PENDIENTE EMISION"]||r["Pendiente emisión"]||r["Pend. Emisión"]||
+        r["Pendiente"]||r["pendiente"]||0
+      )||0;
+      if(!DATA[a.id])DATA[a.id]={};
+      DATA[a.id].e=emit;
+      DATA[a.id].p=pend;
+      DATA[a.id].pol=pol;
+      cargados++;
+    });
+    if(cargados>0){
+      guardarTodo(true);
+      recalcular();
+      renderLinea();
+      toast(`✅ ${cargados} asesores cargados desde Excel`);
+    } else {
+      toast("⚠ No se encontraron datos. Revisá el formato del archivo.");
+    }
+  };
+  reader.readAsBinaryString(file);
+  input.value="";
 }
 
-function setCanalSel(c){
-  CANAL_SEL=c;
-  document.querySelectorAll(".ctab").forEach(b=>{
-    b.classList.toggle("active",b.textContent.replace("C. Digital","CANALES DIGITALES")===c||
-      (c==="TODOS"&&b.textContent==="TODOS"));
-  });
-  const diasPas=Number(document.getElementById("dias-pas").value)||16;
-  const diasTot=Number(document.getElementById("dias-tot").value)||21;
-  renderTabla(diasPas,diasTot);
+function onDrop(ev){
+  ev.preventDefault();
+  document.getElementById("upload-zone").classList.remove("drag");
+  const file=ev.dataTransfer.files[0];
+  if(!file)return;
+  const fakeInput={files:[file]};
+  subirExcel(fakeInput);
 }
 
-let autoguardTimer=null;
-function autoguardar(){
-  clearTimeout(autoguardTimer);
-  autoguardTimer=setTimeout(()=>{
-    guardarTodo(true);
-  },1500);
+// ════════════════════════════════════════════════════════════
+// GUARDAR
+// ════════════════════════════════════════════════════════════
+function autoGuardar(){
+  clearTimeout(autoTimer);
+  autoTimer=setTimeout(()=>guardarTodo(true),1500);
 }
 
 function guardarTodo(silencioso=false){
-  // Guardar datos del mes actual en el histórico
-  HISTORICO_CM[MES_ACT]={...DATA};
-  try{localStorage.setItem("crm_hist_manual",JSON.stringify(HISTORICO_CM));}catch(e){}
-  try{localStorage.setItem("carga_manual_mayo26",JSON.stringify(DATA));}catch(e){}
-  // Guardar config con mes activo
-  try{localStorage.setItem("carga_cfg",JSON.stringify({
-    mes:  MES_ACT,
-    obj:  document.getElementById("obj-prima").value,
-    pol:  document.getElementById("obj-pol").value,
-    diasPas:document.getElementById("dias-pas").value,
-    diasTot:document.getElementById("dias-tot").value,
+  HIST[MES_ACT]={...DATA};
+  try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){}
+  // Sincronizar con panel-gerencia
+  const ventasGerencia={};
+  ASESORES.forEach(a=>{
+    const d=DATA[a.id]||{};
+    if(d.e||d.p||d.pol) ventasGerencia[a.id]={e:Number(d.e||0),p:Number(d.p||0),pol:Number(d.pol||0)};
+  });
+  try{localStorage.setItem("crm_ventas",JSON.stringify(ventasGerencia));}catch(e){}
+  guardarCfg();
+  if(!silencioso)toast("💾 Guardado");
+  document.getElementById("lbl-guardado").textContent=
+    `Guardado ${new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}`;
+}
+
+function guardarCfg(){
+  try{localStorage.setItem("bocaurna_cfg",JSON.stringify({
+    mes:MES_ACT,
+    obj:document.getElementById("cfg-obj").value,
+    pol:document.getElementById("cfg-pol").value,
+    diasPas:document.getElementById("cfg-dias-pas").value,
+    diasTot:document.getElementById("cfg-dias-tot").value,
   }));}catch(e){}
-  // Actualizar línea de tiempo
-  renderLinea();
-
-  // Sincronizar con panel-gerencia via localStorage compartido
-  const ventasParaGerencia={};
-  ASESORES.forEach(a=>{
-    const d=DATA[a.id]||{};
-    if(d.emit||d.pend||d.pol){
-      ventasParaGerencia[a.id]={e:Number(d.emit||0),p:Number(d.pend||0),pol:Number(d.pol||0)};
-    }
-  });
-  try{localStorage.setItem("crm_ventas",JSON.stringify(ventasParaGerencia));}catch(e){}
-
-  if(!silencioso) toast("💾 Guardado correctamente");
-  actualizarUltimaGuarda();
 }
 
-function actualizarUltimaGuarda(){
-  const keys=Object.keys(DATA).filter(k=>DATA[k].emit||DATA[k].pend||DATA[k].pol);
-  document.getElementById("ultima-guarda").textContent=
-    keys.length>0?`${keys.length} asesores con datos · ${new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}`:"";
-}
-
-function exportarExcel(){
-  // Crear tabla para Excel
-  const rows=[["Asesor","Canal","Zona","Ant.","Obj Prima","Emitido","Pend. Emisión","Pólizas","Alcance %","Proyectado","Brecha"]];
-  const diasPas=Number(document.getElementById("dias-pas").value)||16;
-  const diasTot=Number(document.getElementById("dias-tot").value)||21;
+function exportarCSV(){
+  const dp=Number(document.getElementById("cfg-dias-pas").value)||16;
+  const dt=Number(document.getElementById("cfg-dias-tot").value)||21;
+  const rows=[["Asesor","Canal","Zona","Ant.","Obj Prima","Obj Pol","Emitido","Pend. Emisión","Pólizas","Alcance%","Proyectado","Brecha"]];
   ASESORES.forEach(a=>{
     const d=DATA[a.id]||{};
-    const emit=Number(d.emit||0), pend=Number(d.pend||0), pol=Number(d.pol||0);
-    const proy=proyS(emit,diasPas,diasTot)+pend;
-    rows.push([a.n,a.c,a.z,a.a,a.obj,emit,pend,pol,pct(emit+pend,a.obj),proy,Math.max(0,a.obj-emit-pend)]);
+    const e=Number(d.e||0),p=Number(d.p||0),pol=Number(d.pol||0);
+    const o=getObj(a.id);
+    rows.push([a.n,a.c,a.z,a.a,o.prima,o.pol,e,p,pol,pct(e+p,o.prima),proyS(e,dp,dt)+p,Math.max(0,o.prima-e-p)]);
   });
-  // Totales
-  const tE=ASESORES.reduce((s,a)=>s+Number((DATA[a.id]||{}).emit||0),0);
-  const tP=ASESORES.reduce((s,a)=>s+Number((DATA[a.id]||{}).pend||0),0);
-  const tPol=ASESORES.reduce((s,a)=>s+Number((DATA[a.id]||{}).pol||0),0);
-  const objT=Number(document.getElementById("obj-prima").value)||0;
-  rows.push(["TOTAL EQUIPO","","","",objT,tE,tP,tPol,pct(tE+tP,objT),"",Math.max(0,objT-tE-tP)]);
-
-  // Descargar como CSV (sin librería)
   const csv=rows.map(r=>r.map(v=>`"${v}"`).join(",")).join("\n");
   const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
-  a.download=`CRM_VIDA_Mayo2026_${new Date().toLocaleDateString("es-AR").replace(/\//g,"-")}.csv`;
+  a.download=`VIDA_${MESES[MES_ACT]}_2026.csv`;
   a.click();
-  toast("⬇ Excel exportado");
+  toast("⬇ CSV exportado");
 }
 
 function toast(msg){
   const t=document.getElementById("toast");
-  t.textContent=msg; t.classList.add("show");
+  t.textContent=msg;t.classList.add("show");
   setTimeout(()=>t.classList.remove("show"),3000);
 }
 </script>
