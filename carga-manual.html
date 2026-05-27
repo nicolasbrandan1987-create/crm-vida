@@ -306,9 +306,10 @@ tbody td{padding:6px 7px;vertical-align:middle;font-size:12px;}
           <th class="center" style="min-width:100px;background:#16A34A">✅ Prima Emitida $</th>
           <th class="center" style="min-width:100px;background:#CA8A04">⏳ Pend. Emisión $</th>
           <th class="center" style="min-width:60px">🏆 Pólizas</th>
-          <th class="center">Alcance</th>
+          <th class="center">Cuad. / Alcance</th>
           <th class="center">Proyectado</th>
           <th class="center">Brecha</th>
+          <th class="center">vs Mes Ant.</th>
           <th class="center">Part. Canal</th>
         </tr>
       </thead>
@@ -339,33 +340,37 @@ tbody td{padding:6px 7px;vertical-align:middle;font-size:12px;}
 // 42 ASESORES REALES — con objetivos por defecto
 // ════════════════════════════════════════════════════════════
 const ASESORES=[
+  // AMBA CENTRO — todos Sr/Semi confirmados
   {id:"cuckovich",     n:"CUCKOVICH, VERONICA CECILIA",       c:"AMBA CENTRO",       z:"Caballito",      a:"Semi",objPrima:450000,objPol:5},
   {id:"aguilar",       n:"AGUILAR, ANALIA HAYDEE",            c:"AMBA CENTRO",       z:"La Plata",       a:"Sr",  objPrima:450000,objPol:5},
-  {id:"sanchez_mc",    n:"SANCHEZ, MERCEDES CAMILA",          c:"AMBA CENTRO",       z:"La Plata",       a:"Jr",  objPrima:450000,objPol:5},
+  {id:"sanchez_mc",    n:"SANCHEZ, MERCEDES CAMILA",          c:"AMBA CENTRO",       z:"La Plata",       a:"Semi",objPrima:450000,objPol:5},
   {id:"manteiga",      n:"MANTEIGA, MIRIAM MABEL",            c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Sr",  objPrima:450000,objPol:5},
   {id:"rios",          n:"RIOS, ERICA ELIZABET",              c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Semi",objPrima:450000,objPol:5},
-  {id:"quispe",        n:"QUISPE, NOELIA CARINA",             c:"AMBA CENTRO",       z:"Microcentro",    a:"Jr",  objPrima:450000,objPol:5},
+  {id:"quispe",        n:"QUISPE, NOELIA CARINA",             c:"AMBA CENTRO",       z:"Microcentro",    a:"Semi",objPrima:450000,objPol:5},
   {id:"witel",         n:"WITEL, LAURA DANIELA",              c:"AMBA CENTRO",       z:"Microcentro",    a:"Semi",objPrima:450000,objPol:5},
-  {id:"garcia_sanchez",n:"GARCIA SANCHEZ, BRENDA ELIZABETH",  c:"AMBA CENTRO",       z:"San Isidro",     a:"Jr",  objPrima:450000,objPol:5},
+  {id:"garcia_sanchez",n:"GARCIA SANCHEZ, BRENDA ELIZABETH",  c:"AMBA CENTRO",       z:"San Isidro",     a:"Semi",objPrima:450000,objPol:5},
   {id:"morello",       n:"MORELLO, MARCELO ROQUE",            c:"AMBA CENTRO",       z:"San Isidro",     a:"Sr",  objPrima:450000,objPol:5},
+  // AMBA METRO
   {id:"flores_i",      n:"FLORES, IVANA CAROLINA NORMA",      c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",  objPrima:450000,objPol:5},
   {id:"prieto",        n:"PRIETO, BLANCA",                    c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",  objPrima:450000,objPol:5},
-  {id:"barroso",       n:"BARROSO CARPINTERO, RAFAEL ARMANDO",c:"AMBA METRO",        z:"Nordelta",       a:"Semi",objPrima:450000,objPol:5},
-  {id:"briozzo",       n:"BRIOZZO, ANDREA LETICIA",           c:"AMBA METRO",        z:"Nordelta",       a:"Semi",objPrima:450000,objPol:5},
-  {id:"varela",        n:"VARELA, SOFIA AYLEN",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Jr",  objPrima:450000,objPol:5},
-  {id:"salas",         n:"SALAS, MAGALI PAULA",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Jr",  objPrima:450000,objPol:5},
-  {id:"perez_g",       n:"PEREZ, GUSTAVO MARCELO",            c:"AMBA METRO",        z:"Zárate",         a:"Semi",objPrima:450000,objPol:5},
-  {id:"medina_g",      n:"MEDINA, GIULIANA BEATRIZ",          c:"AMBA METRO",        z:"Zárate",         a:"Jr",  objPrima:450000,objPol:5},
+  {id:"barroso",       n:"BARROSO CARPINTERO, RAFAEL ARMANDO",c:"AMBA METRO",        z:"Nordelta",       a:"Sr",  objPrima:450000,objPol:5},
+  {id:"briozzo",       n:"BRIOZZO, ANDREA LETICIA",           c:"AMBA METRO",        z:"Nordelta",       a:"Sr",  objPrima:450000,objPol:5},
+  {id:"varela",        n:"VARELA, SOFIA AYLEN",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Semi",objPrima:450000,objPol:5},
+  {id:"salas",         n:"SALAS, MAGALI PAULA",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Semi",objPrima:450000,objPol:5},
+  {id:"perez_g",       n:"PEREZ, GUSTAVO MARCELO",            c:"AMBA METRO",        z:"Zárate",         a:"Sr",  objPrima:450000,objPol:5},
+  {id:"medina_g",      n:"MEDINA, GIULIANA BEATRIZ",          c:"AMBA METRO",        z:"Zárate",         a:"Semi",objPrima:450000,objPol:5},
+  // CANALES DIGITALES — Jr: gomez_g, finocchiaro
   {id:"magallanes",    n:"MAGALLANES, MARIA LAURA",           c:"CANALES DIGITALES", z:"Brigada 1",      a:"Sr",  objPrima:450000,objPol:5},
-  {id:"gomez_g",       n:"GOMEZ, GEORGINA FERNANDA",          c:"CANALES DIGITALES", z:"Brigada 8",      a:"Sr",  objPrima:315000,objPol:5},
+  {id:"gomez_g",       n:"GOMEZ, GEORGINA FERNANDA",          c:"CANALES DIGITALES", z:"Brigada 8",      a:"Jr",  objPrima:315000,objPol:5},
   {id:"benitez",       n:"BENITEZ MOMBELLI, LEANDRO EZEQUIEL",c:"CANALES DIGITALES", z:"Brigada 2",      a:"Semi",objPrima:450000,objPol:5},
   {id:"bastidas",      n:"BASTIDAS HERRERA, CLAUDIA CECILIA", c:"CANALES DIGITALES", z:"Brigada 4",      a:"Semi",objPrima:450000,objPol:5},
   {id:"finocchiaro",   n:"FINOCCHIARO, LAURA LORENA",         c:"CANALES DIGITALES", z:"Brigada 4",      a:"Jr",  objPrima:315000,objPol:5},
   {id:"carrasco",      n:"CARRASCO, SILVIA GRACIELA",         c:"CANALES DIGITALES", z:"Brigada 5",      a:"Sr",  objPrima:450000,objPol:5},
   {id:"avila",         n:"AVILA, JAVIER ALEJANDRO",           c:"CANALES DIGITALES", z:"Brigada 6",      a:"Semi",objPrima:450000,objPol:5},
-  {id:"rosen",         n:"ROSEN, BARBARA DAIANA",             c:"CANALES DIGITALES", z:"Brigada 7",      a:"Jr",  objPrima:450000,objPol:5},
+  {id:"rosen",         n:"ROSEN, BARBARA DAIANA",             c:"CANALES DIGITALES", z:"Brigada 7",      a:"Semi",objPrima:450000,objPol:5},
+  // INTERIOR — Jr: passeri, aguirre
   {id:"berlocq",       n:"BERLOCQ, MARIA FLORENCIA",          c:"INTERIOR",          z:"Bs As Sur",      a:"Semi",objPrima:450000,objPol:5},
-  {id:"passeri",       n:"PASSERI, JOSE RAUL",                c:"INTERIOR",          z:"Bs As Sur",      a:"Semi",objPrima:315000,objPol:5},
+  {id:"passeri",       n:"PASSERI, JOSE RAUL",                c:"INTERIOR",          z:"Bs As Sur",      a:"Jr",  objPrima:315000,objPol:5},
   {id:"armand",        n:"ARMAND, LUCAS",                     c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:450000,objPol:5},
   {id:"lopez_e",       n:"LOPEZ, ERNESTO MARTIN",             c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:450000,objPol:5},
   {id:"pierlucca",     n:"PIERLUCCA, JULIA ELISABETH",        c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:450000,objPol:5},
@@ -377,6 +382,7 @@ const ASESORES=[
   {id:"beltran",       n:"BELTRAN, DELMA RINA",               c:"INTERIOR",          z:"Salta",          a:"Semi",objPrima:450000,objPol:5},
   {id:"aguirre",       n:"AGUIRRE ALEN, AGUSTINA",            c:"INTERIOR",          z:"Salta",          a:"Jr",  objPrima:315000,objPol:5},
   {id:"bagnasco",      n:"BAGNASCO GENTILE, KARINA PAOLA",    c:"INTERIOR",          z:"Salta",          a:"Semi",objPrima:450000,objPol:5},
+  // MIXTO
   {id:"michellis",     n:"MICHELLIS, SUSANA BEATRIZ",         c:"MIXTO",             z:"Brigada 9",      a:"Sr",  objPrima:450000,objPol:5},
   {id:"bruno",         n:"BRUNO, MARIA SILVINA",              c:"MIXTO",             z:"Rosario 1",      a:"Sr",  objPrima:450000,objPol:5},
   {id:"gerez",         n:"GEREZ, CARLOS",                     c:"MIXTO",             z:"Brigada 3",      a:"Semi",objPrima:450000,objPol:5},
@@ -480,8 +486,8 @@ const MAYO_2026={
 
 const CANALES=["AMBA CENTRO","AMBA METRO","CANALES DIGITALES","INTERIOR","MIXTO"];
 const MESES=["","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-const ANT_C={"Sr":"#2563EB","Semi":"#CA8A04","Jr":"#EA580C"};
-const ANT_B={"Sr":"#EFF6FF","Semi":"#FEF9C3","Jr":"#FFEDD5"};
+const ANT_C={"Sr":"#2563EB","Semi":"#7C3AED","Jr":"#94A3B8"};
+const ANT_B={"Sr":"#EFF6FF","Semi":"#EDE9FE","Jr":"#F1F5F9"};
 
 // ════════════════════════════════════════════════════════════
 // ESTADO
@@ -500,11 +506,12 @@ const fmt=n=>n>=1e6?`$${(n/1e6).toFixed(2)}M`:n>=1000?`$${(n/1000).toFixed(0)}K`
 const pct=(v,t)=>t===0?0:Math.round(v/t*100);
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const sm=p=>{
-  if(p>=100)return{c:"#16A34A",bg:"#DCFCE7",txt:"Objetivo ✅"};
-  if(p>=75) return{c:"#CA8A04",bg:"#FEF9C3",txt:"En riesgo"};
-  if(p>=50) return{c:"#EA580C",bg:"#FFEDD5",txt:"Bajo"};
-  return         {c:"#DC2626",bg:"#FEE2E2",txt:"Crítico"};
+  if(p>=100)return{c:"#16A34A",bg:"#DCFCE7",txt:"C1 — Objetivo ✅",cuad:1};
+  if(p>=75) return{c:"#CA8A04",bg:"#FEF9C3",txt:"C2 — En riesgo", cuad:2};
+  if(p>=50) return{c:"#EA580C",bg:"#FFEDD5",txt:"C3 — Bajo",      cuad:3};
+  return         {c:"#DC2626",bg:"#FEE2E2",txt:"C4 — Crítico",    cuad:4};
 };
+const cuadLabel=q=>q===1?"🟢 C1":q===2?"🟡 C2":q===3?"🟠 C3":"🔴 C4";
 const proyS=(e,dp,dt)=>Math.round(e+(dp>0?e/dp:0)*(dt-dp));
 const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
 
@@ -663,106 +670,86 @@ function recalcular(){
 // TABLA CARGA
 // ════════════════════════════════════════════════════════════
 function renderTabla(){
-  const dp=Number(document.getElementById("cfg-dias-pas").value)||16;
-  const dt=Number(document.getElementById("cfg-dias-tot").value)||21;
-  const filtrados=CANAL_SEL==="TODOS"?ASESORES:ASESORES.filter(a=>a.c===CANAL_SEL);
+  var dp=Number(document.getElementById("cfg-dias-pas").value)||16;
+  var dt=Number(document.getElementById("cfg-dias-tot").value)||21;
+  var filtrados=CANAL_SEL==="TODOS"?ASESORES:ASESORES.filter(function(a){return a.c===CANAL_SEL;});
+  var emitCanal={};
+  CANALES.forEach(function(c){
+    emitCanal[c]=ASESORES.filter(function(a){return a.c===c;}).reduce(function(s,a){return s+Number((DATA[a.id]||{}).e||0);},0);
+  });
+  var tE=0,tP=0,tPol=0,tObj=0,tOPol=0;
+  var rows="";
 
-  // Emitido por canal para calcular participación
-  const emitCanal={};
-  CANALES.forEach(c=>{emitCanal[c]=ASESORES.filter(a=>a.c===c).reduce((s,a)=>s+Number((DATA[a.id]||{}).e||0),0);});
+  filtrados.forEach(function(a,i){
+    var d=DATA[a.id]||{};
+    var e=Number(d.e||0),p=Number(d.p||0),pol=Number(d.pol||0);
+    var o=getObj(a.id);
+    tE+=e;tP+=p;tPol+=pol;tObj+=o.prima;tOPol+=o.pol;
+    var proy=e+p;
+    var proyR=proyS(e,dp,dt)+p;
+    var alc=pct(proy,o.prima);
+    var ss=sm(alc);
+    var brecha=Math.max(0,o.prima-proy);
+    var partCanal=emitCanal[a.c]>0?pct(e,emitCanal[a.c]):0;
+    var cuadTxt=cuadLabel(ss.cuad);
+    var mesAnt=MES_ACT>1?MES_ACT-1:null;
+    var dAnt=mesAnt?(HIST[mesAnt]||{})[a.id]||{}:{};
+    var eAnt=Number(dAnt.e||0);
+    var vPct=eAnt>0&&e>0?Math.round((e-eAnt)/eAnt*100):null;
+    var vColor=vPct===null?"#94A3B8":vPct>=0?"#16A34A":"#DC2626";
+    var vText=vPct===null?"—":(vPct>=0?"▲ +":"▼ ")+vPct+"%";
+    var rowBg=e===0&&p===0?"#FFF1F2":alc>=100?"#F0FDF4":i%2===0?"#fff":"#F8FAFC";
+    var antC=ANT_C[a.a]||"#94A3B8";
+    var antB=ANT_B[a.a]||"#F1F5F9";
+    var id=a.id;
+    var objMod=o.prima!==a.objPrima?" style='border-color:#2563EB;background:#EFF6FF'":"";
 
-  let tE=0,tP=0,tPol=0,tObj=0,tOPol=0;
+    rows+='<tr style="background:'+rowBg+'">';
+    rows+='<td><b style="color:#0B1F4B;font-size:12px">'+a.n+'</b><div style="font-size:10px;color:#94A3B8">'+a.z+'</div></td>';
+    rows+='<td style="font-size:10px;color:#475569">'+a.c.replace("CANALES DIGITALES","C.Dig")+'</td>';
+    rows+='<td style="font-size:10px;color:#475569">'+a.z+'</td>';
+    rows+='<td><span class="tag" style="color:'+antC+';background:'+antB+'">'+a.a+'</span><div style="font-size:10px;font-weight:700;color:'+ss.c+'">'+cuadTxt+'</div></td>';
+    rows+='<td><input class="inp-obj" type="number" value="'+o.prima+'" id="obj-'+id+'" data-id="'+id+'" data-campo="objprima"'+objMod+' onfocus="this.select()"></td>';
+    rows+='<td><input class="inp-obj" type="number" value="'+o.pol+'" id="objpol-'+id+'" data-id="'+id+'" data-campo="objpol" style="width:50px" onfocus="this.select()"></td>';
+    rows+='<td><input class="'+(e>0?"inp-emit filled":"inp-emit")+'" type="number" min="0" placeholder="0" value="'+(e||"")+'" id="e-'+id+'" data-id="'+id+'" data-campo="e" onfocus="this.select()"></td>';
+    rows+='<td><input class="'+(p>0?"inp-pend filled":"inp-pend")+'" type="number" min="0" placeholder="0" value="'+(p||"")+'" id="p-'+id+'" data-id="'+id+'" data-campo="p" onfocus="this.select()"></td>';
+    rows+='<td><input class="inp-pol" type="number" min="0" placeholder="0" value="'+(pol||"")+'" id="pol-'+id+'" data-id="'+id+'" data-campo="pol" style="width:55px" onfocus="this.select()"></td>';
+    rows+='<td><div class="sm-wrap"><div class="sm-bar"><div class="sm-fill" style="width:'+Math.min(alc,100)+'%;background:'+ss.c+'"></div></div><span class="sm-pct" style="color:'+ss.c+'">'+alc+'%</span></div><div style="font-size:9px;color:'+ss.c+'">'+ss.txt+'</div></td>';
+    rows+='<td style="text-align:right"><div style="font-size:12px;font-weight:700">'+fmt(proyR)+'</div><div style="font-size:9px;color:#94A3B8">'+pct(proyR,o.prima)+'% obj.</div></td>';
+    rows+='<td style="text-align:right"><div style="font-size:12px;font-weight:700;color:'+(brecha>0?"#DC2626":"#16A34A")+'">'+(brecha>0?"-"+fmt(brecha):"✅")+'</div></td>';
+    rows+='<td style="text-align:center"><div style="font-size:12px;font-weight:800;color:'+vColor+'">'+vText+'</div>'+(eAnt>0?'<div style="font-size:9px;color:#94A3B8">'+fmt(eAnt)+' → '+fmt(e)+'</div>':"")+'</td>';
+    rows+='<td style="text-align:center">'+(e>0?'<div style="font-size:11px;font-weight:700;color:#2563EB">'+partCanal+'%</div><div style="font-size:9px;color:#94A3B8">canal</div>':"—")+'</td>';
+    rows+='</tr>';
+  });
 
-  document.getElementById("tbody-carga").innerHTML=filtrados.map((a,i)=>{
-    const d=DATA[a.id]||{};
-    const e=Number(d.e||0), p=Number(d.p||0), pol=Number(d.pol||0);
-    const o=getObj(a.id);
-    tE+=e; tP+=p; tPol+=pol; tObj+=o.prima; tOPol+=o.pol;
+  document.getElementById("tbody-carga").innerHTML=rows;
 
-    const proy=e+p;
-    const proyR=proyS(e,dp,dt)+p;
-    const alc=pct(proy,o.prima), ss=sm(alc);
-    const brecha=Math.max(0,o.prima-proy);
-    const partCanal=emitCanal[a.c]>0?pct(e,emitCanal[a.c]):0;
-    const rowCls=e===0&&p===0?"cero":alc>=100?"sobre":"";
+  // Event delegation para inputs
+  document.getElementById("tbody-carga").oninput=function(ev){
+    var t=ev.target;
+    var id=t.dataset.id;
+    var campo=t.dataset.campo;
+    if(!id||!campo) return;
+    var val=Number(t.value)||0;
+    if(campo==="objprima"){setObjPrima(id,val);}
+    else if(campo==="objpol"){setObjPol(id,val);}
+    else{setDato(id,campo,val);}
+  };
 
-    return `<tr class="${rowCls}" id="tr-${a.id}">
-      <td>
-        <div style="font-weight:700;color:var(--navy);font-size:12px">${a.n}</div>
-        <div style="font-size:10px;color:var(--g400)">${a.z}</div>
-      </td>
-      <td style="font-size:10px;color:var(--g600)">${a.c.replace("CANALES DIGITALES","C.Dig")}</td>
-      <td style="font-size:10px;color:var(--g600)">${a.z}</td>
-      <td><span class="tag" style="color:${ANT_C[a.a]};background:${ANT_B[a.a]}">${a.a}</span></td>
-      <td>
-        <input class="inp-obj ${o.prima!==a.objPrima?"modificado":""}" type="number"
-          value="${o.prima}" id="obj-${a.id}"
-          onchange="setObjPrima('${a.id}',this.value)"
-          onfocus="this.select()" title="Objetivo prima individual — editá para personalizar">
-      </td>
-      <td>
-        <input class="inp-obj inp-pol" type="number"
-          value="${o.pol}" id="objpol-${a.id}"
-          onchange="setObjPol('${a.id}',this.value)"
-          onfocus="this.select()" style="width:50px" title="Objetivo pólizas individual">
-      </td>
-      <td>
-        <input class="inp-emit ${e>0?"filled":""}" type="number" min="0" placeholder="0"
-          value="${e||""}" id="e-${a.id}"
-          oninput="setDato('${a.id}','e',this.value)"
-          onfocus="this.select()">
-      </td>
-      <td>
-        <input class="inp-pend ${p>0?"filled":""}" type="number" min="0" placeholder="0"
-          value="${p||""}" id="p-${a.id}"
-          oninput="setDato('${a.id}','p',this.value)"
-          onfocus="this.select()">
-      </td>
-      <td>
-        <input class="inp-pol" type="number" min="0" placeholder="0"
-          value="${pol||""}" id="pol-${a.id}"
-          oninput="setDato('${a.id}','pol',this.value)"
-          onfocus="this.select()" style="width:55px">
-      </td>
-      <td>
-        <div class="sm-wrap">
-          <div class="sm-bar"><div class="sm-fill" style="width:${clamp(alc,0,100)}%;background:${ss.c}"></div></div>
-          <span class="sm-pct" style="color:${ss.c}">${alc}%</span>
-        </div>
-        <div style="font-size:9px;color:${ss.c}">${ss.txt}</div>
-      </td>
-      <td style="text-align:right">
-        <div style="font-size:12px;font-weight:700;color:var(--navy)">${fmt(proyR)}</div>
-        <div style="font-size:9px;color:var(--g400)">${pct(proyR,o.prima)}% obj.</div>
-      </td>
-      <td style="text-align:right">
-        <div style="font-size:12px;font-weight:700;color:${brecha>0?"var(--red)":"var(--green)"}">
-          ${brecha>0?`-${fmt(brecha)}`:"✅ Logrado"}
-        </div>
-      </td>
-      <td style="text-align:center">
-        ${e>0?`<div style="font-size:11px;font-weight:700;color:var(--sky)">${partCanal}%</div>
-          <div style="font-size:9px;color:var(--g400)">de su canal</div>`:"—"}
-      </td>
-    </tr>`;
-  }).join("");
-
-  // Totales footer
-  const tProy=tE+tP, tProyR=proyS(tE,dp,dt)+tP;
-  const tAlc=pct(tProy,tObj), ts=sm(tAlc);
+  // Footer
+  var tProy=tE+tP,tProyR=proyS(tE,dp,dt)+tP;
+  var tAlc=pct(tProy,tObj),ts=sm(tAlc);
   document.getElementById("tf-obj").textContent=fmt(tObj);
   document.getElementById("tf-obj-pol").textContent=tOPol;
   document.getElementById("tf-emit").textContent=fmt(tE);
   document.getElementById("tf-pend").textContent=tP>0?fmt(tP):"—";
   document.getElementById("tf-pol").textContent=tPol;
-  document.getElementById("tf-alc").innerHTML=`<span style="color:${ts.c}">${tAlc}%</span>`;
+  document.getElementById("tf-alc").innerHTML='<span style="color:'+ts.c+'">'+tAlc+'% — '+ts.txt+'</span>';
   document.getElementById("tf-proy").textContent=fmt(tProyR);
-  document.getElementById("tf-brecha").textContent=`-${fmt(Math.max(0,tObj-tProy))}`;
+  document.getElementById("tf-brecha").textContent="-"+fmt(Math.max(0,tObj-tProy));
 }
 
-// ════════════════════════════════════════════════════════════
-// SETTERS
-// ════════════════════════════════════════════════════════════
+
 function setDato(id,campo,val){
   if(!DATA[id])DATA[id]={};
   DATA[id][campo]=Number(val)||0;
