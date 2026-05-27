@@ -3,164 +3,137 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRM VIDA — Carga Manual</title>
+<title>CRM VIDA — Boca de Urna</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --navy:#0B1F4B;--blue:#1A3A8F;--sky:#2563EB;--accent:#38BDF8;
+  --navy:#0B1F4B;--blue:#1A3A8F;--sky:#2563EB;
   --g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;--g400:#94A3B8;--g600:#475569;--g800:#1E293B;
-  --green:#16A34A;--gBg:#DCFCE7;--gL:#86EFAC;
+  --green:#16A34A;--gBg:#DCFCE7;
   --yellow:#CA8A04;--yBg:#FEF9C3;
   --orange:#EA580C;--oBg:#FFEDD5;
   --red:#DC2626;--rBg:#FEE2E2;
 }
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--g50);min-height:100vh;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#EEF2F8;min-height:100vh;}
 button,select,input{font-family:inherit;}
 
-/* TOPBAR */
-.topbar{background:linear-gradient(135deg,var(--navy),var(--blue));padding:12px 20px;
+.topbar{background:linear-gradient(135deg,var(--navy),var(--blue));padding:11px 20px;
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
   box-shadow:0 2px 12px rgba(0,0,0,.25);position:sticky;top:0;z-index:100;}
 .logo{display:flex;align-items:center;gap:9px;}
-.logo-ico{width:32px;height:32px;border-radius:8px;
-  background:linear-gradient(135deg,var(--sky),var(--accent));
-  display:flex;align-items:center;justify-content:center;font-size:16px;}
-.logo strong{color:#fff;font-size:14px;font-weight:800;}
+.logo-ico{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--sky),#38BDF8);display:flex;align-items:center;justify-content:center;font-size:15px;}
+.logo strong{color:#fff;font-size:13px;font-weight:800;}
 .logo small{color:rgba(255,255,255,.4);font-size:9px;letter-spacing:1px;}
 .top-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
-.btn{border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;
-  cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
-.btn-primary{background:var(--sky);color:#fff;}
+.btn{border:none;border-radius:7px;padding:6px 13px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;}
 .btn-success{background:var(--green);color:#fff;}
 .btn-ghost{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);}
-.btn-orange{background:var(--orange);color:#fff;}
+.lbl-saved{font-size:10px;color:rgba(255,255,255,.45);}
 
-.main{padding:18px 20px;display:flex;flex-direction:column;gap:16px;max-width:1500px;margin:0 auto;}
+.main{padding:16px 20px;display:flex;flex-direction:column;gap:14px;max-width:1600px;margin:0 auto;}
 
 /* HERO */
-.hero{background:linear-gradient(135deg,var(--navy),#1e3a8a);border-radius:14px;padding:20px 24px;}
-.hero-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
+.hero{background:linear-gradient(135deg,var(--navy),#1e3a8a);border-radius:13px;padding:18px 22px;}
+.hero-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
 .hero-ttl{font-size:16px;font-weight:800;color:#fff;}
-.hero-sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
-.hero-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:14px;}
-.hk{background:rgba(255,255,255,.08);border-radius:10px;padding:11px 13px;text-align:center;}
-.hk-v{font-size:22px;font-weight:900;color:#fff;}
-.hk-l{font-size:10px;color:rgba(255,255,255,.45);margin-top:2px;}
-.hk-sub{font-size:11px;font-weight:700;margin-top:2px;}
-.barra{height:22px;border-radius:7px;background:rgba(255,255,255,.1);display:flex;overflow:hidden;margin-bottom:6px;}
-.barra-e{background:linear-gradient(90deg,#16A34A,#22c55e);display:flex;align-items:center;justify-content:center;transition:width .5s;}
-.barra-p{background:linear-gradient(90deg,#CA8A04,#eab308);display:flex;align-items:center;justify-content:center;transition:width .5s;}
-.barra-gap{flex:1;background:rgba(255,255,255,.07);}
-.barra-txt{font-size:9px;color:#fff;font-weight:700;padding:0 5px;white-space:nowrap;}
-.ley{display:flex;gap:12px;flex-wrap:wrap;}
+.hero-sub{font-size:11px;color:rgba(255,255,255,.5);}
+.mes-sel{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:700;outline:none;}
+.hero-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:12px;}
+.hk{background:rgba(255,255,255,.08);border-radius:9px;padding:10px 12px;text-align:center;}
+.hk-v{font-size:20px;font-weight:900;color:#fff;}
+.hk-l{font-size:9px;color:rgba(255,255,255,.45);margin-top:2px;}
+.hk-s{font-size:10px;font-weight:700;margin-top:2px;}
+.barra{height:20px;border-radius:6px;background:rgba(255,255,255,.1);display:flex;overflow:hidden;}
+.be{background:linear-gradient(90deg,#16A34A,#22c55e);display:flex;align-items:center;justify-content:center;transition:width .5s;}
+.bp{background:linear-gradient(90deg,#CA8A04,#eab308);display:flex;align-items:center;justify-content:center;transition:width .5s;}
+.bgap{flex:1;background:rgba(255,255,255,.07);}
+.btxt{font-size:9px;color:#fff;font-weight:700;padding:0 5px;white-space:nowrap;}
+.ley{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
 .li{display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,.55);}
 .li b{color:#fff;} .lid{width:7px;height:7px;border-radius:2px;}
 
 /* CARD */
-.card{background:#fff;border-radius:13px;padding:18px 22px;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid var(--g200);}
-.sec{font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;}
+.card{background:#fff;border-radius:12px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.07);border:1px solid var(--g200);}
+.sec{font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;}
 
-/* CONFIGURACIÓN */
-.cfg-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end;}
-.cfg-item{display:flex;flex-direction:column;gap:4px;}
-.cfg-lbl{font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;letter-spacing:.5px;}
-.cfg-inp{border:1.5px solid var(--g200);border-radius:8px;padding:8px 11px;font-size:14px;
-  font-weight:800;text-align:center;outline:none;width:100%;color:var(--navy);}
+/* CONFIG */
+.cfg-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+.cfg-item{display:flex;flex-direction:column;gap:3px;}
+.cfg-lbl{font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;}
+.cfg-inp{border:1.5px solid var(--g200);border-radius:7px;padding:7px 10px;font-size:13px;font-weight:800;text-align:center;outline:none;width:100%;color:var(--navy);}
 .cfg-inp:focus{border-color:var(--sky);}
 
-/* CANAL TABS */
-.canal-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-.ctab{border:1px solid var(--g200);background:#fff;color:var(--g600);border-radius:8px;
-  padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;}
-.ctab.active{background:var(--navy);color:#fff;border-color:var(--navy);}
-
-/* RESUMEN CANAL */
-.canal-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;}
-.cz{border-radius:10px;padding:12px 14px;border:1px solid var(--g200);}
-.cz-name{font-size:11px;font-weight:800;color:var(--navy);margin-bottom:4px;}
+/* CANAL GRID */
+.canal-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.cz{border-radius:10px;padding:12px 14px;border:1px solid var(--g200);cursor:pointer;}
+.cz-name{font-size:11px;font-weight:800;margin-bottom:3px;}
 .cz-pct{font-size:20px;font-weight:900;margin-bottom:4px;}
-.cz-bar{height:6px;border-radius:3px;background:var(--g100);overflow:hidden;display:flex;margin-bottom:5px;}
-.cz-det{font-size:10px;color:var(--g400);line-height:1.5;}
+.cz-bar{height:5px;border-radius:3px;background:rgba(0,0,0,.08);overflow:hidden;display:flex;margin-bottom:5px;}
+.cz-det{font-size:10px;line-height:1.5;}
+.cz-obj{font-size:10px;color:var(--g400);margin-top:4px;}
+.cz-obj input{border:1px solid var(--g200);border-radius:5px;padding:3px 6px;font-size:11px;font-weight:700;width:100%;margin-top:2px;outline:none;text-align:right;}
+.cz-obj input:focus{border-color:var(--sky);}
 
-/* TABLA */
-.tbl-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;}
-thead th{padding:9px 8px;background:var(--navy);color:#fff;font-size:10px;font-weight:700;
-  text-align:left;white-space:nowrap;}
-thead th.center{text-align:center;}
-tbody tr{border-bottom:1px solid var(--g100);transition:background .1s;}
-tbody tr:hover{background:#F0F7FF!important;}
-tbody tr:nth-child(even){background:var(--g50);}
-tbody tr.cero{background:#FFF1F2!important;}
-tbody tr.sobre{background:#F0FDF4!important;}
-tbody td{padding:6px 7px;vertical-align:middle;font-size:12px;}
-.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
-
-/* INPUTS CARGA — más grandes para tipear rápido */
-.inp-emit{border:1.5px solid var(--g200);border-radius:6px;padding:5px 7px;
-  font-size:13px;font-weight:700;text-align:right;outline:none;width:95px;color:var(--g800);}
-.inp-emit:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(22,163,74,.1);}
-.inp-emit.filled{border-color:var(--green);background:var(--gBg);}
-.inp-pend{border:1.5px solid var(--g200);border-radius:6px;padding:5px 7px;
-  font-size:13px;font-weight:700;text-align:right;outline:none;width:95px;color:var(--g800);}
-.inp-pend:focus{border-color:var(--yellow);box-shadow:0 0 0 2px rgba(202,138,4,.1);}
-.inp-pend.filled{border-color:var(--yellow);background:var(--yBg);}
-.inp-pol{border:1.5px solid var(--g200);border-radius:6px;padding:5px 7px;
-  font-size:13px;font-weight:700;text-align:center;outline:none;width:55px;color:var(--g800);}
-.inp-pol:focus{border-color:var(--sky);}
-.inp-obj{border:1.5px solid var(--g200);border-radius:6px;padding:5px 7px;
-  font-size:12px;font-weight:700;text-align:right;outline:none;width:90px;color:var(--blue);}
-.inp-obj:focus{border-color:var(--sky);background:#EFF6FF;}
-.inp-obj.modificado{border-color:var(--sky);background:#EFF6FF;}
-
-/* SEMAFORO */
-.sm-wrap{display:flex;align-items:center;gap:5px;}
-.sm-bar{width:46px;height:5px;background:var(--g100);border-radius:3px;overflow:hidden;}
-.sm-fill{height:100%;border-radius:3px;}
-.sm-pct{font-size:11px;font-weight:800;}
-
-/* VARIACION */
-.var-up{color:var(--green);font-weight:700;}
-.var-dn{color:var(--red);font-weight:700;}
-.var-eq{color:var(--g400);}
-
-/* LINEA DE TIEMPO */
-.linea-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
-.ltab{border:1px solid var(--g200);background:#fff;color:var(--g600);border-radius:20px;
-  padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer;}
+/* LÍNEA DE TIEMPO */
+.ltabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+.ltab{border:1px solid var(--g200);background:#fff;color:var(--g600);border-radius:20px;padding:4px 11px;font-size:11px;font-weight:600;cursor:pointer;}
 .ltab.active{background:var(--navy);color:#fff;border-color:var(--navy);}
 
-/* UPLOAD ZONE */
-.upload-zone{border:2px dashed var(--g200);border-radius:11px;padding:24px;text-align:center;cursor:pointer;transition:all .15s;}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--sky);background:#EFF6FF;}
-.upload-zone input{display:none;}
+/* FILTROS TABLA */
+.filtros-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
+.ctab{border:1px solid var(--g200);background:#fff;color:var(--g600);border-radius:7px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;}
+.ctab.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.qtab{border:1px solid var(--g200);background:#fff;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;}
+.sort-sel{border:1px solid var(--g200);border-radius:7px;padding:5px 8px;font-size:11px;outline:none;}
+
+/* TABLA */
+.tbl-outer{overflow-x:auto;border-radius:10px;border:1px solid var(--g200);}
+table{width:100%;border-collapse:collapse;font-size:11px;min-width:1300px;}
+thead th{padding:8px 8px;background:var(--navy);color:#fff;font-size:10px;font-weight:700;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;}
+thead th:hover{background:#1e3a8a;}
+thead th.sorted-asc::after{content:" ▲";}
+thead th.sorted-desc::after{content:" ▼";}
+tbody tr{border-bottom:1px solid var(--g100);}
+tbody tr:hover{background:#F0F7FF!important;}
+tbody tr.cero{background:#FFF1F2!important;}
+tbody tr.sobre{background:#F0FDF4!important;}
+tbody td{padding:6px 7px;vertical-align:middle;}
+tfoot td{padding:8px 8px;background:var(--navy);color:#fff;font-weight:700;font-size:11px;}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
+.inp-e{border:1.5px solid var(--g200);border-radius:5px;padding:4px 6px;font-size:12px;font-weight:700;text-align:right;outline:none;width:100px;}
+.inp-e:focus{border-color:var(--green);background:var(--gBg);}
+.inp-e.filled{border-color:var(--green);background:var(--gBg);}
+.inp-p{border:1.5px solid var(--g200);border-radius:5px;padding:4px 6px;font-size:12px;font-weight:700;text-align:right;outline:none;width:100px;}
+.inp-p:focus{border-color:var(--yellow);background:var(--yBg);}
+.inp-p.filled{border-color:var(--yellow);background:var(--yBg);}
+.inp-pol{border:1.5px solid var(--g200);border-radius:5px;padding:4px 6px;font-size:12px;font-weight:700;text-align:center;outline:none;width:50px;}
+.inp-obj-pr{border:1.5px solid var(--g200);border-radius:5px;padding:4px 6px;font-size:11px;font-weight:700;text-align:right;outline:none;width:90px;}
+.inp-obj-pr.mod{border-color:var(--sky);background:#EFF6FF;}
+.sm-wrap{display:flex;align-items:center;gap:4px;}
+.sm-bar{width:42px;height:4px;background:var(--g100);border-radius:2px;overflow:hidden;}
+.sm-fill{height:100%;border-radius:2px;}
+
+/* UPLOAD */
+.upload-zone{border:2px dashed var(--g200);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .15s;background:#fff;}
+.upload-zone:hover{border-color:var(--sky);background:#F0F7FF;}
 
 /* TOAST */
-.toast{position:fixed;bottom:20px;right:20px;background:var(--navy);color:#fff;
-  padding:10px 18px;border-radius:10px;font-size:12px;font-weight:600;
-  box-shadow:0 4px 20px rgba(0,0,0,.3);opacity:0;transition:opacity .25s;z-index:999;pointer-events:none;}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--navy);color:#fff;padding:10px 18px;border-radius:10px;font-size:12px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.3);opacity:0;transition:opacity .25s;z-index:999;pointer-events:none;}
 .toast.show{opacity:1;}
-
-@media(max-width:1000px){
-  .hero-kpis{grid-template-columns:repeat(3,1fr);}
-  .cfg-grid{grid-template-columns:repeat(3,1fr);}
-  .canal-grid{grid-template-columns:1fr 1fr;}
-}
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
 <div class="topbar">
   <div class="logo">
     <div class="logo-ico">💎</div>
-    <div><strong>CRM VIDA</strong><small>BOCA DE URNA · SWISS MEDICAL</small></div>
+    <div><strong>CRM VIDA</strong><small>BOCA DE URNA</small></div>
   </div>
   <div class="top-actions">
-    <span style="color:rgba(255,255,255,.45);font-size:11px;" id="lbl-guardado"></span>
-    <button class="btn btn-ghost" onclick="document.getElementById('file-excel').click()">📂 Subir Excel</button>
-    <input id="file-excel" type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="subirExcel(this)">
+    <span class="lbl-saved" id="lbl-saved"></span>
+    <button class="btn btn-ghost" onclick="document.getElementById('file-xl').click()">📂 Subir Excel</button>
+    <input id="file-xl" type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="subirExcel(this)">
     <button class="btn btn-ghost" onclick="exportarCSV()">⬇ Exportar</button>
     <button class="btn btn-ghost" onclick="window.open('panel-gerencia.html','_blank')">📊 Gerencia</button>
     <button class="btn btn-success" onclick="guardarTodo()">💾 Guardar</button>
@@ -173,28 +146,23 @@ tbody td{padding:6px 7px;vertical-align:middle;font-size:12px;}
 <div class="hero">
   <div class="hero-top">
     <div>
-      <div class="hero-ttl" id="hero-ttl">División VIDA — Mayo 2026</div>
-      <div class="hero-sub" id="hero-sub">Equipo completo · 42 asesores</div>
+      <div class="hero-ttl" id="hero-ttl">División VIDA</div>
+      <div class="hero-sub">42 asesores · <span id="hero-sub-txt"></span></div>
     </div>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <span style="font-size:11px;color:rgba(255,255,255,.5)">Mes:</span>
-      <select id="mes-sel" onchange="cambiarMes()"
-        style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
-        color:#fff;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:700;outline:none;">
-        <option value="1">Enero 2026</option><option value="2">Febrero 2026</option>
-        <option value="3">Marzo 2026</option><option value="4">Abril 2026</option>
-        <option value="5" selected>Mayo 2026</option><option value="6">Junio 2026</option>
-        <option value="7">Julio 2026</option><option value="8">Agosto 2026</option>
-        <option value="9">Septiembre 2026</option><option value="10">Octubre 2026</option>
-        <option value="11">Noviembre 2026</option><option value="12">Diciembre 2026</option>
-      </select>
-    </div>
+    <select class="mes-sel" id="mes-sel" onchange="cambiarMes()">
+      <option value="1">Enero 2026</option><option value="2">Febrero 2026</option>
+      <option value="3">Marzo 2026</option><option value="4">Abril 2026</option>
+      <option value="5" selected>Mayo 2026</option><option value="6">Junio 2026</option>
+      <option value="7">Julio 2026</option><option value="8">Agosto 2026</option>
+      <option value="9">Septiembre 2026</option><option value="10">Octubre 2026</option>
+      <option value="11">Noviembre 2026</option><option value="12">Diciembre 2026</option>
+    </select>
   </div>
   <div class="hero-kpis" id="hero-kpis"></div>
   <div class="barra">
-    <div class="barra-e" id="b-e" style="width:0%"><span class="barra-txt" id="b-e-txt"></span></div>
-    <div class="barra-p" id="b-p" style="width:0%"><span class="barra-txt" id="b-p-txt"></span></div>
-    <div class="barra-gap"></div>
+    <div class="be" id="b-e" style="width:0%"><span class="btxt" id="b-e-t"></span></div>
+    <div class="bp" id="b-p" style="width:0%"><span class="btxt" id="b-p-t"></span></div>
+    <div class="bgap"></div>
   </div>
   <div class="ley">
     <div class="li"><div class="lid" style="background:#16A34A"></div>Emitido: <b id="l-e">$0</b></div>
@@ -206,130 +174,111 @@ tbody td{padding:6px 7px;vertical-align:middle;font-size:12px;}
 
 <!-- CONFIG -->
 <div class="card">
-  <div class="sec">⚙ Parámetros del mes</div>
+  <div class="sec">⚙ Parámetros del mes — <span id="cfg-mes-lbl">Mayo 2026</span></div>
   <div class="cfg-grid">
-    <div class="cfg-item">
-      <div class="cfg-lbl">Objetivo total Prima $</div>
-      <input class="cfg-inp" id="cfg-obj" type="number" value="19803546" oninput="recalcular()">
-    </div>
-    <div class="cfg-item">
-      <div class="cfg-lbl">Objetivo total Pólizas</div>
-      <input class="cfg-inp" id="cfg-pol" type="number" value="210" oninput="recalcular()">
-    </div>
-    <div class="cfg-item">
-      <div class="cfg-lbl">Días laborales transcurridos</div>
-      <input class="cfg-inp" id="cfg-dias-pas" type="number" value="16" oninput="recalcular()">
-    </div>
-    <div class="cfg-item">
-      <div class="cfg-lbl">Días laborales del mes</div>
-      <input class="cfg-inp" id="cfg-dias-tot" type="number" value="21" oninput="recalcular()">
-    </div>
-    <div class="cfg-item">
-      <div class="cfg-lbl">Sem 1 (fecha)</div>
-      <input class="cfg-inp" id="cfg-s1" type="text" value="03/05" style="font-size:12px;font-weight:600;">
-    </div>
-    <div class="cfg-item">
-      <div class="cfg-lbl">Sem 4 / última cargada</div>
-      <select class="cfg-inp" id="cfg-sem-act" onchange="recalcular()" style="font-size:12px;padding:7px 8px;">
+    <div class="cfg-item"><div class="cfg-lbl">Objetivo Prima $</div>
+      <input class="cfg-inp" id="cfg-obj" type="number" value="19803546" oninput="guardarCfgMes();recalcular()"></div>
+    <div class="cfg-item"><div class="cfg-lbl">Objetivo Pólizas</div>
+      <input class="cfg-inp" id="cfg-pol" type="number" value="210" oninput="guardarCfgMes();recalcular()"></div>
+    <div class="cfg-item"><div class="cfg-lbl">Días transcurridos</div>
+      <input class="cfg-inp" id="cfg-dp" type="number" value="16" oninput="guardarCfgMes();recalcular()"></div>
+    <div class="cfg-item"><div class="cfg-lbl">Días del mes</div>
+      <input class="cfg-inp" id="cfg-dt" type="number" value="21" oninput="guardarCfgMes();recalcular()"></div>
+    <div class="cfg-item"><div class="cfg-lbl">Semana actual</div>
+      <select class="cfg-inp" id="cfg-sem" onchange="guardarCfgMes();recalcular()" style="font-size:12px;padding:7px 8px;">
         <option value="1">Semana 1</option><option value="2">Semana 2</option>
-        <option value="3">Semana 3</option><option value="4" selected>Semana 4</option>
-      </select>
-    </div>
+        <option value="3">Semana 3</option><option value="4" selected>Semana 4</option><option value="5">Semana 5</option>
+      </select></div>
+    <div class="cfg-item"><div class="cfg-lbl">Sem. fecha ref.</div>
+      <input class="cfg-inp" id="cfg-fecha-sem" type="text" value="22/05" style="font-size:12px;"></div>
   </div>
 </div>
 
-<!-- RESUMEN POR CANAL -->
+<!-- CANAL GRID CON OBJETIVOS EDITABLES -->
 <div class="card">
-  <div class="sec">Alcance por Canal — participación en el total del equipo</div>
+  <div class="sec">Alcance por Canal — objetivos de zona editables (independientes de la suma de asesores)</div>
   <div class="canal-grid" id="canal-grid"></div>
 </div>
 
 <!-- LÍNEA DE TIEMPO -->
 <div class="card">
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
-    <div class="sec" style="margin-bottom:0">📈 Evolución mensual del equipo</div>
-    <div class="linea-tabs" id="linea-tabs"></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+    <div class="sec" style="margin-bottom:0">📈 Evolución mensual</div>
+    <div class="ltabs" id="ltabs"></div>
   </div>
-  <div id="linea-chart" style="overflow-x:auto;min-height:60px;"></div>
-  <!-- Tabla comparativa -->
-  <div style="overflow-x:auto;margin-top:14px;">
-    <table style="font-size:11px;min-width:1200px;">
-      <thead>
-        <tr id="comp-header">
-          <th>Asesor</th><th>Canal</th>
-          <th id="col-m2" style="min-width:90px">—</th>
-          <th id="col-m1" style="min-width:90px">—</th>
-          <th id="col-m0" style="min-width:100px">— (actual)</th>
-          <th>Var.</th>
-        </tr>
-      </thead>
+  <div id="linea-chart" style="overflow-x:auto;"></div>
+  <div style="overflow-x:auto;margin-top:12px;">
+    <table style="font-size:11px;min-width:600px;">
+      <thead><tr id="comp-hdr" style="background:var(--g50);">
+        <th style="padding:6px 10px;color:var(--g600);font-size:10px;font-weight:700;">Asesor</th>
+        <th style="padding:6px 8px;color:var(--g600);font-size:10px;font-weight:700;">Canal</th>
+        <th id="col-m2" style="padding:6px 10px;color:var(--g600);font-size:10px;font-weight:700;min-width:90px;">—</th>
+        <th id="col-m1" style="padding:6px 10px;color:var(--g600);font-size:10px;font-weight:700;min-width:90px;">—</th>
+        <th id="col-m0" style="padding:6px 10px;color:var(--g600);font-size:10px;font-weight:700;min-width:100px;">— (actual)</th>
+        <th style="padding:6px 8px;color:var(--g600);font-size:10px;font-weight:700;">Var.</th>
+      </tr></thead>
       <tbody id="comp-tbody"></tbody>
     </table>
   </div>
 </div>
 
-<!-- CARGA TABLA -->
+<!-- TABLA CARGA -->
 <div>
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
-    <div style="font-size:14px;font-weight:800;color:var(--navy)">
-      Carga de datos — <span id="lbl-mes-tabla">Mayo 2026</span>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-      <div style="font-size:11px;color:var(--g400)">Filtrar:</div>
-      <div class="canal-tabs" id="canal-tabs"></div>
-    </div>
+  <div class="filtros-bar">
+    <div style="font-size:13px;font-weight:800;color:var(--navy)">Carga — <span id="lbl-mes-tabla">Mayo 2026</span></div>
+    <div id="canal-tabs" style="display:flex;gap:5px;flex-wrap:wrap;"></div>
+    <div id="cuad-tabs" style="display:flex;gap:5px;"></div>
+    <select class="sort-sel" id="sort-sel" onchange="renderTabla()">
+      <option value="">Ordenar por...</option>
+      <option value="nombre_asc">Nombre A→Z</option>
+      <option value="nombre_desc">Nombre Z→A</option>
+      <option value="emit_desc">Mayor emitido</option>
+      <option value="emit_asc">Menor emitido</option>
+      <option value="alc_desc">Mayor alcance</option>
+      <option value="alc_asc">Menor alcance</option>
+      <option value="pend_desc">Mayor pendiente</option>
+      <option value="canal_asc">Por canal</option>
+    </select>
+    <span style="font-size:10px;color:var(--g400)" id="filtro-cnt"></span>
   </div>
 
-  <!-- Upload zone -->
-  <div class="upload-zone card" id="upload-zone" onclick="document.getElementById('file-excel').click()"
-    ondragover="event.preventDefault();this.classList.add('drag')"
-    ondragleave="this.classList.remove('drag')"
+  <div class="upload-zone" onclick="document.getElementById('file-xl').click()"
+    ondragover="event.preventDefault();this.style.borderColor='var(--sky)'"
+    ondragleave="this.style.borderColor=''"
     ondrop="onDrop(event)">
-    <div style="font-size:28px;margin-bottom:8px">📂</div>
-    <div style="font-size:13px;font-weight:700;color:var(--navy)">Subí tu Excel de Boca de Urna</div>
-    <div style="font-size:11px;color:var(--g400);margin-top:4px">
-      Arrastrá el archivo o hacé click · Formato: el mismo Excel que usabas (col. Asesor, Producción, Pólizas)
-    </div>
-    <div style="margin-top:10px;font-size:10px;color:var(--g400)">
-      Columnas detectadas automáticamente: <b>ASESOR · PÓLIZAS ACUM · PRODUCCIÓN ACUM · PENDIENTE EMISIÓN $</b>
-    </div>
+    <div style="font-size:24px;margin-bottom:6px">📂</div>
+    <div style="font-size:12px;font-weight:700;color:var(--navy)">Subí el Excel de Boca de Urna</div>
+    <div style="font-size:10px;color:var(--g400);margin-top:3px">Formato exacto del BU · Col Z = Pólizas emitidas · Col AA = Producción · Col R/V = Pendiente</div>
   </div>
 
-  <div class="card" style="padding:0;overflow:hidden;margin-top:14px;overflow-x:auto;">
-    <table style="font-size:11px;min-width:1200px;border-collapse:collapse;">
+  <div class="tbl-outer" style="margin-top:12px;">
+    <table>
       <thead>
         <tr>
-          <th style="min-width:160px">Asesor</th>
-          <th style="min-width:55px">Canal</th>
-          <th style="min-width:80px">Zona</th>
-          <th style="min-width:50px">Ant.</th>
-          <th class="center" style="min-width:95px">Obj. Prima $<br><span style="font-size:9px;font-weight:400;opacity:.7">editable ↓</span></th>
-          <th class="center" style="min-width:45px">Obj. Pol.</th>
-          <th class="center" style="min-width:110px;background:#16A34A">✅ Prima Emitida $</th>
-          <th class="center" style="min-width:110px;background:#CA8A04">⏳ Pend. Emisión $</th>
-          <th class="center" style="min-width:45px">🏆 Pol.</th>
-          <th class="center" style="min-width:110px">Cuad. / Alcance</th>
-          <th class="center" style="min-width:90px">Proyectado</th>
-          <th class="center" style="min-width:80px">Brecha</th>
-          <th class="center" style="min-width:90px">vs Mes Ant.</th>
-          <th class="center" style="min-width:60px">Part.</th>
+          <th onclick="sortBy('nombre')">Asesor</th>
+          <th onclick="sortBy('canal')">Canal</th>
+          <th onclick="sortBy('zona')">Zona</th>
+          <th>Ant.</th>
+          <th onclick="sortBy('obj')">Obj. Prima $</th>
+          <th>Obj. Pol.</th>
+          <th onclick="sortBy('emit')" style="background:#16A34A">✅ Prima Emitida $</th>
+          <th onclick="sortBy('pend')" style="background:#CA8A04">⏳ Pend. Emisión $</th>
+          <th onclick="sortBy('pol')">🏆 Pol.</th>
+          <th onclick="sortBy('alc')">Cuad. / Alcance</th>
+          <th onclick="sortBy('proy')">Proyectado</th>
+          <th onclick="sortBy('brecha')">Brecha</th>
+          <th onclick="sortBy('var')">vs Mes Ant.</th>
+          <th>Part. Canal</th>
         </tr>
       </thead>
       <tbody id="tbody-carga"></tbody>
-      <tfoot>
-        <tr id="tfoot-total" style="background:var(--navy);color:#fff;font-weight:700;">
-          <td colspan="4" style="padding:9px 10px;font-size:12px">TOTAL EQUIPO</td>
-          <td id="tf-obj" style="padding:9px 8px;text-align:right;font-size:11px"></td>
-          <td id="tf-obj-pol" style="padding:9px 8px;text-align:center"></td>
-          <td id="tf-emit" style="padding:9px 8px;text-align:right;color:#86EFAC;font-size:13px;font-weight:900"></td>
-          <td id="tf-pend" style="padding:9px 8px;text-align:right;color:#FCD34D"></td>
-          <td id="tf-pol" style="padding:9px 8px;text-align:center;color:#38BDF8"></td>
-          <td id="tf-alc" style="padding:9px 8px;text-align:center;font-size:13px;font-weight:900"></td>
-          <td id="tf-proy" style="padding:9px 8px;text-align:right"></td>
-          <td id="tf-brecha" style="padding:9px 8px;text-align:right;color:#FCA5A5"></td>
-          <td></td>
-        </tr>
-      </tfoot>
+      <tfoot><tr id="tfoot-row">
+        <td colspan="4">TOTAL EQUIPO</td>
+        <td id="tf-obj"></td><td id="tf-opol"></td>
+        <td id="tf-e"></td><td id="tf-p"></td><td id="tf-pol"></td>
+        <td id="tf-alc"></td><td id="tf-proy"></td><td id="tf-br"></td>
+        <td colspan="2"></td>
+      </tr></tfoot>
     </table>
   </div>
 </div>
@@ -338,725 +287,703 @@ tbody td{padding:6px 7px;vertical-align:middle;font-size:12px;}
 <div class="toast" id="toast"></div>
 
 <script>
-// ════════════════════════════════════════════════════════════
-// 42 ASESORES REALES — con objetivos por defecto
-// ════════════════════════════════════════════════════════════
-const ASESORES=[
-  // AMBA CENTRO — todos Sr/Semi confirmados
-  {id:"cuckovich",     n:"CUCKOVICH, VERONICA CECILIA",       c:"AMBA CENTRO",       z:"Caballito",      a:"Sr",objPrima:485381,objPol:5},
-  {id:"aguilar",       n:"AGUILAR, ANALIA HAYDEE",            c:"AMBA CENTRO",       z:"La Plata",       a:"Sr",  objPrima:485381,objPol:5},
-  {id:"sanchez_mc",    n:"SANCHEZ, MERCEDES CAMILA",          c:"AMBA CENTRO",       z:"La Plata",       a:"Sr",objPrima:485381,objPol:5},
-  {id:"manteiga",      n:"MANTEIGA, MIRIAM MABEL",            c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Sr",  objPrima:485381,objPol:5},
-  {id:"rios",          n:"RIOS, ERICA ELIZABET",              c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Sr",objPrima:485381,objPol:5},
-  {id:"quispe",        n:"QUISPE, NOELIA CARINA",             c:"AMBA CENTRO",       z:"Microcentro",    a:"Sr",objPrima:485381,objPol:5},
-  {id:"witel",         n:"WITEL, LAURA DANIELA",              c:"AMBA CENTRO",       z:"Microcentro",    a:"Sr",objPrima:485381,objPol:5},
-  {id:"garcia_sanchez",n:"GARCIA SANCHEZ, BRENDA ELIZABETH",  c:"AMBA CENTRO",       z:"San Isidro",     a:"Sr",objPrima:485381,objPol:5},
-  {id:"morello",       n:"MORELLO, MARCELO ROQUE",            c:"AMBA CENTRO",       z:"San Isidro",     a:"Sr",  objPrima:485381,objPol:5},
-  // AMBA METRO
-  {id:"flores_i",      n:"FLORES, IVANA CAROLINA NORMA",      c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",  objPrima:485381,objPol:5},
-  {id:"prieto",        n:"PRIETO, BLANCA",                    c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",  objPrima:485381,objPol:5},
-  {id:"barroso",       n:"BARROSO CARPINTERO, RAFAEL ARMANDO",c:"AMBA METRO",        z:"Nordelta",       a:"Sr",  objPrima:485381,objPol:5},
-  {id:"briozzo",       n:"BRIOZZO, ANDREA LETICIA",           c:"AMBA METRO",        z:"Nordelta",       a:"Sr",  objPrima:485381,objPol:5},
-  {id:"varela",        n:"VARELA, SOFIA AYLEN",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Sr",objPrima:485381,objPol:5},
-  {id:"salas",         n:"SALAS, MAGALI PAULA",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Sr",objPrima:485381,objPol:5},
-  {id:"perez_g",       n:"PEREZ, GUSTAVO MARCELO",            c:"AMBA METRO",        z:"Zárate",         a:"Sr",  objPrima:485381,objPol:5},
-  {id:"medina_g",      n:"MEDINA, GIULIANA BEATRIZ",          c:"AMBA METRO",        z:"Zárate",         a:"Sr",objPrima:485381,objPol:5},
-  // CANALES DIGITALES — Jr: gomez_g, finocchiaro
-  {id:"magallanes",    n:"MAGALLANES, MARIA LAURA",           c:"CANALES DIGITALES", z:"Brigada 1",      a:"Sr",  objPrima:485381,objPol:5},
-  {id:"gomez_g",       n:"GOMEZ, GEORGINA FERNANDA",          c:"CANALES DIGITALES", z:"Brigada 8",      a:"Jr",  objPrima:339767,objPol:5},
-  {id:"benitez",       n:"BENITEZ MOMBELLI, LEANDRO EZEQUIEL",c:"CANALES DIGITALES", z:"Brigada 2",      a:"Sr",objPrima:485381,objPol:5},
-  {id:"bastidas",      n:"BASTIDAS HERRERA, CLAUDIA CECILIA", c:"CANALES DIGITALES", z:"Brigada 4",      a:"Sr",objPrima:485381,objPol:5},
-  {id:"finocchiaro",   n:"FINOCCHIARO, LAURA LORENA",         c:"CANALES DIGITALES", z:"Brigada 4",      a:"Jr",  objPrima:339767,objPol:5},
-  {id:"carrasco",      n:"CARRASCO, SILVIA GRACIELA",         c:"CANALES DIGITALES", z:"Brigada 5",      a:"Sr",  objPrima:485381,objPol:5},
-  {id:"avila",         n:"AVILA, JAVIER ALEJANDRO",           c:"CANALES DIGITALES", z:"Brigada 6",      a:"Sr",objPrima:485381,objPol:5},
-  {id:"rosen",         n:"ROSEN, BARBARA DAIANA",             c:"CANALES DIGITALES", z:"Brigada 7",      a:"Sr",objPrima:485381,objPol:5},
-  // INTERIOR — Jr: passeri, aguirre
-  {id:"berlocq",       n:"BERLOCQ, MARIA FLORENCIA",          c:"INTERIOR",          z:"Bs As Sur",      a:"Sr",objPrima:485381,objPol:5},
-  {id:"passeri",       n:"PASSERI, JOSE RAUL",                c:"INTERIOR",          z:"Bs As Sur",      a:"Jr",  objPrima:339767,objPol:5},
-  {id:"armand",        n:"ARMAND, LUCAS",                     c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:485381,objPol:5},
-  {id:"lopez_e",       n:"LOPEZ, ERNESTO MARTIN",             c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:485381,objPol:5},
-  {id:"pierlucca",     n:"PIERLUCCA, JULIA ELISABETH",        c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:485381,objPol:5},
-  {id:"nunez",         n:"NUÑEZ, MIGUEL ANGEL",               c:"INTERIOR",          z:"Córdoba",        a:"Sr",  objPrima:485381,objPol:5},
-  {id:"rivero",        n:"RIVERO, NADIA",                     c:"INTERIOR",          z:"Córdoba",        a:"Sr",objPrima:485381,objPol:5},
-  {id:"flores_lg",     n:"FLORES, LUCAS GASTON",              c:"INTERIOR",          z:"Mendoza",        a:"Sr",  objPrima:485381,objPol:5},
-  {id:"blanco",        n:"BLANCO, RICARDO FABIAN",            c:"INTERIOR",          z:"Neuquén",        a:"Sr",  objPrima:485381,objPol:5},
-  {id:"dominguez",     n:"DOMINGUEZ, ANA LAURA",              c:"INTERIOR",          z:"Neuquén",        a:"Sr",  objPrima:485381,objPol:5},
-  {id:"beltran",       n:"BELTRAN, DELMA RINA",               c:"INTERIOR",          z:"Salta",          a:"Sr",objPrima:485381,objPol:5},
-  {id:"aguirre",       n:"AGUIRRE ALEN, AGUSTINA",            c:"INTERIOR",          z:"Salta",          a:"Jr",  objPrima:339767,objPol:5},
-  {id:"bagnasco",      n:"BAGNASCO GENTILE, KARINA PAOLA",    c:"INTERIOR",          z:"Salta",          a:"Sr",objPrima:485381,objPol:5},
-  // MIXTO
-  {id:"michellis",     n:"MICHELLIS, SUSANA BEATRIZ",         c:"MIXTO",             z:"Brigada 9",      a:"Sr",  objPrima:485381,objPol:5},
-  {id:"bruno",         n:"BRUNO, MARIA SILVINA",              c:"MIXTO",             z:"Rosario 1",      a:"Sr",  objPrima:485381,objPol:5},
-  {id:"gerez",         n:"GEREZ, CARLOS",                     c:"MIXTO",             z:"Brigada 3",      a:"Sr",objPrima:485381,objPol:5},
-  {id:"silva",         n:"SILVA, ANA ROSA",                   c:"MIXTO",             z:"Equipo Pyme",    a:"Sr",objPrima:485381,objPol:5},
+// ══════════════════════════════════════════════════════
+// ASESORES — Sr y Jr únicamente
+// ══════════════════════════════════════════════════════
+var ASESORES=[
+  {id:"cuckovich",     n:"CUCKOVICH, VERONICA CECILIA",       c:"AMBA CENTRO",       z:"Caballito",      a:"Sr"},
+  {id:"aguilar",       n:"AGUILAR, ANALIA HAYDEE",            c:"AMBA CENTRO",       z:"La Plata",       a:"Sr"},
+  {id:"sanchez_mc",    n:"SANCHEZ, MERCEDES CAMILA",          c:"AMBA CENTRO",       z:"La Plata",       a:"Sr"},
+  {id:"manteiga",      n:"MANTEIGA, MIRIAM MABEL",            c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Sr"},
+  {id:"rios",          n:"RIOS, ERICA ELIZABET",              c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Sr"},
+  {id:"quispe",        n:"QUISPE, NOELIA CARINA",             c:"AMBA CENTRO",       z:"Microcentro",    a:"Sr"},
+  {id:"witel",         n:"WITEL, LAURA DANIELA",              c:"AMBA CENTRO",       z:"Microcentro",    a:"Sr"},
+  {id:"garcia_sanchez",n:"GARCIA SANCHEZ, BRENDA ELIZABETH",  c:"AMBA CENTRO",       z:"San Isidro",     a:"Sr"},
+  {id:"morello",       n:"MORELLO, MARCELO ROQUE",            c:"AMBA CENTRO",       z:"San Isidro",     a:"Sr"},
+  {id:"flores_i",      n:"FLORES, IVANA CAROLINA NORMA",      c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr"},
+  {id:"prieto",        n:"PRIETO, BLANCA",                    c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr"},
+  {id:"barroso",       n:"BARROSO CARPINTERO, RAFAEL ARMANDO",c:"AMBA METRO",        z:"Nordelta",       a:"Sr"},
+  {id:"briozzo",       n:"BRIOZZO, ANDREA LETICIA",           c:"AMBA METRO",        z:"Nordelta",       a:"Sr"},
+  {id:"varela",        n:"VARELA, SOFIA AYLEN",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Sr"},
+  {id:"salas",         n:"SALAS, MAGALI PAULA",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Sr"},
+  {id:"perez_g",       n:"PEREZ, GUSTAVO MARCELO",            c:"AMBA METRO",        z:"Zárate",         a:"Sr"},
+  {id:"medina_g",      n:"MEDINA, GIULIANA BEATRIZ",          c:"AMBA METRO",        z:"Zárate",         a:"Sr"},
+  {id:"magallanes",    n:"MAGALLANES, MARIA LAURA",           c:"CANALES DIGITALES", z:"Brigada 1",      a:"Sr"},
+  {id:"gomez_g",       n:"GOMEZ, GEORGINA FERNANDA",          c:"CANALES DIGITALES", z:"Brigada 8",      a:"Jr"},
+  {id:"benitez",       n:"BENITEZ MOMBELLI, LEANDRO EZEQUIEL",c:"CANALES DIGITALES", z:"Brigada 2",      a:"Sr"},
+  {id:"bastidas",      n:"BASTIDAS HERRERA, CLAUDIA CECILIA", c:"CANALES DIGITALES", z:"Brigada 4",      a:"Sr"},
+  {id:"finocchiaro",   n:"FINOCCHIARO, LAURA LORENA",         c:"CANALES DIGITALES", z:"Brigada 4",      a:"Jr"},
+  {id:"carrasco",      n:"CARRASCO, SILVIA GRACIELA",         c:"CANALES DIGITALES", z:"Brigada 5",      a:"Sr"},
+  {id:"avila",         n:"AVILA, JAVIER ALEJANDRO",           c:"CANALES DIGITALES", z:"Brigada 6",      a:"Sr"},
+  {id:"rosen",         n:"ROSEN, BARBARA DAIANA",             c:"CANALES DIGITALES", z:"Brigada 7",      a:"Sr"},
+  {id:"berlocq",       n:"BERLOCQ, MARIA FLORENCIA",          c:"INTERIOR",          z:"Bs As Sur",      a:"Sr"},
+  {id:"passeri",       n:"PASSERI, JOSE RAUL",                c:"INTERIOR",          z:"Bs As Sur",      a:"Jr"},
+  {id:"armand",        n:"ARMAND, LUCAS",                     c:"INTERIOR",          z:"Chaco",          a:"Sr"},
+  {id:"lopez_e",       n:"LOPEZ, ERNESTO MARTIN",             c:"INTERIOR",          z:"Chaco",          a:"Sr"},
+  {id:"pierlucca",     n:"PIERLUCCA, JULIA ELISABETH",        c:"INTERIOR",          z:"Chaco",          a:"Sr"},
+  {id:"nunez",         n:"NUÑEZ, MIGUEL ANGEL",               c:"INTERIOR",          z:"Córdoba",        a:"Sr"},
+  {id:"rivero",        n:"RIVERO, NADIA",                     c:"INTERIOR",          z:"Córdoba",        a:"Sr"},
+  {id:"flores_lg",     n:"FLORES, LUCAS GASTON",              c:"INTERIOR",          z:"Mendoza",        a:"Sr"},
+  {id:"blanco",        n:"BLANCO, RICARDO FABIAN",            c:"INTERIOR",          z:"Neuquén",        a:"Sr"},
+  {id:"dominguez",     n:"DOMINGUEZ, ANA LAURA",              c:"INTERIOR",          z:"Neuquén",        a:"Sr"},
+  {id:"beltran",       n:"BELTRAN, DELMA RINA",               c:"INTERIOR",          z:"Salta",          a:"Sr"},
+  {id:"aguirre",       n:"AGUIRRE ALEN, AGUSTINA",            c:"INTERIOR",          z:"Salta",          a:"Jr"},
+  {id:"bagnasco",      n:"BAGNASCO GENTILE, KARINA PAOLA",    c:"INTERIOR",          z:"Salta",          a:"Sr"},
+  {id:"michellis",     n:"MICHELLIS, SUSANA BEATRIZ",         c:"MIXTO",             z:"Brigada 9",      a:"Sr"},
+  {id:"bruno",         n:"BRUNO, MARIA SILVINA",              c:"MIXTO",             z:"Rosario 1",      a:"Sr"},
+  {id:"gerez",         n:"GEREZ, CARLOS",                     c:"MIXTO",             z:"Brigada 3",      a:"Sr"},
+  {id:"silva",         n:"SILVA, ANA ROSA",                   c:"MIXTO",             z:"Equipo Pyme",    a:"Sr"},
 ];
+var OBJ_SR=485381, OBJ_JR=339767;
 
-// DATOS ABRIL 2026 (del Excel real que me pasaron)
-const ABRIL_2026={
-  cuckovich:    {e:311083,  p:0,       pol:6},
-  aguilar:      {e:90100,   p:300000,  pol:2},
-  sanchez_mc:   {e:531000,  p:0,       pol:3},
-  manteiga:     {e:428622,  p:0,       pol:6},
-  rios:         {e:299000,  p:0,       pol:4},
-  quispe:       {e:767000,  p:0,       pol:8},
-  witel:        {e:262000,  p:90010,   pol:5},
-  garcia_sanchez:{e:256000, p:126000,  pol:4},
-  morello:      {e:802000,  p:225000,  pol:8},
-  flores_i:     {e:1674000, p:0,       pol:12},
-  prieto:       {e:200000,  p:0,       pol:2},
-  barroso:      {e:1135000, p:0,       pol:5},
-  briozzo:      {e:3700000, p:0,       pol:9},
-  varela:       {e:100000,  p:0,       pol:1},
-  salas:        {e:1383000, p:0,       pol:14},
-  perez_g:      {e:600000,  p:0,       pol:3},
-  medina_g:     {e:250000,  p:0,       pol:1},
-  magallanes:   {e:145200,  p:0,       pol:3},
-  gomez_g:      {e:190000,  p:0,       pol:4},
-  benitez:      {e:598000,  p:60000,   pol:10},
-  bastidas:     {e:0,       p:0,       pol:0},
-  finocchiaro:  {e:554000,  p:0,       pol:7},
-  carrasco:     {e:211000,  p:0,       pol:6},
-  avila:        {e:308000,  p:0,       pol:5},
-  rosen:        {e:282600,  p:0,       pol:5},
-  berlocq:      {e:178000,  p:0,       pol:5},
-  passeri:      {e:180000,  p:0,       pol:3},
-  armand:       {e:80000,   p:120000,  pol:1},
-  lopez_e:      {e:420000,  p:100000,  pol:4},
-  pierlucca:    {e:635000,  p:100000,  pol:7},
-  nunez:        {e:549000,  p:0,       pol:4},
-  rivero:       {e:888800,  p:647800,  pol:6},
-  flores_lg:    {e:502270,  p:0,       pol:4},
-  blanco:       {e:509000,  p:0,       pol:5},
-  dominguez:    {e:150000,  p:0,       pol:4},
-  beltran:      {e:106000,  p:0,       pol:3},
-  aguirre:      {e:290000,  p:0,       pol:6},
-  bagnasco:     {e:376000,  p:0,       pol:4},
-  michellis:    {e:1010000, p:250000,  pol:5},
-  bruno:        {e:481000,  p:0,       pol:4},
-  gerez:        {e:887000,  p:29800,   pol:7},
-  silva:        {e:513000,  p:0,       pol:9},
+var CANALES=["AMBA CENTRO","AMBA METRO","CANALES DIGITALES","INTERIOR","MIXTO"];
+var MESES=["","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+// Datos Abril 2026 precargados
+var ABRIL_2026={
+  cuckovich:{e:311083,p:0,pol:6},aguilar:{e:90100,p:300000,pol:2},sanchez_mc:{e:531000,p:0,pol:3},
+  manteiga:{e:428622,p:0,pol:6},rios:{e:299000,p:0,pol:4},quispe:{e:767000,p:0,pol:8},
+  witel:{e:262000,p:90010,pol:5},garcia_sanchez:{e:256000,p:126000,pol:4},morello:{e:802000,p:225000,pol:8},
+  flores_i:{e:1674000,p:0,pol:12},prieto:{e:200000,p:0,pol:2},barroso:{e:1135000,p:0,pol:5},
+  briozzo:{e:3700000,p:0,pol:9},varela:{e:100000,p:0,pol:1},salas:{e:1383000,p:0,pol:14},
+  perez_g:{e:600000,p:0,pol:3},medina_g:{e:250000,p:0,pol:1},magallanes:{e:145200,p:0,pol:3},
+  gomez_g:{e:190000,p:0,pol:4},benitez:{e:598000,p:60000,pol:10},bastidas:{e:0,p:0,pol:0},
+  finocchiaro:{e:554000,p:0,pol:7},carrasco:{e:211000,p:0,pol:6},avila:{e:308000,p:0,pol:5},
+  rosen:{e:282600,p:0,pol:5},berlocq:{e:178000,p:0,pol:5},passeri:{e:180000,p:0,pol:3},
+  armand:{e:80000,p:120000,pol:1},lopez_e:{e:420000,p:100000,pol:4},pierlucca:{e:635000,p:100000,pol:7},
+  nunez:{e:549000,p:0,pol:4},rivero:{e:888800,p:647800,pol:6},flores_lg:{e:502270,p:0,pol:4},
+  blanco:{e:509000,p:0,pol:5},dominguez:{e:150000,p:0,pol:4},beltran:{e:106000,p:0,pol:3},
+  aguirre:{e:290000,p:0,pol:6},bagnasco:{e:376000,p:0,pol:4},michellis:{e:1010000,p:250000,pol:5},
+  bruno:{e:481000,p:0,pol:4},gerez:{e:887000,p:29800,pol:7},silva:{e:513000,p:0,pol:9},
+};
+var MAYO_2026={
+  cuckovich:{e:540166,p:87500,pol:7},aguilar:{e:326100,p:155000,pol:7},sanchez_mc:{e:65000,p:210000,pol:1},
+  manteiga:{e:624000,p:65000,pol:6},rios:{e:402000,p:80000,pol:6},quispe:{e:200000,p:50000,pol:3},
+  witel:{e:99787,p:138210,pol:1},garcia_sanchez:{e:256000,p:126000,pol:4},morello:{e:449000,p:200000,pol:5},
+  flores_i:{e:958380,p:150000,pol:9},prieto:{e:322000,p:115000,pol:3},barroso:{e:999999,p:0,pol:8},
+  briozzo:{e:1700000,p:0,pol:7},varela:{e:0,p:0,pol:0},salas:{e:537000,p:0,pol:6},
+  perez_g:{e:90000,p:300000,pol:1},medina_g:{e:202000,p:0,pol:4},magallanes:{e:285579,p:0,pol:6},
+  gomez_g:{e:125000,p:100000,pol:2},benitez:{e:170000,p:0,pol:3},bastidas:{e:30000,p:60000,pol:1},
+  finocchiaro:{e:420000,p:340000,pol:8},carrasco:{e:409000,p:47000,pol:5},avila:{e:110000,p:0,pol:2},
+  rosen:{e:259573,p:47000,pol:4},berlocq:{e:135200,p:401795,pol:2},passeri:{e:320000,p:140000,pol:3},
+  armand:{e:278000,p:200000,pol:2},lopez_e:{e:320000,p:200000,pol:3},pierlucca:{e:450000,p:350000,pol:5},
+  nunez:{e:834000,p:50000,pol:9},rivero:{e:402191,p:74241,pol:9},flores_lg:{e:132131,p:112638,pol:3},
+  blanco:{e:923622,p:139349,pol:10},dominguez:{e:443973,p:0,pol:8},beltran:{e:28300,p:0,pol:1},
+  aguirre:{e:208000,p:100000,pol:4},bagnasco:{e:50000,p:0,pol:1},michellis:{e:385000,p:325000,pol:4},
+  bruno:{e:206533,p:87900,pol:3},gerez:{e:213751,p:142000,pol:3},silva:{e:313253,p:0,pol:6},
 };
 
-
-// ════════════════════════════════════════════════════════════
-// DATOS REALES MAYO 2026 — cargados desde Excel
-// ════════════════════════════════════════════════════════════
-const MAYO_2026={
-  cuckovich:    {e:540166,  p:87500,   pol:7},
-  aguilar:      {e:326100,  p:155000,  pol:7},
-  sanchez_mc:   {e:65000,   p:210000,  pol:1},
-  manteiga:     {e:624000,  p:65000,   pol:6},
-  rios:         {e:402000,  p:80000,   pol:6},
-  quispe:       {e:200000,  p:50000,   pol:3},
-  witel:        {e:99787,   p:138210,  pol:1},
-  garcia_sanchez:{e:256000, p:126000,  pol:4},
-  morello:      {e:449000,  p:200000,  pol:5},
-  flores_i:     {e:958380,  p:150000,  pol:9},
-  prieto:       {e:322000,  p:115000,  pol:3},
-  barroso:      {e:999999,  p:0,       pol:8},
-  briozzo:      {e:1700000, p:0,       pol:7},
-  varela:       {e:0,       p:0,       pol:0},
-  salas:        {e:537000,  p:0,       pol:6},
-  perez_g:      {e:90000,   p:300000,  pol:1},
-  medina_g:     {e:202000,  p:0,       pol:4},
-  magallanes:   {e:285579,  p:0,       pol:6},
-  gomez_g:      {e:125000,  p:100000,  pol:2},
-  benitez:      {e:170000,  p:0,       pol:3},
-  bastidas:     {e:30000,   p:60000,   pol:1},
-  finocchiaro:  {e:420000,  p:340000,  pol:8},
-  carrasco:     {e:409000,  p:47000,   pol:5},
-  avila:        {e:110000,  p:0,       pol:2},
-  rosen:        {e:259573,  p:47000,   pol:4},
-  berlocq:      {e:135200,  p:401795,  pol:2},
-  passeri:      {e:320000,  p:140000,  pol:3},
-  armand:       {e:278000,  p:200000,  pol:2},
-  lopez_e:      {e:320000,  p:200000,  pol:3},
-  pierlucca:    {e:450000,  p:350000,  pol:5},
-  nunez:        {e:834000,  p:50000,   pol:9},
-  rivero:       {e:402191,  p:74241,   pol:9},
-  flores_lg:    {e:132131,  p:112638,  pol:3},
-  blanco:       {e:923622,  p:139349,  pol:10},
-  dominguez:    {e:443973,  p:0,       pol:8},
-  beltran:      {e:28300,   p:0,       pol:1},
-  aguirre:      {e:208000,  p:100000,  pol:4},
-  bagnasco:     {e:50000,   p:0,       pol:1},
-  michellis:    {e:385000,  p:325000,  pol:4},
-  bruno:        {e:206533,  p:87900,   pol:3},
-  gerez:        {e:213751,  p:142000,  pol:3},
-  silva:        {e:313253,  p:0,       pol:6},
-};
-
-const CANALES=["AMBA CENTRO","AMBA METRO","CANALES DIGITALES","INTERIOR","MIXTO"];
-const MESES=["","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-const ANT_C={"Sr":"#2563EB","Jr":"#EA580C"};
-const ANT_B={"Sr":"#EFF6FF","Jr":"#FFF7ED"};
-
-// ════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // ESTADO
-// ════════════════════════════════════════════════════════════
-let MES_ACT=5;
-let DATA={};        // datos mes actual {id:{e,p,pol,objPrima,objPol}}
-let HIST={};        // histórico {mes:{id:{e,p,pol}}}
-let CANAL_SEL="TODOS";
-let OBJ_CANAL="TODOS"; // para línea de tiempo
-let autoTimer=null;
+// ══════════════════════════════════════════════════════
+var MES_ACT=5;
+var HIST={};       // {mes: {id:{e,p,pol,objPrima,objPol}}}
+var CFG_MES={};    // {mes: {obj,pol,dp,dt,sem}}
+var OBJ_ZONA={};   // {mes: {canal: {obj,pol}}}
+var HIST_SEMANAL={}; // {mes: {sem: {id:{e,p,pol}}}}
+var CANAL_SEL="TODOS";
+var CUAD_SEL="TODOS";
+var SORT_KEY="canal"; var SORT_DIR=1;
+var LTAB_SEL="TODOS";
+var DATA={};
 
-// ════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // HELPERS
-// ════════════════════════════════════════════════════════════
-const fmt=n=>{
+// ══════════════════════════════════════════════════════
+function fmt(n){
   if(!n||n===0) return "$0";
   return "$"+Math.round(n).toLocaleString("es-AR");
-};
-// Para ejes de gráficos (abreviado)
-const fmtC=n=>{
+}
+function fmtC(n){
   if(!n||n===0) return "$0";
-  if(n>=1000000) return "$"+(n/1000000).toFixed(1)+"M";
-  if(n>=1000) return "$"+(n/1000).toFixed(0)+"K";
+  if(Math.abs(n)>=1000000) return "$"+(n/1000000).toFixed(1)+"M";
+  if(Math.abs(n)>=1000) return "$"+(n/1000).toFixed(0)+"K";
   return "$"+Math.round(n);
-};
-const pct=(v,t)=>t===0?0:Math.round(v/t*100);
-const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
-const sm=p=>{
-  if(p>=100)return{c:"#16A34A",bg:"#DCFCE7",txt:"C1 — Objetivo ✅",cuad:1};
-  if(p>=75) return{c:"#CA8A04",bg:"#FEF9C3",txt:"C2 — En riesgo", cuad:2};
-  if(p>=50) return{c:"#EA580C",bg:"#FFEDD5",txt:"C3 — Bajo",      cuad:3};
-  return         {c:"#DC2626",bg:"#FEE2E2",txt:"C4 — Crítico",    cuad:4};
-};
-const cuadLabel=q=>q===1?"🟢 C1":q===2?"🟡 C2":q===3?"🟠 C3":"🔴 C4";
-const proyS=(e,dp,dt)=>Math.round(e+(dp>0?e/dp:0)*(dt-dp));
-const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
-
-function getObj(id){
-  const d=DATA[id]||{};
-  const base=ASESORES.find(a=>a.id===id)||{};
-  return{prima:Number(d.objPrima||base.objPrima||450000),pol:Number(d.objPol||base.objPol||5)};
+}
+function pct(v,t){return t===0?0:Math.round(v/t*100);}
+function clamp(v,a,b){return Math.min(b,Math.max(a,v));}
+function norm(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();}
+function proyS(e,dp,dt){return Math.round(e+(dp>0?e/dp:0)*(dt-dp));}
+function sm(p){
+  if(p>=100) return {c:"#16A34A",bg:"#DCFCE7",txt:"C1 — Objetivo ✅",cuad:1};
+  if(p>=75)  return {c:"#CA8A04",bg:"#FEF9C3",txt:"C2 — En riesgo",  cuad:2};
+  if(p>=50)  return {c:"#EA580C",bg:"#FFEDD5",txt:"C3 — Bajo",       cuad:3};
+  return           {c:"#DC2626",bg:"#FEE2E2",txt:"C4 — Crítico",     cuad:4};
+}
+function cuadLabel(q){return q===1?"🟢 C1":q===2?"🟡 C2":q===3?"🟠 C3":"🔴 C4";}
+function getObjAsesor(id){
+  var d=DATA[id]||{};
+  if(d.objPrima) return {prima:d.objPrima, pol:d.objPol||5};
+  var a=ASESORES.find(function(x){return x.id===id;})||{};
+  return {prima:a.a==="Jr"?OBJ_JR:OBJ_SR, pol:5};
+}
+function getCfg(){
+  var c=CFG_MES[MES_ACT]||{};
+  return {
+    obj: Number(c.obj||document.getElementById("cfg-obj").value)||19803546,
+    pol: Number(c.pol||document.getElementById("cfg-pol").value)||210,
+    dp:  Number(c.dp ||document.getElementById("cfg-dp").value)||16,
+    dt:  Number(c.dt ||document.getElementById("cfg-dt").value)||21,
+    sem: Number(c.sem||document.getElementById("cfg-sem").value)||4,
+  };
 }
 
-// ════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // INIT
-// ════════════════════════════════════════════════════════════
-window.addEventListener("DOMContentLoaded",()=>{
-  // Cargar histórico
-  try{HIST=JSON.parse(localStorage.getItem("bocaurna_hist")||"{}");}catch(e){}
-  // Pre-cargar Abril si no existe
-  if(!HIST[4]){HIST[4]=ABRIL_2026;try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){}}
+// ══════════════════════════════════════════════════════
+window.addEventListener("DOMContentLoaded",function(){
+  // Cargar historial
+  try{HIST=JSON.parse(localStorage.getItem("bu_hist")||"{}");}catch(e){}
+  try{CFG_MES=JSON.parse(localStorage.getItem("bu_cfg_mes")||"{}");}catch(e){}
+  try{OBJ_ZONA=JSON.parse(localStorage.getItem("bu_obj_zona")||"{}");}catch(e){}
+  try{HIST_SEMANAL=JSON.parse(localStorage.getItem("bu_semanal")||"{}");}catch(e){}
 
-  // Cargar config
+  // Precargar meses con datos reales si no existen
+  if(!HIST[4]||Object.keys(HIST[4]).length===0) HIST[4]=JSON.parse(JSON.stringify(ABRIL_2026));
+  if(!HIST[5]||Object.keys(HIST[5]).length===0) HIST[5]=JSON.parse(JSON.stringify(MAYO_2026));
+  // Siempre actualizar mayo con datos correctos del Excel
+  HIST[5]=JSON.parse(JSON.stringify(MAYO_2026));
+
+  // Cargar mes guardado
   try{
-    const cfg=JSON.parse(localStorage.getItem("bocaurna_cfg")||"{}");
-    if(cfg.mes){MES_ACT=Number(cfg.mes);document.getElementById("mes-sel").value=MES_ACT;}
-    if(cfg.obj)       document.getElementById("cfg-obj").value=cfg.obj;
-    if(cfg.pol)       document.getElementById("cfg-pol").value=cfg.pol;
-    if(cfg.diasPas)   document.getElementById("cfg-dias-pas").value=cfg.diasPas;
-    if(cfg.diasTot)   document.getElementById("cfg-dias-tot").value=cfg.diasTot;
+    var last=localStorage.getItem("bu_mes_act");
+    if(last){MES_ACT=Number(last);document.getElementById("mes-sel").value=MES_ACT;}
   }catch(e){}
 
-  // Cargar datos del mes activo (copia para no mutar el historial)
-  // Si Mayo no tiene datos, precargar con datos reales del Excel
-  // Siempre actualizar Mayo con datos correctos del Excel
-  HIST[5]=JSON.parse(JSON.stringify(MAYO_2026));
-  try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){}
   DATA=JSON.parse(JSON.stringify(HIST[MES_ACT]||{}));
+  cargarCfgMes();
 
-  // Build canal tabs
-  const tabsDiv=document.getElementById("canal-tabs");
-  ["TODOS",...CANALES].forEach(c=>{
-    const b=document.createElement("button");
-    b.className="ctab"+(c==="TODOS"?" active":"");
-    b.textContent=c==="CANALES DIGITALES"?"C.Digital":c==="AMBA CENTRO"?"A.Centro":c==="AMBA METRO"?"A.Metro":c;
-    (function(canal, btn){
-      btn.onclick=function(){
-        CANAL_SEL=canal;
-        document.querySelectorAll(".ctab").forEach(function(x){x.classList.toggle("active",x===btn);});
-        renderTabla();
-      };
-    })(c, b);
-    tabsDiv.appendChild(b);
-  });
-
-  // Build linea tabs
-  const lTabsDiv=document.getElementById("linea-tabs");
-  ["TODOS",...CANALES].forEach(c=>{
-    const b=document.createElement("button");
-    b.className="ltab"+(c==="TODOS"?" active":"");
-    b.textContent=c==="CANALES DIGITALES"?"C.Dig":c==="AMBA CENTRO"?"A.Cen":c==="AMBA METRO"?"A.Met":c;
-    (function(canal, btn){
-      btn.onclick=function(){
-        OBJ_CANAL=canal;
-        document.querySelectorAll(".ltab").forEach(function(x){x.classList.toggle("active",x===btn);});
-        renderLinea();
-      };
-    })(c, b);
-    lTabsDiv.appendChild(b);
-  });
+  // Build tabs
+  buildCanalTabs();
+  buildCuadTabs();
+  buildLtabs();
 
   recalcular();
   renderLinea();
 });
 
-// ════════════════════════════════════════════════════════════
-// CAMBIAR MES
-// ════════════════════════════════════════════════════════════
-function cambiarMes(){
-  // Guardar mes actual ANTES de cambiar
-  HIST[MES_ACT]={...DATA};
-  try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){}
-  // Ahora cambiar
-  MES_ACT=Number(document.getElementById("mes-sel").value);
-  DATA=HIST[MES_ACT]||{};
-  guardarCfg();
+function cargarCfgMes(){
+  var c=CFG_MES[MES_ACT]||{};
+  var inp=document.getElementById("cfg-obj"); if(inp&&c.obj) inp.value=c.obj;
+  inp=document.getElementById("cfg-pol"); if(inp&&c.pol) inp.value=c.pol;
+  inp=document.getElementById("cfg-dp");  if(inp&&c.dp)  inp.value=c.dp;
+  inp=document.getElementById("cfg-dt");  if(inp&&c.dt)  inp.value=c.dt;
+  inp=document.getElementById("cfg-sem"); if(inp&&c.sem) inp.value=c.sem;
+  document.getElementById("cfg-mes-lbl").textContent=MESES[MES_ACT]+" 2026";
   document.getElementById("lbl-mes-tabla").textContent=MESES[MES_ACT]+" 2026";
-  document.getElementById("hero-ttl").textContent=`División VIDA — ${MESES[MES_ACT]} 2026`;
-  recalcular();
-  renderLinea();
-  toast(`📅 ${MESES[MES_ACT]} 2026`);
+  document.getElementById("hero-ttl").textContent="División VIDA — "+MESES[MES_ACT]+" 2026";
 }
 
-// ════════════════════════════════════════════════════════════
-// RECALCULAR + RENDER HERO + CANAL GRID
-// ════════════════════════════════════════════════════════════
-function recalcular(){
-  const objT=Number(document.getElementById("cfg-obj").value)||0;
-  const objPT=Number(document.getElementById("cfg-pol").value)||0;
-  const dp=Number(document.getElementById("cfg-dias-pas").value)||16;
-  const dt=Number(document.getElementById("cfg-dias-tot").value)||21;
+function guardarCfgMes(){
+  CFG_MES[MES_ACT]={
+    obj:document.getElementById("cfg-obj").value,
+    pol:document.getElementById("cfg-pol").value,
+    dp: document.getElementById("cfg-dp").value,
+    dt: document.getElementById("cfg-dt").value,
+    sem:document.getElementById("cfg-sem").value,
+  };
+  try{localStorage.setItem("bu_cfg_mes",JSON.stringify(CFG_MES));}catch(e){}
+}
 
-  let tE=0,tP=0,tPol=0,tObj=0,tOPol=0;
-  ASESORES.forEach(a=>{
-    const d=DATA[a.id]||{};
-    const o=getObj(a.id);
+function cambiarMes(){
+  // Guardar mes actual
+  guardarTodo(true);
+  MES_ACT=Number(document.getElementById("mes-sel").value);
+  try{localStorage.setItem("bu_mes_act",MES_ACT);}catch(e){}
+  DATA=JSON.parse(JSON.stringify(HIST[MES_ACT]||{}));
+  cargarCfgMes();
+  recalcular();
+  renderLinea();
+  toast("📅 "+MESES[MES_ACT]+" 2026");
+}
+
+// ══════════════════════════════════════════════════════
+// BUILD TABS
+// ══════════════════════════════════════════════════════
+function buildCanalTabs(){
+  var div=document.getElementById("canal-tabs");
+  div.innerHTML="";
+  var items=["TODOS"].concat(CANALES);
+  items.forEach(function(c){
+    var b=document.createElement("button");
+    b.className="ctab"+(c==="TODOS"?" active":"");
+    b.textContent=c==="CANALES DIGITALES"?"C.Digital":c==="AMBA CENTRO"?"A.Centro":c==="AMBA METRO"?"A.Metro":c;
+    b.dataset.canal=c;
+    b.onclick=function(){
+      CANAL_SEL=c;
+      document.querySelectorAll(".ctab").forEach(function(x){x.classList.toggle("active",x===b);});
+      renderTabla();
+    };
+    div.appendChild(b);
+  });
+}
+
+function buildCuadTabs(){
+  var div=document.getElementById("cuad-tabs");
+  div.innerHTML="";
+  var items=[
+    {v:"TODOS",l:"Todos",c:"var(--g600)",bg:"#fff"},
+    {v:"1",l:"🟢 C1",c:"#16A34A",bg:"#DCFCE7"},
+    {v:"2",l:"🟡 C2",c:"#CA8A04",bg:"#FEF9C3"},
+    {v:"3",l:"🟠 C3",c:"#EA580C",bg:"#FFEDD5"},
+    {v:"4",l:"🔴 C4",c:"#DC2626",bg:"#FEE2E2"},
+  ];
+  items.forEach(function(item){
+    var b=document.createElement("button");
+    b.className="qtab"+(item.v==="TODOS"?" active":"");
+    b.style.color=item.c; b.style.background=item.v==="TODOS"?"#fff":item.bg;
+    b.style.borderColor=item.c+"60";
+    b.textContent=item.l;
+    b.dataset.q=item.v;
+    b.onclick=function(){
+      CUAD_SEL=item.v;
+      document.querySelectorAll(".qtab").forEach(function(x){x.classList.toggle("active",x===b);});
+      renderTabla();
+    };
+    div.appendChild(b);
+  });
+}
+
+function buildLtabs(){
+  var div=document.getElementById("ltabs");
+  div.innerHTML="";
+  var items=["TODOS"].concat(CANALES);
+  items.forEach(function(c){
+    var b=document.createElement("button");
+    b.className="ltab"+(c==="TODOS"?" active":"");
+    b.textContent=c==="CANALES DIGITALES"?"C.Dig":c==="AMBA CENTRO"?"A.Cen":c==="AMBA METRO"?"A.Met":c;
+    b.onclick=function(){
+      LTAB_SEL=c;
+      document.querySelectorAll(".ltab").forEach(function(x){x.classList.toggle("active",x===b);});
+      renderLinea();
+    };
+    div.appendChild(b);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// RECALCULAR
+// ══════════════════════════════════════════════════════
+function recalcular(){
+  var cfg=getCfg();
+  var tE=0,tP=0,tPol=0,tObj=0,tOPol=0;
+  ASESORES.forEach(function(a){
+    var d=DATA[a.id]||{};
+    var o=getObjAsesor(a.id);
     tE+=Number(d.e||0); tP+=Number(d.p||0); tPol+=Number(d.pol||0);
     tObj+=o.prima; tOPol+=o.pol;
   });
-
-  const tProy=tE+tP, pp=pct(tProy,objT||tObj), s=sm(pp);
-  const proyRitmo=proyS(tE,dp,dt)+tP;
+  var objT=cfg.obj||tObj;
+  var proy=tE+tP, proyR=proyS(tE,cfg.dp,cfg.dt)+tP;
+  var pp=pct(proy,objT), s=sm(pp);
 
   // Hero KPIs
   document.getElementById("hero-kpis").innerHTML=[
-    {l:"Objetivo Total",v:fmt(objT||tObj),c:"rgba(255,255,255,.9)",sub:""},
-    {l:"Prima Emitida",v:fmt(tE),c:"#86EFAC",sub:`${pct(tE,objT||tObj)}% del obj.`},
-    {l:"Pend. de Emisión",v:fmt(tP),c:"#FCD34D",sub:`${pct(tP,objT||tObj)}% del obj.`},
-    {l:"Proy. con Pend.",v:fmt(tProy),c:s.c,sub:`${pp}% — ${s.txt}`},
-    {l:"Proy. al Fin de Mes",v:fmt(proyRitmo),c:sm(pct(proyRitmo,objT||tObj)).c,sub:`Ritmo actual extrapolado`},
-    {l:"Pólizas",v:`${tPol}/${objPT||tOPol}`,c:"#38BDF8",sub:`${pct(tPol,objPT||tOPol)}% del obj.`},
-  ].map(x=>`<div class="hk">
-    <div class="hk-v" style="color:${x.c}">${x.v}</div>
-    <div class="hk-l">${x.l}</div>
-    ${x.sub?`<div class="hk-sub" style="color:${x.c}">${x.sub}</div>`:""}
-  </div>`).join("");
-
-  // Barra
-  const pE=clamp(pct(tE,objT||tObj),0,100), pP=clamp(pct(tP,objT||tObj),0,Math.max(0,100-pE));
-  document.getElementById("b-e").style.width=pE+"%";
-  document.getElementById("b-p").style.width=pP+"%";
-  document.getElementById("b-e-txt").textContent=pE>8?fmt(tE):"";
-  document.getElementById("b-p-txt").textContent=pP>6?fmt(tP):"";
-  document.getElementById("l-e").textContent=fmt(tE);
-  document.getElementById("l-p").textContent=fmt(tP);
-  document.getElementById("l-br").textContent=fmt(Math.max(0,(objT||tObj)-tProy));
-  document.getElementById("l-o").textContent=fmt(objT||tObj);
-
-  // Canal grid
-  document.getElementById("canal-grid").innerHTML=CANALES.map(c=>{
-    const aa=ASESORES.filter(a=>a.c===c);
-    const cO=aa.reduce((s,a)=>s+getObj(a.id).prima,0);
-    const cE=aa.reduce((s,a)=>s+Number((DATA[a.id]||{}).e||0),0);
-    const cP=aa.reduce((s,a)=>s+Number((DATA[a.id]||{}).p||0),0);
-    const cPol=aa.reduce((s,a)=>s+Number((DATA[a.id]||{}).pol||0),0);
-    const cOPol=aa.reduce((s,a)=>s+getObj(a.id).pol,0);
-    const cPPct=pct(cE+cP,cO), cSm=sm(cPPct);
-    const pCE=clamp(pct(cE,cO),0,100), pCP=clamp(pct(cP,cO),0,Math.max(0,100-pCE));
-    const partTotal=tE>0?pct(cE,tE):0;
-    const enCero=aa.filter(a=>!Number((DATA[a.id]||{}).e)&&!Number((DATA[a.id]||{}).p)).length;
-    return `<div class="cz" style="background:${cSm.bg};border-color:${cSm.c}40;cursor:pointer"
-      onclick="CANAL_SEL='${c}';document.querySelectorAll('.ctab').forEach(b=>b.classList.toggle('active',b.textContent.includes('${c.slice(0,5)}')));renderTabla()">
-      <div class="cz-name" style="color:${cSm.c}">${c.replace("CANALES DIGITALES","C.Digital")}</div>
-      <div class="cz-pct" style="color:${cSm.c}">${cPPct}%</div>
-      <div class="cz-bar">
-        <div style="width:${pCE}%;height:100%;background:#16A34A"></div>
-        <div style="width:${pCP}%;height:100%;background:#CA8A04"></div>
-      </div>
-      <div class="cz-det">
-        ${fmt(cE)} emit · ${fmt(cP)} pend<br>
-        ${cPol}/${cOPol} pólizas · ${enCero} en cero<br>
-        <b style="color:${cSm.c}">Part. equipo: ${partTotal}%</b>
-      </div>
-    </div>`;
+    {l:"Objetivo Total",v:fmtC(objT),c:"rgba(255,255,255,.9)",s:""},
+    {l:"Prima Emitida",v:fmtC(tE),c:"#86EFAC",s:pct(tE,objT)+"% del obj."},
+    {l:"Pend. de Emisión",v:fmtC(tP),c:"#FCD34D",s:pct(tP,objT)+"% del obj."},
+    {l:"Proy. con Pend.",v:fmtC(proy),c:s.c,s:pp+"% — "+s.txt},
+    {l:"Proy. fin de mes",v:fmtC(proyR),c:sm(pct(proyR,objT)).c,s:"Ritmo actual"},
+    {l:"Pólizas",v:tPol+"/"+cfg.pol,c:"#38BDF8",s:pct(tPol,cfg.pol)+"% del obj."},
+  ].map(function(x){
+    return "<div class='hk'><div class='hk-v' style='color:"+x.c+"'>"+x.v+"</div><div class='hk-l'>"+x.l+"</div>"+(x.s?"<div class='hk-s' style='color:"+x.c+"'>"+x.s+"</div>":"")+"</div>";
   }).join("");
 
+  // Barra
+  var pE=clamp(pct(tE,objT),0,100), pPp=clamp(pct(tP,objT),0,Math.max(0,100-pE));
+  document.getElementById("b-e").style.width=pE+"%";
+  document.getElementById("b-p").style.width=pPp+"%";
+  document.getElementById("b-e-t").textContent=pE>8?fmtC(tE):"";
+  document.getElementById("b-p-t").textContent=pPp>6?fmtC(tP):"";
+  document.getElementById("l-e").textContent=fmt(tE);
+  document.getElementById("l-p").textContent=fmt(tP);
+  document.getElementById("l-br").textContent=fmt(Math.max(0,objT-tE-tP));
+  document.getElementById("l-o").textContent=fmt(objT);
+  document.getElementById("hero-sub-txt").textContent=pp+"% alcance";
+
+  renderCanalGrid();
   renderTabla();
 }
 
-// ════════════════════════════════════════════════════════════
-// TABLA CARGA
-// ════════════════════════════════════════════════════════════
-function renderTabla(){
-  var dp=Number(document.getElementById("cfg-dias-pas").value)||16;
-  var dt=Number(document.getElementById("cfg-dias-tot").value)||21;
-  var filtrados=CANAL_SEL==="TODOS"?ASESORES:ASESORES.filter(function(a){return a.c===CANAL_SEL;});
+// ══════════════════════════════════════════════════════
+// CANAL GRID CON OBJETIVOS EDITABLES POR ZONA
+// ══════════════════════════════════════════════════════
+function renderCanalGrid(){
+  var cfg=getCfg();
   var emitCanal={};
-  CANALES.forEach(function(c){
-    emitCanal[c]=ASESORES.filter(function(a){return a.c===c;}).reduce(function(s,a){return s+Number((DATA[a.id]||{}).e||0);},0);
+  CANALES.forEach(function(c){emitCanal[c]=0;});
+  var tEmit=0;
+  ASESORES.forEach(function(a){
+    var e=Number((DATA[a.id]||{}).e||0);
+    emitCanal[a.c]=(emitCanal[a.c]||0)+e;
+    tEmit+=e;
   });
-  var tE=0,tP=0,tPol=0,tObj=0,tOPol=0;
-  var rows="";
 
-  filtrados.forEach(function(a,i){
+  document.getElementById("canal-grid").innerHTML=CANALES.map(function(c){
+    var aa=ASESORES.filter(function(a){return a.c===c;});
+    var cE=aa.reduce(function(s,a){return s+Number((DATA[a.id]||{}).e||0);},0);
+    var cP=aa.reduce(function(s,a){return s+Number((DATA[a.id]||{}).p||0);},0);
+    var cPol=aa.reduce(function(s,a){return s+Number((DATA[a.id]||{}).pol||0);},0);
+    // Objetivo de zona: usar el guardado o la suma de asesores
+    var oz=OBJ_ZONA[MES_ACT]&&OBJ_ZONA[MES_ACT][c]?OBJ_ZONA[MES_ACT][c]:{};
+    var cObj=Number(oz.prima)||aa.reduce(function(s,a){return s+getObjAsesor(a.id).prima;},0);
+    var cOPol=Number(oz.pol)||aa.reduce(function(s,a){return s+getObjAsesor(a.id).pol;},0);
+    var pp=pct(cE+cP,cObj), ss=sm(pp);
+    var pCE=clamp(pct(cE,cObj),0,100), pCP=clamp(pct(cP,cObj),0,Math.max(0,100-pCE));
+    var partTotal=tEmit>0?pct(cE,tEmit):0;
+    var cNom=c.replace("CANALES DIGITALES","C.Digital");
+    return "<div class='cz' style='background:"+ss.bg+";border-color:"+ss.c+"40'>"+
+      "<div class='cz-name' style='color:"+ss.c+"'>"+cNom+"</div>"+
+      "<div class='cz-pct' style='color:"+ss.c+"'>"+pp+"%</div>"+
+      "<div class='cz-bar'>"+
+        "<div style='width:"+pCE+"%;height:100%;background:#16A34A'></div>"+
+        "<div style='width:"+pCP+"%;height:100%;background:#CA8A04'></div>"+
+      "</div>"+
+      "<div class='cz-det' style='color:"+ss.c+"'>"+
+        fmtC(cE)+" emit · "+fmtC(cP)+" pend<br>"+
+        cPol+" pólizas · Part: "+partTotal+"%"+
+      "</div>"+
+      "<div class='cz-obj'>"+
+        "<div>Obj. Prima zona:</div>"+
+        "<input type='number' value='"+cObj+"' data-canal='"+c+"' data-campo='prima' oninput='setObjZona(this)' placeholder='"+cObj+"'>"+
+        "<div style='margin-top:4px'>Obj. Pólizas zona:</div>"+
+        "<input type='number' value='"+cOPol+"' data-canal='"+c+"' data-campo='pol' oninput='setObjZona(this)' placeholder='"+cOPol+"' style='width:80px'>"+
+      "</div>"+
+    "</div>";
+  }).join("");
+}
+
+function setObjZona(inp){
+  var c=inp.dataset.canal, campo=inp.dataset.campo, val=Number(inp.value)||0;
+  if(!OBJ_ZONA[MES_ACT]) OBJ_ZONA[MES_ACT]={};
+  if(!OBJ_ZONA[MES_ACT][c]) OBJ_ZONA[MES_ACT][c]={};
+  OBJ_ZONA[MES_ACT][c][campo]=val;
+  try{localStorage.setItem("bu_obj_zona",JSON.stringify(OBJ_ZONA));}catch(e){}
+  recalcular();
+}
+
+// ══════════════════════════════════════════════════════
+// TABLA
+// ══════════════════════════════════════════════════════
+function sortBy(key){
+  if(SORT_KEY===key) SORT_DIR*=-1;
+  else{SORT_KEY=key;SORT_DIR=-1;}
+  renderTabla();
+}
+
+function renderTabla(){
+  var cfg=getCfg();
+  var filtrados=ASESORES.filter(function(a){
+    if(CANAL_SEL!=="TODOS"&&a.c!==CANAL_SEL) return false;
+    if(CUAD_SEL!=="TODOS"){
+      var d=DATA[a.id]||{};
+      var e=Number(d.e||0),p=Number(d.p||0);
+      var o=getObjAsesor(a.id);
+      var alc=pct(e+p,o.prima);
+      var ss=sm(alc);
+      if(String(ss.cuad)!==CUAD_SEL) return false;
+    }
+    return true;
+  });
+  document.getElementById("filtro-cnt").textContent=filtrados.length+" asesores";
+
+  // Emitido por canal
+  var emitC={};
+  CANALES.forEach(function(c){emitC[c]=0;});
+  ASESORES.forEach(function(a){emitC[a.c]=(emitC[a.c]||0)+Number((DATA[a.id]||{}).e||0);});
+
+  // Calcular datos para sort
+  var rows=filtrados.map(function(a){
     var d=DATA[a.id]||{};
     var e=Number(d.e||0),p=Number(d.p||0),pol=Number(d.pol||0);
-    var o=getObj(a.id);
-    tE+=e;tP+=p;tPol+=pol;tObj+=o.prima;tOPol+=o.pol;
-    var proy=e+p;
-    var proyR=proyS(e,dp,dt)+p;
-    var alc=pct(proy,o.prima);
-    var ss=sm(alc);
+    var o=getObjAsesor(a.id);
+    var proy=e+p, proyR=proyS(e,cfg.dp,cfg.dt)+p;
+    var alc=pct(proy,o.prima), ss=sm(alc);
     var brecha=Math.max(0,o.prima-proy);
-    var partCanal=emitCanal[a.c]>0?pct(e,emitCanal[a.c]):0;
-    var cuadTxt=cuadLabel(ss.cuad);
+    var partC=emitC[a.c]>0?pct(e,emitC[a.c]):0;
     var mesAnt=MES_ACT>1?MES_ACT-1:null;
     var dAnt=mesAnt?(HIST[mesAnt]||{})[a.id]||{}:{};
     var eAnt=Number(dAnt.e||0);
     var vPct=eAnt>0&&e>0?Math.round((e-eAnt)/eAnt*100):null;
-    var vColor=vPct===null?"#94A3B8":vPct>=0?"#16A34A":"#DC2626";
-    var vText=vPct===null?"—":(vPct>=0?"▲ +":"▼ ")+vPct+"%";
-    var rowBg=e===0&&p===0?"#FFF1F2":alc>=100?"#F0FDF4":i%2===0?"#fff":"#F8FAFC";
-    var antC=ANT_C[a.a]||"#94A3B8";
-    var antB=ANT_B[a.a]||"#F1F5F9";
-    var id=a.id;
-    var objMod=o.prima!==a.objPrima?" style='border-color:#2563EB;background:#EFF6FF'":"";
-
-    rows+='<tr style="background:'+rowBg+'">';
-    rows+='<td><b style="color:#0B1F4B;font-size:12px">'+a.n+'</b><div style="font-size:10px;color:#94A3B8">'+a.z+'</div></td>';
-    rows+='<td style="font-size:10px;color:#475569">'+a.c.replace("CANALES DIGITALES","C.Dig")+'</td>';
-    rows+='<td style="font-size:10px;color:#475569">'+a.z+'</td>';
-    rows+='<td><span class="tag" style="color:'+antC+';background:'+antB+'">'+a.a+'</span><div style="font-size:10px;font-weight:700;color:'+ss.c+'">'+cuadTxt+'</div></td>';
-    rows+='<td><input class="inp-obj" type="number" value="'+o.prima+'" id="obj-'+id+'" data-id="'+id+'" data-campo="objprima"'+objMod+' onfocus="this.select()"></td>';
-    rows+='<td><input class="inp-obj" type="number" value="'+o.pol+'" id="objpol-'+id+'" data-id="'+id+'" data-campo="objpol" style="width:50px" onfocus="this.select()"></td>';
-    rows+='<td><input class="'+(e>0?"inp-emit filled":"inp-emit")+'" type="number" min="0" placeholder="0" value="'+(e||"")+'" id="e-'+id+'" data-id="'+id+'" data-campo="e" onfocus="this.select()"></td>';
-    rows+='<td><input class="'+(p>0?"inp-pend filled":"inp-pend")+'" type="number" min="0" placeholder="0" value="'+(p||"")+'" id="p-'+id+'" data-id="'+id+'" data-campo="p" onfocus="this.select()"></td>';
-    rows+='<td><input class="inp-pol" type="number" min="0" placeholder="0" value="'+(pol||"")+'" id="pol-'+id+'" data-id="'+id+'" data-campo="pol" style="width:55px" onfocus="this.select()"></td>';
-    rows+='<td><div class="sm-wrap"><div class="sm-bar"><div class="sm-fill" style="width:'+Math.min(alc,100)+'%;background:'+ss.c+'"></div></div><span class="sm-pct" style="color:'+ss.c+'">'+alc+'%</span></div><div style="font-size:9px;color:'+ss.c+'">'+ss.txt+'</div></td>';
-    rows+='<td style="text-align:right"><div style="font-size:12px;font-weight:700">'+fmt(proyR)+'</div><div style="font-size:9px;color:#94A3B8">'+pct(proyR,o.prima)+'% obj.</div></td>';
-    rows+='<td style="text-align:right"><div style="font-size:12px;font-weight:700;color:'+(brecha>0?"#DC2626":"#16A34A")+'">'+(brecha>0?"-"+fmt(brecha):"✅")+'</div></td>';
-    rows+='<td style="text-align:center"><div style="font-size:12px;font-weight:800;color:'+vColor+'">'+vText+'</div>'+(eAnt>0?'<div style="font-size:9px;color:#94A3B8">'+fmt(eAnt)+' → '+fmt(e)+'</div>':"")+'</td>';
-    rows+='<td style="text-align:center">'+(e>0?'<div style="font-size:11px;font-weight:700;color:#2563EB">'+partCanal+'%</div><div style="font-size:9px;color:#94A3B8">canal</div>':"—")+'</td>';
-    rows+='</tr>';
+    return {a:a,e:e,p:p,pol:pol,o:o,proy:proy,proyR:proyR,alc:alc,ss:ss,brecha:brecha,partC:partC,eAnt:eAnt,vPct:vPct};
   });
 
-  document.getElementById("tbody-carga").innerHTML=rows;
+  // Sort
+  rows.sort(function(x,y){
+    var va,vb;
+    if(SORT_KEY==="nombre"){va=x.a.n;vb=y.a.n;return SORT_DIR*(va<vb?-1:1);}
+    if(SORT_KEY==="canal"){va=x.a.c+x.a.z;vb=y.a.c+y.a.z;return SORT_DIR*(va<vb?-1:1);}
+    if(SORT_KEY==="zona"){va=x.a.z;vb=y.a.z;return SORT_DIR*(va<vb?-1:1);}
+    if(SORT_KEY==="emit") return SORT_DIR*(y.e-x.e);
+    if(SORT_KEY==="pend") return SORT_DIR*(y.p-x.p);
+    if(SORT_KEY==="pol")  return SORT_DIR*(y.pol-x.pol);
+    if(SORT_KEY==="alc")  return SORT_DIR*(y.alc-x.alc);
+    if(SORT_KEY==="proy") return SORT_DIR*(y.proyR-x.proyR);
+    if(SORT_KEY==="brecha") return SORT_DIR*(y.brecha-x.brecha);
+    if(SORT_KEY==="obj")  return SORT_DIR*(y.o.prima-x.o.prima);
+    if(SORT_KEY==="var"){
+      va=x.vPct===null?-9999:x.vPct;
+      vb=y.vPct===null?-9999:y.vPct;
+      return SORT_DIR*(vb-va);
+    }
+    return 0;
+  });
 
-  // Event delegation para inputs
+  var html="";
+  var tE=0,tP=0,tPol=0,tObj=0,tOPol=0;
+  rows.forEach(function(r,i){
+    var a=r.a,e=r.e,p=r.p,pol=r.pol,o=r.o,ss=r.ss;
+    tE+=e;tP+=p;tPol+=pol;tObj+=o.prima;tOPol+=o.pol;
+    var bg=e===0&&p===0?"#FFF1F2":r.alc>=100?"#F0FDF4":i%2===0?"#fff":"#F8FAFC";
+    var antC=a.a==="Jr"?"#EA580C":"#2563EB";
+    var antB=a.a==="Jr"?"#FFF7ED":"#EFF6FF";
+    var objMod=o.prima!==(a.a==="Jr"?OBJ_JR:OBJ_SR)?" mod":"";
+    var vColor=r.vPct===null?"#94A3B8":r.vPct>=0?"#16A34A":"#DC2626";
+    var vText=r.vPct===null?"—":(r.vPct>=0?"▲ +":"▼ ")+r.vPct+"%";
+    html+="<tr style='background:"+bg+"'>";
+    html+="<td><b style='color:#0B1F4B;font-size:11px'>"+a.n+"</b><div style='font-size:10px;color:#94A3B8'>"+a.z+"</div></td>";
+    html+="<td style='font-size:10px;color:#475569'>"+a.c.replace("CANALES DIGITALES","C.Dig")+"</td>";
+    html+="<td style='font-size:10px;color:#475569'>"+a.z+"</td>";
+    html+="<td><span class='tag' style='color:"+antC+";background:"+antB+"'>"+a.a+"</span><div style='font-size:10px;font-weight:700;color:"+ss.c+"'>"+r.ss.txt.split("—")[0]+"</div></td>";
+    html+="<td><input class='inp-obj-pr"+objMod+"' type='number' value='"+o.prima+"' data-id='"+a.id+"' data-campo='objprima' onfocus='this.select()'></td>";
+    html+="<td><input type='number' value='"+o.pol+"' data-id='"+a.id+"' data-campo='objpol' onfocus='this.select()' style='width:45px;border:1px solid #E2E8F0;border-radius:5px;padding:4px 5px;font-size:11px;font-weight:700;text-align:center;outline:none;'></td>";
+    html+="<td><input class='"+(e>0?"inp-e filled":"inp-e")+"' type='number' min='0' placeholder='0' value='"+(e||"")+"' data-id='"+a.id+"' data-campo='e' onfocus='this.select()'></td>";
+    html+="<td><input class='"+(p>0?"inp-p filled":"inp-p")+"' type='number' min='0' placeholder='0' value='"+(p||"")+"' data-id='"+a.id+"' data-campo='p' onfocus='this.select()'></td>";
+    html+="<td><input class='inp-pol' type='number' min='0' placeholder='0' value='"+(pol||"")+"' data-id='"+a.id+"' data-campo='pol' onfocus='this.select()'></td>";
+    html+="<td><div class='sm-wrap'><div class='sm-bar'><div class='sm-fill' style='width:"+clamp(r.alc,0,100)+"%;background:"+ss.c+"'></div></div><span style='font-size:11px;font-weight:800;color:"+ss.c+"'>"+r.alc+"%</span></div><div style='font-size:9px;color:"+ss.c+"'>"+cuadLabel(ss.cuad)+"</div></td>";
+    html+="<td style='text-align:right'><div style='font-size:12px;font-weight:700'>"+fmt(r.proyR)+"</div><div style='font-size:9px;color:#94A3B8'>"+pct(r.proyR,o.prima)+"% obj.</div></td>";
+    html+="<td style='text-align:right'><div style='font-size:12px;font-weight:700;color:"+(r.brecha>0?"#DC2626":"#16A34A")+";white-space:nowrap'>"+(r.brecha>0?"-"+fmt(r.brecha):"✅")+"</div></td>";
+    html+="<td style='text-align:center'><div style='font-size:12px;font-weight:800;color:"+vColor+"'>"+vText+"</div>"+(r.eAnt>0?"<div style='font-size:9px;color:#94A3B8'>"+fmt(r.eAnt)+" → "+fmt(e)+"</div>":"")+"</td>";
+    html+="<td style='text-align:center'>"+(e>0?"<div style='font-size:11px;font-weight:700;color:#2563EB'>"+r.partC+"%</div><div style='font-size:9px;color:#94A3B8'>canal</div>":"—")+"</td>";
+    html+="</tr>";
+  });
+  document.getElementById("tbody-carga").innerHTML=html;
+
+  // Event delegation
   document.getElementById("tbody-carga").oninput=function(ev){
-    var t=ev.target;
-    var id=t.dataset.id;
-    var campo=t.dataset.campo;
+    var t=ev.target, id=t.dataset.id, campo=t.dataset.campo;
     if(!id||!campo) return;
     var val=Number(t.value)||0;
-    if(campo==="objprima"){setObjPrima(id,val);}
-    else if(campo==="objpol"){setObjPol(id,val);}
-    else{setDato(id,campo,val);}
+    if(campo==="objprima"){
+      if(!DATA[id])DATA[id]={};
+      DATA[id].objPrima=val;
+      t.className="inp-obj-pr mod";
+    } else if(campo==="objpol"){
+      if(!DATA[id])DATA[id]={};
+      DATA[id].objPol=val;
+    } else {
+      if(!DATA[id])DATA[id]={};
+      DATA[id][campo]=val;
+      if(campo==="e") t.className=val>0?"inp-e filled":"inp-e";
+      if(campo==="p") t.className=val>0?"inp-p filled":"inp-p";
+    }
+    HIST[MES_ACT]=JSON.parse(JSON.stringify(DATA));
+    recalcular();
+    autoGuardar();
   };
 
   // Footer
-  var tProy=tE+tP,tProyR=proyS(tE,dp,dt)+tP;
-  var tAlc=pct(tProy,tObj),ts=sm(tAlc);
+  var cfg2=getCfg();
+  var tProy=tE+tP, tProyR=proyS(tE,cfg2.dp,cfg2.dt)+tP;
+  var tAlc=pct(tProy,tObj), ts=sm(tAlc);
   document.getElementById("tf-obj").textContent=fmt(tObj);
-  document.getElementById("tf-obj-pol").textContent=tOPol;
-  document.getElementById("tf-emit").textContent=fmt(tE);
-  document.getElementById("tf-pend").textContent=tP>0?fmt(tP):"—";
+  document.getElementById("tf-opol").textContent=tOPol;
+  document.getElementById("tf-e").textContent=fmt(tE);
+  document.getElementById("tf-p").textContent=tP>0?fmt(tP):"—";
   document.getElementById("tf-pol").textContent=tPol;
-  document.getElementById("tf-alc").innerHTML='<span style="color:'+ts.c+'">'+tAlc+'% — '+ts.txt+'</span>';
+  document.getElementById("tf-alc").innerHTML="<span style='color:"+ts.c+"'>"+tAlc+"% — "+ts.txt+"</span>";
   document.getElementById("tf-proy").textContent=fmt(tProyR);
-  document.getElementById("tf-brecha").textContent="-"+fmt(Math.max(0,tObj-tProy));
+  document.getElementById("tf-br").textContent="-"+fmt(Math.max(0,tObj-tProy));
 }
 
-
-function setDato(id,campo,val){
-  if(!DATA[id])DATA[id]={};
-  DATA[id][campo]=Number(val)||0;
-  const inp=document.getElementById(`${campo}-${id}`);
-  if(inp&&campo==="e") inp.className="inp-emit "+(DATA[id].e>0?"filled":"");
-  if(inp&&campo==="p") inp.className="inp-pend "+(DATA[id].p>0?"filled":"");
-  // Actualizar HIST en tiempo real para no perder datos al cambiar mes
-  HIST[MES_ACT]=JSON.parse(JSON.stringify(DATA));
-  recalcular();
-  autoGuardar();
-}
-
-function setObjPrima(id,val){
-  if(!DATA[id])DATA[id]={};
-  DATA[id].objPrima=Number(val)||0;
-  const inp=document.getElementById("obj-"+id);
-  const base=ASESORES.find(a=>a.id===id)?.objPrima||450000;
-  if(inp) inp.className="inp-obj "+(DATA[id].objPrima!==base?"modificado":"");
-  recalcular();
-  autoGuardar();
-}
-
-function setObjPol(id,val){
-  if(!DATA[id])DATA[id]={};
-  DATA[id].objPol=Number(val)||0;
-  recalcular();
-  autoGuardar();
-}
-
-// ════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // LÍNEA DE TIEMPO
-// ════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 function renderLinea(){
-  const meses=Object.keys(HIST).map(Number).filter(m=>{
-    const d=HIST[m]||{};
-    return Object.values(d).some(x=>Number(x.e||0)>0||Number(x.pol||0)>0);
-  }).sort((a,b)=>a-b);
-  // Incluir mes actual si tiene datos
-  const tActual=Object.values(DATA||{}).reduce((s,d)=>s+Number(d.e||0),0);
-  if(tActual>0&&!meses.includes(MES_ACT))meses.push(MES_ACT);
-  meses.sort((a,b)=>a-b);
+  // Construir lista de meses con datos
+  var meses=[];
+  for(var m=1;m<=12;m++){
+    var d=HIST[m]||{};
+    var hasData=Object.keys(d).length>0&&Object.values(d).some(function(x){return Number(x.e||0)>0||Number(x.pol||0)>0;});
+    if(hasData) meses.push(m);
+  }
+  if(meses.indexOf(MES_ACT)<0){
+    var tActual=Object.values(DATA||{}).reduce(function(s,d){return s+Number(d.e||0);},0);
+    if(tActual>0) meses.push(MES_ACT);
+  }
+  meses.sort(function(a,b){return a-b;});
 
-  // Actualizar headers tabla comparativa
-  const m2=meses[meses.length-3]||null;
-  const m1=meses[meses.length-2]||null;
-  const m0=meses[meses.length-1]||MES_ACT;
-  document.getElementById("col-m2").textContent=m2?MESES[m2]:"(sin dato)";
-  document.getElementById("col-m1").textContent=m1?MESES[m1]:"(sin dato)";
-  document.getElementById("col-m0").textContent=MESES[m0]+" ← actual";
+  // Headers comparativa
+  var m2=meses.length>=3?meses[meses.length-3]:null;
+  var m1=meses.length>=2?meses[meses.length-2]:null;
+  var m0=meses.length>=1?meses[meses.length-1]:MES_ACT;
+  document.getElementById("col-m2").textContent=m2?MESES[m2]:"—";
+  document.getElementById("col-m1").textContent=m1?MESES[m1]:"—";
+  document.getElementById("col-m0").textContent=MESES[m0]+" (actual)";
 
-  // Función para obtener emitido de un mes
-  const getE=(m,id)=>{
-    if(!m)return 0;
-    const d=m===MES_ACT?(DATA[id]||{}):(HIST[m]||{})[id]||{};
+  var getE=function(m,id){
+    if(!m) return 0;
+    var d=m===MES_ACT?(DATA[id]||{}):(HIST[m]||{})[id]||{};
     return Number(d.e||0);
   };
 
   if(meses.length<2){
     document.getElementById("linea-chart").innerHTML=
-      `<div style="text-align:center;padding:24px;color:var(--g400);font-size:12px">
-        Cargá al menos 2 meses para ver la evolución. Abril 2026 ya está precargado.
-      </div>`;
+      "<div style='text-align:center;padding:20px;color:#94A3B8;font-size:12px'>"+
+      "Cargá al menos 2 meses para ver la evolución. Abril ya está precargado.</div>";
     renderComparativa(meses,m2,m1,m0,getE);
     return;
   }
 
-  // Calcular series
-  const serie=meses.map(m=>{
-    const aa=OBJ_CANAL==="TODOS"?ASESORES:ASESORES.filter(a=>a.c===OBJ_CANAL);
-    const d=m===MES_ACT?DATA:(HIST[m]||{});
-    const e=aa.reduce((s,a)=>s+Number((d[a.id]||{}).e||0),0);
-    const p=aa.reduce((s,a)=>s+Number((d[a.id]||{}).p||0),0);
-    const pol=aa.reduce((s,a)=>s+Number((d[a.id]||{}).pol||0),0);
-    const objT=aa.reduce((s,a)=>s+getObj(a.id).prima,0);
-    return{m,e,p,pol,objT};
+  // Series
+  var serie=meses.map(function(m){
+    var aa=LTAB_SEL==="TODOS"?ASESORES:ASESORES.filter(function(a){return a.c===LTAB_SEL;});
+    var d=m===MES_ACT?DATA:(HIST[m]||{});
+    var e=aa.reduce(function(s,a){return s+Number((d[a.id]||{}).e||0);},0);
+    var p=aa.reduce(function(s,a){return s+Number((d[a.id]||{}).p||0);},0);
+    var cObj=CFG_MES[m]?Number(CFG_MES[m].obj):aa.reduce(function(s,a){return s+getObjAsesor(a.id).prima;},0);
+    return {m:m,e:e,p:p,objT:cObj||19803546};
   });
 
-  const W=600,H=200,PAD={t:28,r:30,b:38,l:72};
-  const allE=serie.map(s=>s.e), allEC=serie.map(s=>s.e+s.p), allO=serie.map(s=>s.objT);
-  const maxV=Math.max(...allE,...allEC,...allO,1)*1.15;
-  const xS=(W-PAD.l-PAD.r)/Math.max(serie.length-1,1);
-  const yS=v=>H-PAD.b-(v/maxV)*(H-PAD.t-PAD.b);
-  const xP=i=>PAD.l+i*xS;
+  var W=580,H=180,PAD={t:26,r:30,b:36,l:72};
+  var allVals=serie.map(function(s){return s.e+s.p;}).concat(serie.map(function(s){return s.objT;}));
+  var maxV=Math.max.apply(null,allVals)*1.15||1;
+  var xS=(W-PAD.l-PAD.r)/Math.max(serie.length-1,1);
+  var yS=function(v){return H-PAD.b-(v/maxV)*(H-PAD.t-PAD.b);};
+  var xP=function(i){return PAD.l+i*xS;};
 
-  let svg="";
+  var svg="";
   // Grid
-  [0,.25,.5,.75,1].forEach(p=>{
-    const y=yS(maxV*p);
-    svg+=`<line x1="${PAD.l}" y1="${y}" x2="${W-PAD.r}" y2="${y}" stroke="#F1F5F9" stroke-width="1"/>`;
-    svg+=`<text x="${PAD.l-6}" y="${y+4}" text-anchor="end" font-size="9" fill="#94A3B8">${fmt(maxV*p)}</text>`;
+  [0,.25,.5,.75,1].forEach(function(p){
+    var y=yS(maxV*p);
+    svg+="<line x1='"+PAD.l+"' y1='"+y+"' x2='"+(W-PAD.r)+"' y2='"+y+"' stroke='#F1F5F9' stroke-width='1'/>";
+    svg+="<text x='"+(PAD.l-6)+"' y='"+(y+4)+"' text-anchor='end' font-size='9' fill='#94A3B8'>"+fmtC(maxV*p)+"</text>";
   });
   // Eje X
-  serie.forEach((s,i)=>{
-    const isAct=s.m===MES_ACT;
-    if(isAct) svg+=`<line x1="${xP(i)}" y1="${PAD.t}" x2="${xP(i)}" y2="${H-PAD.b}" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="4 3"/>`;
-    svg+=`<text x="${xP(i)}" y="${H-6}" text-anchor="middle" font-size="10"
-      fill="${isAct?"#0B1F4B":"#475569"}" font-weight="${isAct?700:400}">${MESES[s.m].slice(0,3)}</text>`;
-    if(isAct) svg+=`<text x="${xP(i)}" y="${PAD.t-6}" text-anchor="middle" font-size="9" fill="#2563EB" font-weight="700">← actual</text>`;
+  serie.forEach(function(s,i){
+    var isAct=s.m===MES_ACT;
+    if(isAct) svg+="<line x1='"+xP(i)+"' y1='"+PAD.t+"' x2='"+xP(i)+"' y2='"+(H-PAD.b)+"' stroke='#2563EB' stroke-width='1.5' stroke-dasharray='4 3'/>";
+    svg+="<text x='"+xP(i)+"' y='"+(H-6)+"' text-anchor='middle' font-size='10' fill='"+(isAct?"#0B1F4B":"#475569")+"' font-weight='"+(isAct?700:400)+"'>"+MESES[s.m].slice(0,3)+"</text>";
   });
-  // Área emitido
-  const areaP=`${xP(0)},${H-PAD.b} ${allE.map((v,i)=>`${xP(i)},${yS(v)}`).join(" ")} ${xP(serie.length-1)},${H-PAD.b}`;
-  svg+=`<polygon points="${areaP}" fill="#16A34A" opacity=".08"/>`;
+  // Área
+  var areaPts=xP(0)+","+(H-PAD.b)+" "+serie.map(function(s,i){return xP(i)+","+yS(s.e);}).join(" ")+" "+xP(serie.length-1)+","+(H-PAD.b);
+  svg+="<polygon points='"+areaPts+"' fill='#16A34A' opacity='.08'/>";
   // Línea objetivo
-  const objPts=serie.map((s,i)=>`${xP(i)},${yS(s.objT)}`).join(" ");
-  svg+=`<polyline points="${objPts}" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+  svg+="<polyline points='"+serie.map(function(s,i){return xP(i)+","+yS(s.objT);}).join(" ")+"' fill='none' stroke='#94A3B8' stroke-width='1.5' stroke-dasharray='6 4'/>";
   // Línea con pendientes
-  const conPPts=allEC.map((v,i)=>`${xP(i)},${yS(v)}`).join(" ");
-  svg+=`<polyline points="${conPPts}" fill="none" stroke="#CA8A04" stroke-width="2" stroke-dasharray="5 3" stroke-linejoin="round"/>`;
+  svg+="<polyline points='"+serie.map(function(s,i){return xP(i)+","+yS(s.e+s.p);}).join(" ")+"' fill='none' stroke='#CA8A04' stroke-width='2' stroke-dasharray='5 3' stroke-linejoin='round'/>";
   // Línea emitido
-  const ePts=allE.map((v,i)=>`${xP(i)},${yS(v)}`).join(" ");
-  svg+=`<polyline points="${ePts}" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linejoin="round"/>`;
+  svg+="<polyline points='"+serie.map(function(s,i){return xP(i)+","+yS(s.e);}).join(" ")+"' fill='none' stroke='#16A34A' stroke-width='2.5' stroke-linejoin='round'/>";
   // Puntos
-  allE.forEach((v,i)=>{
-    const isAct=serie[i].m===MES_ACT;
-    const ss=sm(pct(v+serie[i].p,serie[i].objT));
-    svg+=`<circle cx="${xP(i)}" cy="${yS(v)}" r="${isAct?6:4}" fill="${ss.c}" stroke="white" stroke-width="2"/>`;
-    svg+=`<text x="${xP(i)}" y="${yS(v)-11}" text-anchor="middle" font-size="9" font-weight="700" fill="${ss.c}">${fmt(v)}</text>`;
-    if(serie[i].p>0){
-      svg+=`<circle cx="${xP(i)}" cy="${yS(v+serie[i].p)}" r="3" fill="#CA8A04" stroke="white" stroke-width="1.5"/>`;
-    }
+  serie.forEach(function(s,i){
+    var isAct=s.m===MES_ACT;
+    var ss2=sm(pct(s.e+s.p,s.objT));
+    svg+="<circle cx='"+xP(i)+"' cy='"+yS(s.e)+"' r='"+(isAct?6:4)+"' fill='"+ss2.c+"' stroke='white' stroke-width='2'/>";
+    svg+="<text x='"+xP(i)+"' y='"+(yS(s.e)-10)+"' text-anchor='middle' font-size='9' font-weight='700' fill='"+ss2.c+"'>"+fmtC(s.e)+"</text>";
+    if(s.p>0) svg+="<circle cx='"+xP(i)+"' cy='"+yS(s.e+s.p)+"' r='3' fill='#CA8A04' stroke='white' stroke-width='1.5'/>";
   });
   // Leyenda
-  [[`#16A34A`,"","Prima emitida"],[`#CA8A04`,"5 3","Con pendientes"],[`#94A3B8`,"6 4","Objetivo"]].forEach(([c,d,l],i)=>{
-    svg+=`<line x1="${PAD.l+i*130}" y1="14" x2="${PAD.l+i*130+18}" y2="14" stroke="${c}" stroke-width="2" stroke-dasharray="${d}"/>`;
-    svg+=`<text x="${PAD.l+i*130+22}" y="18" font-size="9" fill="#475569">${l}</text>`;
+  var leyItems=[["#16A34A","","Prima emitida"],["#CA8A04","5 3","Con pendientes"],["#94A3B8","6 4","Objetivo"]];
+  leyItems.forEach(function(l,i){
+    svg+="<line x1='"+(PAD.l+i*130)+"' y1='14' x2='"+(PAD.l+i*130+18)+"' y2='14' stroke='"+l[0]+"' stroke-width='2' stroke-dasharray='"+l[1]+"'/>";
+    svg+="<text x='"+(PAD.l+i*130+22)+"' y='18' font-size='9' fill='#475569'>"+l[2]+"</text>";
   });
 
-  document.getElementById("linea-chart").innerHTML=`<svg width="100%" viewBox="0 0 ${W} ${H}">${svg}</svg>`;
+  document.getElementById("linea-chart").innerHTML=
+    "<svg width='100%' viewBox='0 0 "+W+" "+H+"'>"+svg+"</svg>";
+
   renderComparativa(meses,m2,m1,m0,getE);
 }
 
 function renderComparativa(meses,m2,m1,m0,getE){
   if(meses.length<2){
     document.getElementById("comp-tbody").innerHTML=
-      `<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--g400);font-size:11px">Cargá al menos 2 meses</td></tr>`;
+      "<tr><td colspan='6' style='text-align:center;padding:14px;color:#94A3B8;font-size:11px'>Cargá al menos 2 meses</td></tr>";
     return;
   }
-  const filas=ASESORES.map(a=>{
-    const e2=getE(m2,a.id), e1=getE(m1,a.id), e0=getE(m0,a.id);
-    if(!e2&&!e1&&!e0)return null;
-    const varia=e1>0&&e0>0?Math.round((e0-e1)/e1*100):null;
-    return{a,e2,e1,e0,varia};
-  }).filter(Boolean).sort((a,b)=>b.e0-a.e0);
+  var filas=ASESORES.map(function(a){
+    var e2=getE(m2,a.id),e1=getE(m1,a.id),e0=getE(m0,a.id);
+    if(!e2&&!e1&&!e0) return null;
+    var varia=e1>0&&e0>0?Math.round((e0-e1)/e1*100):null;
+    return {a:a,e2:e2,e1:e1,e0:e0,varia:varia};
+  }).filter(function(x){return x!==null;}).sort(function(x,y){return y.e0-x.e0;});
 
-  // Totales
-  const t2=filas.reduce((s,f)=>s+f.e2,0);
-  const t1=filas.reduce((s,f)=>s+f.e1,0);
-  const t0=filas.reduce((s,f)=>s+f.e0,0);
-  const tVar=t1>0&&t0>0?Math.round((t0-t1)/t1*100):null;
+  var t2=filas.reduce(function(s,f){return s+f.e2;},0);
+  var t1=filas.reduce(function(s,f){return s+f.e1;},0);
+  var t0=filas.reduce(function(s,f){return s+f.e0;},0);
+  var tVar=t1>0&&t0>0?Math.round((t0-t1)/t1*100):null;
 
-  document.getElementById("comp-tbody").innerHTML=
-    `<tr style="background:var(--navy)">
-      <td style="padding:8px 10px;font-weight:800;color:#fff;font-size:12px">TOTAL EQUIPO</td>
-      <td></td>
-      <td style="padding:8px;color:rgba(255,255,255,.7);font-weight:700">${t2>0?fmt(t2):"—"}</td>
-      <td style="padding:8px;color:rgba(255,255,255,.7);font-weight:700">${t1>0?fmt(t1):"—"}</td>
-      <td style="padding:8px;color:#86EFAC;font-size:13px;font-weight:900">${t0>0?fmt(t0):"—"}</td>
-      <td style="padding:8px;font-weight:800;color:${tVar===null?"#94A3B8":tVar>=0?"#86EFAC":"#FCA5A5"}">
-        ${tVar===null?"—":tVar>=0?`▲ +${tVar}%`:`▼ ${tVar}%`}
-      </td>
-    </tr>`+
-    filas.map((f,i)=>{
-      const vC=f.varia===null?"var-eq":f.varia>0?"var-up":"var-dn";
-      const vT=f.varia===null?"—":f.varia>=0?`▲ +${f.varia}%`:`▼ ${f.varia}%`;
-      return `<tr style="background:${i%2?"#F8FAFC":"#fff"}">
-        <td style="font-weight:700;color:var(--navy);padding:6px 10px;font-size:11px">${f.a.n.split(",")[0]}</td>
-        <td style="font-size:10px;color:var(--g400);padding:6px 8px">${f.a.c.replace("CANALES DIGITALES","C.Dig")}</td>
-        <td style="padding:6px 8px;color:var(--g600)">${f.e2>0?fmt(f.e2):"—"}</td>
-        <td style="padding:6px 8px;color:var(--g600)">${f.e1>0?fmt(f.e1):"—"}</td>
-        <td style="padding:6px 8px;font-weight:700;color:var(--green)">${f.e0>0?fmt(f.e0):"—"}</td>
-        <td style="padding:6px 8px" class="${vC}">${vT}</td>
-      </tr>`;
-    }).join("");
+  var html="<tr style='background:var(--navy)'>";
+  html+="<td style='padding:7px 10px;font-weight:800;color:#fff;font-size:12px'>TOTAL EQUIPO</td>";
+  html+="<td></td>";
+  html+="<td style='padding:7px 8px;color:rgba(255,255,255,.7);font-weight:700'>"+( t2>0?fmt(t2):"—")+"</td>";
+  html+="<td style='padding:7px 8px;color:rgba(255,255,255,.7);font-weight:700'>"+(t1>0?fmt(t1):"—")+"</td>";
+  html+="<td style='padding:7px 8px;color:#86EFAC;font-size:13px;font-weight:900'>"+(t0>0?fmt(t0):"—")+"</td>";
+  html+="<td style='padding:7px 8px;font-weight:800;color:"+(tVar===null?"#94A3B8":tVar>=0?"#86EFAC":"#FCA5A5")+";white-space:nowrap'>"+( tVar===null?"—":tVar>=0?"▲ +"+tVar+"%":"▼ "+tVar+"%")+"</td></tr>";
+
+  filas.forEach(function(f,i){
+    var vC=f.varia===null?"#94A3B8":f.varia>=0?"#16A34A":"#DC2626";
+    var vT=f.varia===null?"—":(f.varia>=0?"▲ +":"▼ ")+f.varia+"%";
+    html+="<tr style='background:"+(i%2?"#F8FAFC":"#fff")+"'>";
+    html+="<td style='font-weight:700;color:#0B1F4B;padding:6px 10px;font-size:11px'>"+f.a.n.split(",")[0]+"</td>";
+    html+="<td style='font-size:10px;color:#94A3B8;padding:6px 8px'>"+f.a.c.replace("CANALES DIGITALES","C.Dig")+"</td>";
+    html+="<td style='padding:6px 8px;color:#475569'>"+(f.e2>0?fmt(f.e2):"—")+"</td>";
+    html+="<td style='padding:6px 8px;color:#475569'>"+(f.e1>0?fmt(f.e1):"—")+"</td>";
+    html+="<td style='padding:6px 8px;font-weight:700;color:#16A34A'>"+(f.e0>0?fmt(f.e0):"—")+"</td>";
+    html+="<td style='padding:6px 8px;font-weight:800;color:"+vC+";white-space:nowrap'>"+vT+"</td></tr>";
+  });
+  document.getElementById("comp-tbody").innerHTML=html;
 }
 
-// ════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // SUBIR EXCEL
-// ════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 function subirExcel(input){
-  const file=input.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    const wb=XLSX.read(ev.target.result,{type:"binary"});
-    const ws=wb.Sheets[wb.SheetNames[0]];
-
-    // Intentar parsear como sheet con headers en fila 3-4 (formato BU)
-    // Leer datos brutos (sin headers) para acceso por índice de columna
-    const rawRows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null,raw:true});
-
-    let cargados=0;
-    // El formato BU: fila 1=título, 2=nota, 3=headers grupo, 4=sub-headers, 5+=datos
-    // Col 0=Canal, 1=Zona, 2=Asesor
-    // Columnas de producción (0-indexed):
-    // Sem1: D=3,E=4 | Sem2: H=7,I=8 | Sem3: L=11,M=12
-    // Sem4: P=15,Q=16 | Sem5: T=19,U=20
-    // Total: Z=25,AA=26
-    // Pendiente Sem4: R=17,S=18 | Sem5: V=21,W=22
-
-    const dataRows=rawRows.filter((r,i)=>i>=4&&r[2]&&typeof r[2]==="string"&&r[2].length>3&&!r[2].startsWith("▶"));
-
-    dataRows.forEach(r=>{
-      const nombreRaw=String(r[2]||"").trim();
-      if(!nombreRaw)return;
-
-      // Buscar asesor
-      const a=ASESORES.find(x=>{
-        const an=norm(x.n).replace(/[^a-z]/g,"");
-        const rn=norm(nombreRaw).replace(/[^a-z]/g,"");
-        const primerApellidoA=an.split("")[0]||"";
-        return an.slice(0,8)===rn.slice(0,8)||rn.includes(an.slice(0,6))||an.includes(rn.slice(0,6));
+  var file=input.files[0]; if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var wb=XLSX.read(ev.target.result,{type:"binary"});
+    var ws=wb.Sheets[wb.SheetNames[0]];
+    var raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:null,raw:true});
+    var cargados=0;
+    var dataRows=raw.filter(function(r,i){
+      return i>=4&&r[2]&&typeof r[2]==="string"&&r[2].length>3&&String(r[2]).indexOf("▶")<0;
+    });
+    dataRows.forEach(function(r){
+      var nombreRaw=String(r[2]||"").trim();
+      if(!nombreRaw) return;
+      var a=ASESORES.find(function(x){
+        var an=norm(x.n).replace(/[^a-z]/g,"");
+        var rn=norm(nombreRaw).replace(/[^a-z]/g,"");
+        return an.slice(0,8)===rn.slice(0,8)||rn.indexOf(an.slice(0,6))>=0||an.indexOf(rn.slice(0,6))>=0;
       });
-      if(!a)return;
-
-      // Tomar el mayor valor entre todas las semanas (último acumulado)
-      const getPol=(...cols)=>Math.max(0,...cols.map(c=>Number(r[c])||0));
-      const getProd=(...cols)=>Math.max(0,...cols.map(c=>Number(r[c])||0));
-
-      const pol  = getPol(3,7,11,15,19);   // D,H,L,P,T
-      const prod = getProd(4,8,12,16,20);   // E,I,M,Q,U
-      // Pendiente: tomar el de la última semana con dato
-      const pendPol  = Number(r[21]||r[17]||r[13]||r[9]||r[5])||0;
-      const pendProd = Number(r[22]||r[18]||r[14]||r[10]||r[6])||0;
-
-      if(!DATA[a.id])DATA[a.id]={};
-      DATA[a.id].e  =Math.round(prod);
-      DATA[a.id].p  =Math.round(pendProd>0&&typeof pendProd==="number"?pendProd:0);
-      DATA[a.id].pol=Math.round(pol);
+      if(!a) return;
+      // Col Z=25 pólizas, AA=26 producción
+      var pol=Number(r[25])||0;
+      var prod=Number(r[26])||0;
+      // Pendiente: última semana con valor V=21,W=22 / R=17,S=18 / N=13,O=14
+      var pendPol=0,pendProd=0;
+      var pCols=[[21,22],[17,18],[13,14],[9,10],[5,6]];
+      for(var pi=0;pi<pCols.length;pi++){
+        var vp=r[pCols[pi][0]],vw=r[pCols[pi][1]];
+        if(vp&&vp!=="-"&&Number(vp)>0){
+          pendPol=Math.round(Number(vp)||0);
+          pendProd=Math.round(Number(vw)||0);
+          break;
+        }
+      }
+      if(!DATA[a.id]) DATA[a.id]={};
+      DATA[a.id].e=prod; DATA[a.id].p=pendProd; DATA[a.id].pol=pol;
       cargados++;
     });
-
-    // Fallback: intentar con json headers si no hubo resultados
-    if(cargados===0){
-      const jsonRows=XLSX.utils.sheet_to_json(ws,{defval:"",raw:true});
-      jsonRows.forEach(r=>{
-      // Detectar nombre del asesor en cualquier columna que diga "asesor" o sea la primera columna con nombre
-      // Buscar nombre del asesor
-      const kAsesor=Object.keys(r).find(x=>norm(x).includes("asesor"));
-      const nombre=String(r.ASESOR||r.Asesor||r.asesor||(kAsesor?r[kAsesor]:"")||Object.values(r)[2]||"").trim();
-      if(!nombre||nombre.length<3)return;
-      // Buscar asesor por nombre normalizado
-      const a=ASESORES.find(x=>{
-        const an=norm(x.n), rn=norm(nombre);
-        return an.includes(rn.split(" ")[0])||rn.includes(an.split(",")[0]);
-      });
-      if(!a)return;
-      // Detectar columnas de producción — buscar la más parecida al formato del Excel
-      // Detección flexible de columnas — busca por nombre normalizado
-      const buscarCol=(palabras,obj)=>{
-        const keys=Object.keys(obj);
-        for(const palabra of palabras){
-          const pn=norm(palabra).replace(/[^a-z0-9]/g,"");
-          const k=keys.find(x=>norm(x).replace(/[^a-z0-9]/g,"").includes(pn.slice(0,6)));
-          if(k&&Number(obj[k])>0) return Number(obj[k]);
-        }
-        return 0;
-      };
-      const emit = buscarCol(["prodmes","produccion","primaemitida","emitido"], r);
-      const pol  = buscarCol(["totalmes","polizas","poliza"], r);
-      const pend = buscarCol(["pendienteemision","pendiente","pendemis"], r);      if(!DATA[a.id])DATA[a.id]={};
-      DATA[a.id].e=emit;
-      DATA[a.id].p=pend;
-      DATA[a.id].pol=pol;
-      cargados++;
-      });
-    } // end fallback json
-
     if(cargados>0){
-      // Guardar en el mes actualmente seleccionado
       HIST[MES_ACT]=JSON.parse(JSON.stringify(DATA));
-      try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){}
-      // Sincronizar con panel-gerencia
-      const vg={};
-      ASESORES.forEach(a=>{
-        const d=DATA[a.id]||{};
-        if(d.e||d.p||d.pol) vg[a.id]={e:Number(d.e||0),p:Number(d.p||0),pol:Number(d.pol||0)};
-      });
-      try{localStorage.setItem("crm_ventas",JSON.stringify(vg));}catch(e){}
+      guardarTodo(true);
       recalcular();
       renderLinea();
-      toast(`✅ ${cargados} asesores cargados en ${MESES[MES_ACT]} 2026`);
-      document.getElementById("lbl-guardado").textContent=
-        `Guardado ${new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}`;
+      toast("✅ "+cargados+" asesores cargados en "+MESES[MES_ACT]+" 2026");
     } else {
-      toast("⚠ No se encontraron datos. Revisá el formato del archivo.");
+      toast("⚠ Sin datos reconocidos. Verificá el formato.");
     }
   };
   reader.readAsBinaryString(file);
@@ -1065,73 +992,56 @@ function subirExcel(input){
 
 function onDrop(ev){
   ev.preventDefault();
-  document.getElementById("upload-zone").classList.remove("drag");
-  const file=ev.dataTransfer.files[0];
-  if(!file)return;
-  const fakeInput={files:[file]};
-  subirExcel(fakeInput);
+  var file=ev.dataTransfer.files[0];
+  if(file) subirExcel({files:[file]});
 }
 
-// ════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // GUARDAR
-// ════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+var autoT=null;
 function autoGuardar(){
-  clearTimeout(autoTimer);
-  autoTimer=setTimeout(()=>guardarTodo(true),1500);
+  clearTimeout(autoT);
+  autoT=setTimeout(function(){guardarTodo(true);},1500);
 }
 
-function guardarTodo(silencioso=false){
-  // Guardar mes actual en histórico (copia profunda)
+function guardarTodo(silencioso){
   HIST[MES_ACT]=JSON.parse(JSON.stringify(DATA));
-  try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){
-    console.error("Error guardando historial:",e);
-  }
+  guardarCfgMes();
+  try{localStorage.setItem("bu_hist",JSON.stringify(HIST));}catch(e){}
   // Sincronizar con panel-gerencia
-  const ventasGerencia={};
-  ASESORES.forEach(a=>{
-    const d=DATA[a.id]||{};
-    if(d.e||d.p||d.pol) ventasGerencia[a.id]={e:Number(d.e||0),p:Number(d.p||0),pol:Number(d.pol||0)};
+  var vg={};
+  ASESORES.forEach(function(a){
+    var d=DATA[a.id]||{};
+    if(d.e||d.p||d.pol) vg[a.id]={e:Number(d.e||0),p:Number(d.p||0),pol:Number(d.pol||0)};
   });
-  try{localStorage.setItem("crm_ventas",JSON.stringify(ventasGerencia));}catch(e){}
-  guardarCfg();
-  if(!silencioso)toast("💾 Guardado");
-  document.getElementById("lbl-guardado").textContent=
-    `Guardado ${new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}`;
-}
-
-function guardarCfg(){
-  try{localStorage.setItem("bocaurna_cfg",JSON.stringify({
-    mes:MES_ACT,
-    obj:document.getElementById("cfg-obj").value,
-    pol:document.getElementById("cfg-pol").value,
-    diasPas:document.getElementById("cfg-dias-pas").value,
-    diasTot:document.getElementById("cfg-dias-tot").value,
-  }));}catch(e){}
+  try{localStorage.setItem("crm_ventas",JSON.stringify(vg));}catch(e){}
+  document.getElementById("lbl-saved").textContent="Guardado "+new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});
+  if(!silencioso) toast("💾 Guardado");
 }
 
 function exportarCSV(){
-  const dp=Number(document.getElementById("cfg-dias-pas").value)||16;
-  const dt=Number(document.getElementById("cfg-dias-tot").value)||21;
-  const rows=[["Asesor","Canal","Zona","Ant.","Obj Prima","Obj Pol","Emitido","Pend. Emisión","Pólizas","Alcance%","Proyectado","Brecha"]];
-  ASESORES.forEach(a=>{
-    const d=DATA[a.id]||{};
-    const e=Number(d.e||0),p=Number(d.p||0),pol=Number(d.pol||0);
-    const o=getObj(a.id);
-    rows.push([a.n,a.c,a.z,a.a,o.prima,o.pol,e,p,pol,pct(e+p,o.prima),proyS(e,dp,dt)+p,Math.max(0,o.prima-e-p)]);
+  var cfg=getCfg();
+  var rows=[["Asesor","Canal","Zona","Ant.","Obj Prima","Emitido","Pend. Emisión","Pólizas","Alcance%","Proyectado","Brecha"]];
+  ASESORES.forEach(function(a){
+    var d=DATA[a.id]||{};
+    var e=Number(d.e||0),p=Number(d.p||0),pol=Number(d.pol||0);
+    var o=getObjAsesor(a.id);
+    rows.push([a.n,a.c,a.z,a.a,o.prima,e,p,pol,pct(e+p,o.prima),proyS(e,cfg.dp,cfg.dt)+p,Math.max(0,o.prima-e-p)]);
   });
-  const csv=rows.map(r=>r.map(v=>`"${v}"`).join(",")).join("\n");
-  const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
-  const a=document.createElement("a");
+  var csv=rows.map(function(r){return r.map(function(v){return '"'+v+'"';}).join(",");}).join("\n");
+  var blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+  var a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
-  a.download=`VIDA_${MESES[MES_ACT]}_2026.csv`;
+  a.download="VIDA_"+MESES[MES_ACT]+"_2026.csv";
   a.click();
   toast("⬇ CSV exportado");
 }
 
 function toast(msg){
-  const t=document.getElementById("toast");
-  t.textContent=msg;t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"),3000);
+  var t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  setTimeout(function(){t.classList.remove("show");},3000);
 }
 </script>
 </body>
