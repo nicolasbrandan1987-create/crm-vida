@@ -667,37 +667,43 @@ window.addEventListener("DOMContentLoaded",async()=>{
   const p=new URLSearchParams(window.location.search);
   ST.id=p.get("id")||p.get("asesor")||"pierlucca";
 
-  // Cargar WA config
-  try{const w=JSON.parse(localStorage.getItem("wa_cfg_"+ST.id)||"{}");
-    ST.wa=w;
-    if(w.numero){
-      document.getElementById("wa-numero").value=w.numero;
+  // WA config
+  try{const w=JSON.parse(localStorage.getItem("wa_cfg_"+ST.id)||"{}");ST.wa=w;
+    if(w.numero){document.getElementById("wa-numero").value=w.numero;
       document.getElementById("wa-apikey").value=w.apikey||"";
       document.getElementById("wa-top-btn").style.display="flex";
-      document.getElementById("btn-wa-prospecto").style.display="flex";
-    }
+      document.getElementById("btn-wa-prospecto").style.display="flex";}
   }catch(e){}
 
-  // Cargar prospectos locales
+  // Prospectos locales
   try{ST.prospectos=JSON.parse(localStorage.getItem("prosp_"+ST.id)||"[]");}catch(e){}
-  // Cargar log WA
   try{ST.waLog=JSON.parse(localStorage.getItem("walog_"+ST.id)||"[]");}catch(e){}
 
-  // Intentar cargar desde Apps Script
-  if(APPS_URL && APPS_URL!=="https://script.google.com/macros/s/AKfycbxKs9Gsh7Dy36Sl2U_q_jFcUytD-bgq9Bin_le0kzS3Hqe5zq24YumftLMMq3XiTnjW/exec"){
+  // Cargar desde Apps Script con timeout de 5 segundos
+  const cargarRemoto = async()=>{
+    if(!APPS_URL||APPS_URL==="TU_APPS_SCRIPT_URL_AQUI") return false;
     try{
-      const r=await fetch(`${APPS_URL}?accion=getAsesor&id=${ST.id}`);
+      const controller=new AbortController();
+      const tid=setTimeout(()=>controller.abort(),5000);
+      const url=`${APPS_URL}?accion=getAsesor&id=${encodeURIComponent(ST.id)}`;
+      const r=await fetch(url,{signal:controller.signal,redirect:"follow"});
+      clearTimeout(tid);
       const d=await r.json();
-      if(d.ok){
-        ST.asesor=d.asesor||{};
+      if(d.ok&&d.asesor){
+        ST.asesor=d.asesor;
         if(d.prospectos?.length) ST.prospectos=d.prospectos;
         ST.cartera=d.cartera||[];
+        return true;
       }
-    }catch(e){}
-  }
+    }catch(e){console.warn("Apps Script:",e.message);}
+    return false;
+  };
 
-  // Fallback a demo
-  if(!ST.asesor?.nombre) ST.asesor=DEMO[ST.id]||DEMO.pierlucca;
+  // Intentar cargar desde Apps Script
+  await cargarRemoto();
+
+  // Fallback a demo si no hay datos reales
+  if(!ST.asesor||!ST.asesor.nombre) ST.asesor=DEMO[ST.id]||DEMO.pierlucca;
 
   render();
   renderCartera();
