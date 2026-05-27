@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM VIDA — Carga Manual Mayo 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0B1F4B;--blue:#1A3A8F;--sky:#2563EB;
+  --g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;--g400:#94A3B8;--g600:#475569;--g800:#1E293B;
+  --green:#16A34A;--gBg:#DCFCE7;
+  --yellow:#CA8A04;--yBg:#FEF9C3;
+  --orange:#EA580C;--oBg:#FFEDD5;
+  --red:#DC2626;--rBg:#FEE2E2;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--g50);min-height:100vh;}
+button,select,input{font-family:inherit;}
+
+.topbar{background:linear-gradient(135deg,var(--navy),var(--blue));padding:12px 20px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  box-shadow:0 2px 12px rgba(0,0,0,.25);position:sticky;top:0;z-index:100;}
+.logo{display:flex;align-items:center;gap:9px;}
+.logo-ico{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--sky),#38BDF8);
+  display:flex;align-items:center;justify-content:center;font-size:16px;}
+.logo strong{color:#fff;font-size:14px;font-weight:800;display:block;}
+.logo small{color:rgba(255,255,255,.4);font-size:9px;letter-spacing:1px;}
+.top-actions{display:flex;gap:8px;align-items:center;}
+.btn{border:none;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+.btn-primary{background:var(--sky);color:#fff;}
+.btn-success{background:var(--green);color:#fff;}
+.btn-ghost{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);}
+
+.main{padding:18px 20px;display:flex;flex-direction:column;gap:16px;max-width:1400px;margin:0 auto;}
+
+/* HERO TOTALES */
+.hero{background:linear-gradient(135deg,var(--navy),#1e3a8a);border-radius:14px;padding:20px 24px;}
+.hero-title{color:rgba(255,255,255,.5);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.hero-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.hk{text-align:center;}
+.hk-v{font-size:26px;font-weight:900;color:#fff;}
+.hk-l{font-size:10px;color:rgba(255,255,255,.45);margin-top:3px;}
+.hk-sub{font-size:11px;margin-top:2px;font-weight:700;}
+
+/* BARRA TOTAL */
+.barra-wrap{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1);}
+.barra-lbl{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.barra-lbl span{font-size:11px;color:rgba(255,255,255,.6);}
+.barra-lbl strong{font-size:18px;font-weight:900;}
+.barra{height:24px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;overflow:hidden;}
+.barra-e{background:linear-gradient(90deg,#16A34A,#22c55e);display:flex;align-items:center;justify-content:center;transition:width .5s;}
+.barra-p{background:linear-gradient(90deg,#CA8A04,#eab308);display:flex;align-items:center;justify-content:center;transition:width .5s;}
+.barra-gap{flex:1;background:rgba(255,255,255,.07);}
+.barra-txt{font-size:10px;color:#fff;font-weight:700;padding:0 6px;white-space:nowrap;}
+.ley{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;}
+.li{display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(255,255,255,.55);}
+.li b{color:#fff;} .lid{width:8px;height:8px;border-radius:2px;}
+
+/* OBJETIVOS GLOBALES */
+.card{background:#fff;border-radius:13px;padding:18px 22px;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid var(--g200);}
+.sec{font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;}
+.obj-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.obj-item{display:flex;flex-direction:column;gap:4px;}
+.obj-lbl{font-size:11px;color:var(--g600);font-weight:600;}
+.obj-inp{border:1px solid var(--g200);border-radius:8px;padding:9px 12px;font-size:16px;font-weight:800;
+  text-align:center;outline:none;width:100%;color:var(--navy);}
+.obj-inp:focus{border-color:var(--sky);box-shadow:0 0 0 2px rgba(37,99,235,.1);}
+
+/* FILTROS CANAL */
+.canal-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.ctab{border:1px solid var(--g200);background:#fff;color:var(--g600);border-radius:8px;
+  padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;}
+.ctab.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+/* TABLA CARGA */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{padding:10px 10px;background:var(--navy);color:#fff;font-size:10px;font-weight:700;
+  text-align:left;white-space:nowrap;position:sticky;top:48px;}
+tbody tr{border-bottom:1px solid var(--g100);transition:background .1s;}
+tbody tr:hover{background:#F0F7FF!important;}
+tbody tr:nth-child(even){background:var(--g50);}
+tbody td{padding:6px 8px;vertical-align:middle;}
+.td-nombre{font-weight:700;color:var(--navy);white-space:nowrap;font-size:12px;}
+.td-zona{font-size:10px;color:var(--g400);}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;}
+
+/* INPUTS DE CARGA */
+.inp-num{border:1.5px solid var(--g200);border-radius:7px;padding:6px 8px;
+  font-size:13px;font-weight:700;text-align:center;outline:none;width:100%;
+  min-width:80px;color:var(--g800);transition:border-color .15s;}
+.inp-num:focus{border-color:var(--sky);}
+.inp-num.has-value{border-color:var(--green);background:var(--gBg);}
+.inp-num.has-pend{border-color:var(--yellow);background:var(--yBg);}
+
+/* SEMAFORO INLINE */
+.sm-bar{width:50px;height:5px;background:var(--g100);border-radius:3px;overflow:hidden;margin-top:3px;}
+.sm-bar-f{height:100%;border-radius:3px;}
+.alcance-pct{font-size:11px;font-weight:800;}
+
+/* RESUMEN POR CANAL */
+.canal-resumen{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.cr{border-radius:10px;padding:12px 14px;border:1px solid var(--g200);}
+.cr-nombre{font-size:11px;font-weight:800;color:var(--navy);margin-bottom:6px;}
+.cr-pct{font-size:20px;font-weight:900;margin-bottom:4px;}
+.cr-bar{height:6px;border-radius:3px;background:var(--g100);overflow:hidden;display:flex;margin-bottom:4px;}
+.cr-stats{font-size:10px;color:var(--g400);}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--navy);color:#fff;
+  padding:10px 18px;border-radius:10px;font-size:12px;font-weight:600;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);opacity:0;transition:opacity .25s;z-index:999;pointer-events:none;}
+.toast.show{opacity:1;}
+
+@media(max-width:900px){
+  .hero-kpis{grid-template-columns:repeat(3,1fr);}
+  .obj-grid{grid-template-columns:1fr 1fr;}
+  .canal-resumen{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-ico">💎</div>
+    <div><strong>CRM VIDA</strong><small>CARGA MANUAL · MAYO 2026</small></div>
+  </div>
+  <div class="top-actions">
+    <span style="color:rgba(255,255,255,.5);font-size:11px;" id="ultima-guarda"></span>
+    <button class="btn btn-ghost" onclick="exportarExcel()">⬇ Exportar Excel</button>
+    <button class="btn btn-ghost" onclick="window.open('panel-gerencia.html','_blank')">📊 Ver Panel Gerencia</button>
+    <button class="btn btn-success" onclick="guardarTodo()">💾 Guardar todo</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- HERO TOTALES -->
+  <div class="hero">
+    <div class="hero-title">RESUMEN TOTAL EQUIPO — MAYO 2026</div>
+    <div class="hero-kpis" id="hero-kpis"></div>
+    <div class="barra-wrap">
+      <div class="barra-lbl">
+        <span>Alcance proyectado (emitido + pendiente de emisión)</span>
+        <strong id="hero-pct" style="color:#fff">0%</strong>
+      </div>
+      <div class="barra">
+        <div class="barra-e" id="b-emit" style="width:0%"><span class="barra-txt" id="b-emit-txt"></span></div>
+        <div class="barra-p" id="b-pend" style="width:0%"><span class="barra-txt" id="b-pend-txt"></span></div>
+        <div class="barra-gap"></div>
+      </div>
+      <div class="ley">
+        <div class="li"><div class="lid" style="background:#16A34A"></div>Emitido: <b id="l-emit">$0</b></div>
+        <div class="li"><div class="lid" style="background:#CA8A04"></div>Pend. emisión: <b id="l-pend">$0</b></div>
+        <div class="li"><div class="lid" style="background:rgba(255,255,255,.15)"></div>Brecha: <b id="l-brecha">$0</b></div>
+        <div class="li"><div class="lid" style="background:rgba(255,255,255,.3)"></div>Objetivo: <b id="l-obj">$0</b></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJETIVOS GLOBALES -->
+  <div class="card">
+    <div class="sec">🎯 Objetivo global del equipo — editá para recalcular todo</div>
+    <div class="obj-grid">
+      <div class="obj-item">
+        <label class="obj-lbl">Objetivo total Prima $</label>
+        <input class="obj-inp" id="obj-prima" type="number" value="16000000" oninput="recalcular()">
+        <div style="font-size:10px;color:var(--g400);margin-top:2px">Suma de todos los asesores</div>
+      </div>
+      <div class="obj-item">
+        <label class="obj-lbl">Objetivo total Pólizas</label>
+        <input class="obj-inp" id="obj-pol" type="number" value="180" oninput="recalcular()">
+        <div style="font-size:10px;color:var(--g400);margin-top:2px">Unidades del mes</div>
+      </div>
+      <div class="obj-item">
+        <label class="obj-lbl">Días laborales transcurridos</label>
+        <input class="obj-inp" id="dias-pas" type="number" value="16" oninput="recalcular()">
+      </div>
+      <div class="obj-item">
+        <label class="obj-lbl">Días laborales del mes</label>
+        <input class="obj-inp" id="dias-tot" type="number" value="21" oninput="recalcular()">
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMEN POR CANAL -->
+  <div class="card">
+    <div class="sec">Alcance por Canal</div>
+    <div class="canal-resumen" id="canal-resumen"></div>
+  </div>
+
+  <!-- FILTRO POR CANAL -->
+  <div>
+    <div class="canal-tabs" id="canal-tabs"></div>
+
+    <!-- TABLA -->
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:200px">Asesor</th>
+            <th>Canal</th>
+            <th>Zona</th>
+            <th>Ant.</th>
+            <th>Obj. Prima</th>
+            <th>Prima emitida $</th>
+            <th>Pend. emisión $</th>
+            <th>Pólizas</th>
+            <th>Alcance</th>
+            <th>Proyección</th>
+            <th>Brecha</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+// 42 ASESORES REALES
+// ════════════════════════════════════════════════════════════
+const ASESORES = [
+  {id:"cuckovich",     n:"CUCKOVICH, VERONICA CECILIA",       c:"AMBA CENTRO",       z:"Caballito",      a:"Semi", obj:380000, objPol:4},
+  {id:"aguilar",       n:"AGUILAR, ANALIA HAYDEE",            c:"AMBA CENTRO",       z:"La Plata",       a:"Sr",   obj:450000, objPol:5},
+  {id:"sanchez_mc",    n:"SANCHEZ, MERCEDES CAMILA",          c:"AMBA CENTRO",       z:"La Plata",       a:"Jr",   obj:320000, objPol:4},
+  {id:"manteiga",      n:"MANTEIGA, MIRIAM MABEL",            c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Sr",   obj:450000, objPol:5},
+  {id:"rios",          n:"RIOS, ERICA ELIZABET",              c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Semi", obj:380000, objPol:4},
+  {id:"quispe",        n:"QUISPE, NOELIA CARINA",             c:"AMBA CENTRO",       z:"Microcentro",    a:"Jr",   obj:320000, objPol:4},
+  {id:"witel",         n:"WITEL, LAURA DANIELA",              c:"AMBA CENTRO",       z:"Microcentro",    a:"Semi", obj:380000, objPol:4},
+  {id:"garcia_sanchez",n:"GARCIA SANCHEZ, BRENDA ELIZABETH",  c:"AMBA CENTRO",       z:"San Isidro",     a:"Jr",   obj:320000, objPol:4},
+  {id:"morello",       n:"MORELLO, MARCELO ROQUE",            c:"AMBA CENTRO",       z:"San Isidro",     a:"Sr",   obj:450000, objPol:5},
+  {id:"flores_i",      n:"FLORES, IVANA CAROLINA NORMA",      c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",   obj:450000, objPol:5},
+  {id:"prieto",        n:"PRIETO, BLANCA",                    c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",   obj:450000, objPol:5},
+  {id:"barroso",       n:"BARROSO CARPINTERO, RAFAEL ARMANDO",c:"AMBA METRO",        z:"Nordelta",       a:"Semi", obj:380000, objPol:4},
+  {id:"briozzo",       n:"BRIOZZO, ANDREA LETICIA",           c:"AMBA METRO",        z:"Nordelta",       a:"Semi", obj:380000, objPol:4},
+  {id:"varela",        n:"VARELA, SOFIA AYLEN",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Jr",   obj:320000, objPol:4},
+  {id:"salas",         n:"SALAS, MAGALI PAULA",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Jr",   obj:320000, objPol:4},
+  {id:"perez_g",       n:"PEREZ, GUSTAVO MARCELO",            c:"AMBA METRO",        z:"Zárate",         a:"Semi", obj:380000, objPol:4},
+  {id:"medina_g",      n:"MEDINA, GIULIANA BEATRIZ",          c:"AMBA METRO",        z:"Zárate",         a:"Jr",   obj:320000, objPol:4},
+  {id:"magallanes",    n:"MAGALLANES, MARIA LAURA",           c:"CANALES DIGITALES", z:"Brigada 1",      a:"Sr",   obj:450000, objPol:5},
+  {id:"gomez_g",       n:"GOMEZ, GEORGINA FERNANDA",          c:"CANALES DIGITALES", z:"Brigada 8",      a:"Sr",   obj:450000, objPol:5},
+  {id:"benitez",       n:"BENITEZ MOMBELLI, LEANDRO EZEQUIEL",c:"CANALES DIGITALES", z:"Brigada 2",      a:"Semi", obj:380000, objPol:4},
+  {id:"bastidas",      n:"BASTIDAS HERRERA, CLAUDIA CECILIA", c:"CANALES DIGITALES", z:"Brigada 4",      a:"Semi", obj:380000, objPol:4},
+  {id:"finocchiaro",   n:"FINOCCHIARO, LAURA LORENA",         c:"CANALES DIGITALES", z:"Brigada 4",      a:"Jr",   obj:320000, objPol:4},
+  {id:"carrasco",      n:"CARRASCO, SILVIA GRACIELA",         c:"CANALES DIGITALES", z:"Brigada 5",      a:"Sr",   obj:450000, objPol:5},
+  {id:"avila",         n:"AVILA, JAVIER ALEJANDRO",           c:"CANALES DIGITALES", z:"Brigada 6",      a:"Semi", obj:380000, objPol:4},
+  {id:"rosen",         n:"ROSEN, BARBARA DAIANA",             c:"CANALES DIGITALES", z:"Brigada 7",      a:"Jr",   obj:320000, objPol:4},
+  {id:"berlocq",       n:"BERLOCQ, MARIA FLORENCIA",          c:"INTERIOR",          z:"Bs As Sur",      a:"Semi", obj:380000, objPol:4},
+  {id:"passeri",       n:"PASSERI, JOSE RAUL",                c:"INTERIOR",          z:"Bs As Sur",      a:"Semi", obj:380000, objPol:4},
+  {id:"armand",        n:"ARMAND, LUCAS",                     c:"INTERIOR",          z:"Chaco",          a:"Sr",   obj:450000, objPol:5},
+  {id:"lopez_e",       n:"LOPEZ, ERNESTO MARTIN",             c:"INTERIOR",          z:"Chaco",          a:"Sr",   obj:450000, objPol:5},
+  {id:"pierlucca",     n:"PIERLUCCA, JULIA ELISABETH",        c:"INTERIOR",          z:"Chaco",          a:"Sr",   obj:450000, objPol:5},
+  {id:"nunez",         n:"NUÑEZ, MIGUEL ANGEL",               c:"INTERIOR",          z:"Córdoba",        a:"Sr",   obj:450000, objPol:5},
+  {id:"rivero",        n:"RIVERO, NADIA",                     c:"INTERIOR",          z:"Córdoba",        a:"Semi", obj:380000, objPol:4},
+  {id:"flores_lg",     n:"FLORES, LUCAS GASTON",              c:"INTERIOR",          z:"Mendoza",        a:"Sr",   obj:450000, objPol:5},
+  {id:"blanco",        n:"BLANCO, RICARDO FABIAN",            c:"INTERIOR",          z:"Neuquén",        a:"Sr",   obj:450000, objPol:5},
+  {id:"dominguez",     n:"DOMINGUEZ, ANA LAURA",              c:"INTERIOR",          z:"Neuquén",        a:"Sr",   obj:450000, objPol:5},
+  {id:"beltran",       n:"BELTRAN, DELMA RINA",               c:"INTERIOR",          z:"Salta",          a:"Semi", obj:380000, objPol:4},
+  {id:"aguirre",       n:"AGUIRRE ALEN, AGUSTINA",            c:"INTERIOR",          z:"Salta",          a:"Jr",   obj:320000, objPol:4},
+  {id:"bagnasco",      n:"BAGNASCO GENTILE, KARINA PAOLA",    c:"INTERIOR",          z:"Salta",          a:"Semi", obj:380000, objPol:4},
+  {id:"michellis",     n:"MICHELLIS, SUSANA BEATRIZ",         c:"MIXTO",             z:"Brigada 9",      a:"Sr",   obj:450000, objPol:5},
+  {id:"bruno",         n:"BRUNO, MARIA SILVINA",              c:"MIXTO",             z:"Rosario 1",      a:"Sr",   obj:450000, objPol:5},
+  {id:"gerez",         n:"GEREZ, CARLOS",                     c:"MIXTO",             z:"Brigada 3",      a:"Semi", obj:380000, objPol:4},
+  {id:"silva",         n:"SILVA, ANA ROSA",                   c:"MIXTO",             z:"Equipo Pyme",    a:"Semi", obj:380000, objPol:4},
+];
+
+const CANALES=["AMBA CENTRO","AMBA METRO","CANALES DIGITALES","INTERIOR","MIXTO"];
+const ANT_COLS={"Sr":"#2563EB","Semi":"#CA8A04","Jr":"#EA580C"};
+const ANT_BGS ={"Sr":"#EFF6FF","Semi":"#FEF9C3","Jr":"#FFEDD5"};
+
+// ════════════════════════════════════════════════════════════
+// ESTADO
+// ════════════════════════════════════════════════════════════
+let DATA = {}; // {id: {emit, pend, pol}}
+let CANAL_SEL = "TODOS";
+
+// ════════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════════
+const fmt  = n=>n>=1e6?`$${(n/1e6).toFixed(2)}M`:n>=1000?`$${(n/1000).toFixed(0)}K`:`$${n}`;
+const pct  = (v,t)=>t===0?0:Math.round(v/t*100);
+const clamp= (v,a,b)=>Math.min(b,Math.max(a,v));
+const sm   = p=>{
+  if(p>=100) return {c:"#16A34A",bg:"#DCFCE7",txt:"En objetivo"};
+  if(p>=75)  return {c:"#CA8A04",bg:"#FEF9C3",txt:"En riesgo"};
+  if(p>=50)  return {c:"#EA580C",bg:"#FFEDD5",txt:"Bajo"};
+  return           {c:"#DC2626",bg:"#FEE2E2",txt:"Crítico"};
+};
+const proyS = (emit,diasPas,diasTot) => {
+  const ritmo = diasPas>0 ? emit/diasPas : 0;
+  return Math.round(emit + ritmo*(diasTot-diasPas));
+};
+const hoy = ()=>new Date().toISOString().slice(0,10);
+
+// ════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════
+window.addEventListener("DOMContentLoaded",()=>{
+  // Cargar datos guardados
+  try{DATA=JSON.parse(localStorage.getItem("carga_manual_mayo26")||"{}");}catch(e){}
+
+  // Cargar objetivos guardados
+  try{
+    const cfg=JSON.parse(localStorage.getItem("carga_cfg")||"{}");
+    if(cfg.obj)       document.getElementById("obj-prima").value=cfg.obj;
+    if(cfg.pol)       document.getElementById("obj-pol").value=cfg.pol;
+    if(cfg.diasPas)   document.getElementById("dias-pas").value=cfg.diasPas;
+    if(cfg.diasTot)   document.getElementById("dias-tot").value=cfg.diasTot;
+  }catch(e){}
+
+  // Tabs canal
+  const tabsDiv=document.getElementById("canal-tabs");
+  ["TODOS",...CANALES].forEach(c=>{
+    const b=document.createElement("button");
+    b.className="ctab"+(c==="TODOS"?" active":"");
+    b.textContent=c.replace("CANALES DIGITALES","C. Digital");
+    b.onclick=()=>setCanalSel(c);
+    tabsDiv.appendChild(b);
+  });
+
+  recalcular();
+  actualizarUltimaGuarda();
+});
+
+// ════════════════════════════════════════════════════════════
+// RENDER
+// ════════════════════════════════════════════════════════════
+function recalcular(){
+  const objTotal  = Number(document.getElementById("obj-prima").value)||0;
+  const objPolTot = Number(document.getElementById("obj-pol").value)||0;
+  const diasPas   = Number(document.getElementById("dias-pas").value)||16;
+  const diasTot   = Number(document.getElementById("dias-tot").value)||21;
+
+  // Totales
+  let tEmit=0,tPend=0,tPol=0;
+  ASESORES.forEach(a=>{
+    const d=DATA[a.id]||{};
+    tEmit+=Number(d.emit||0);
+    tPend+=Number(d.pend||0);
+    tPol +=Number(d.pol ||0);
+  });
+  const tProy=tEmit+tPend;
+  const pp=pct(tProy,objTotal), ppE=pct(tEmit,objTotal), ppP=pct(tPend,objTotal);
+  const s=sm(pp);
+
+  // Hero KPIs
+  const proyRitmo=proyS(tEmit,diasPas,diasTot)+tPend;
+  const proyRitmoSin=proyS(tEmit,diasPas,diasTot);
+  document.getElementById("hero-kpis").innerHTML=[
+    {l:"Objetivo prima",   v:fmt(objTotal),    c:"rgba(255,255,255,.9)",sub:""},
+    {l:"Emitido",          v:fmt(tEmit),       c:"#86EFAC",             sub:`${ppE}% del obj.`},
+    {l:"Pend. de emisión", v:fmt(tPend),       c:"#FCD34D",             sub:`${ppP}% del obj.`},
+    {l:"Proyectado total", v:fmt(proyRitmo),   c:s.c,                   sub:`${pct(proyRitmo,objTotal)}% — ${s.txt}`},
+    {l:"Pólizas",          v:`${tPol}/${objPolTot}`, c:"#38BDF8",       sub:`${pct(tPol,objPolTot)}% del obj.`},
+  ].map(x=>`<div class="hk">
+    <div class="hk-v" style="color:${x.c}">${x.v}</div>
+    <div class="hk-l">${x.l}</div>
+    <div class="hk-sub" style="color:${x.c}">${x.sub}</div>
+  </div>`).join("");
+
+  // Barra
+  const pE=clamp(ppE,0,100), pP=clamp(ppP,0,Math.max(0,100-pE));
+  document.getElementById("b-emit").style.width=pE+"%";
+  document.getElementById("b-pend").style.width=pP+"%";
+  document.getElementById("b-emit-txt").textContent=pE>8?fmt(tEmit):"";
+  document.getElementById("b-pend-txt").textContent=pP>6?fmt(tPend):"";
+  document.getElementById("hero-pct").textContent=pp+"% "+s.txt;
+  document.getElementById("hero-pct").style.color=s.c;
+  document.getElementById("l-emit").textContent=fmt(tEmit);
+  document.getElementById("l-pend").textContent=fmt(tPend);
+  document.getElementById("l-brecha").textContent=fmt(Math.max(0,objTotal-tProy));
+  document.getElementById("l-obj").textContent=fmt(objTotal);
+
+  // Resumen por canal
+  document.getElementById("canal-resumen").innerHTML=CANALES.map(c=>{
+    const aa=ASESORES.filter(a=>a.c===c);
+    const cObj=aa.reduce((s,a)=>s+a.obj,0);
+    const cE  =aa.reduce((s,a)=>s+Number((DATA[a.id]||{}).emit||0),0);
+    const cP  =aa.reduce((s,a)=>s+Number((DATA[a.id]||{}).pend||0),0);
+    const cPol=aa.reduce((s,a)=>s+Number((DATA[a.id]||{}).pol ||0),0);
+    const cPPct=pct(cE+cP,cObj), cSm=sm(cPPct);
+    const pCE=clamp(pct(cE,cObj),0,100), pCP=clamp(pct(cP,cObj),0,Math.max(0,100-pCE));
+    const enCero=aa.filter(a=>!(DATA[a.id]||{}).emit&&!(DATA[a.id]||{}).pend).length;
+    // Participación en el total del equipo
+    const partTotal=tEmit>0?pct(cE,tEmit):0;
+    return `<div class="cr" style="background:${cSm.bg};border-color:${cSm.c}40">
+      <div class="cr-nombre" style="color:${cSm.c}">${c.replace("CANALES DIGITALES","C.Digital")}</div>
+      <div class="cr-pct" style="color:${cSm.c}">${cPPct}%</div>
+      <div class="cr-bar">
+        <div style="width:${pCE}%;height:100%;background:#16A34A"></div>
+        <div style="width:${pCP}%;height:100%;background:#CA8A04"></div>
+      </div>
+      <div class="cr-stats">
+        ${fmt(cE)} emit · ${fmt(cP)} pend<br>
+        ${cPol} pólizas · ${enCero} en cero<br>
+        <span style="font-weight:700;color:${cSm.c}">Particip: ${partTotal}% del total</span>
+      </div>
+    </div>`;
+  }).join("");
+
+  // Tabla
+  renderTabla(diasPas,diasTot);
+}
+
+function renderTabla(diasPas,diasTot){
+  const filtrados=CANAL_SEL==="TODOS"?ASESORES:ASESORES.filter(a=>a.c===CANAL_SEL);
+  const objTotal=Number(document.getElementById("obj-prima").value)||1;
+
+  // Participación por canal para cada asesor
+  const emitPorCanal={};
+  CANALES.forEach(c=>{
+    emitPorCanal[c]=ASESORES.filter(a=>a.c===c).reduce((s,a)=>s+Number((DATA[a.id]||{}).emit||0),0);
+  });
+
+  document.getElementById("tbody").innerHTML=filtrados.map((a,i)=>{
+    const d=DATA[a.id]||{};
+    const emit=Number(d.emit||0), pend=Number(d.pend||0), pol=Number(d.pol||0);
+    const proy=emit+pend;
+    const proyRitmo=proyS(emit,diasPas,diasTot)+pend;
+    const alcPct=pct(proy,a.obj);
+    const alcSm=sm(alcPct);
+    const brecha=Math.max(0,a.obj-proy);
+    // Participación en su canal
+    const partCanal=emitPorCanal[a.c]>0?pct(emit,emitPorCanal[a.c]):0;
+    // Participación en total equipo
+    const tEmitTotal=ASESORES.reduce((s,x)=>s+Number((DATA[x.id]||{}).emit||0),0);
+    const partTotal=tEmitTotal>0?pct(emit,tEmitTotal):0;
+    const bg=emit===0&&pend===0?"#FFF1F2":alcPct>=100?"#F0FDF4":i%2===0?"#fff":"#F8FAFC";
+
+    return `<tr style="background:${bg}" id="row-${a.id}">
+      <td>
+        <div class="td-nombre">${a.n}</div>
+        <div class="td-zona">${a.z}</div>
+      </td>
+      <td style="font-size:10px;color:var(--g600)">${a.c.replace("CANALES DIGITALES","C.Dig")}</td>
+      <td style="font-size:10px;color:var(--g600)">${a.z}</td>
+      <td><span class="tag" style="color:${ANT_COLS[a.a]};background:${ANT_BGS[a.a]}">${a.a}</span></td>
+      <td style="color:var(--g400);font-size:11px">${fmt(a.obj)}</td>
+      <td>
+        <input class="inp-num ${emit>0?'has-value':''}" type="number" min="0" placeholder="0"
+          value="${emit||''}" id="emit-${a.id}"
+          oninput="setVal('${a.id}','emit',this.value)"
+          onfocus="this.select()"
+          style="max-width:110px">
+      </td>
+      <td>
+        <input class="inp-num ${pend>0?'has-pend':''}" type="number" min="0" placeholder="0"
+          value="${pend||''}" id="pend-${a.id}"
+          oninput="setVal('${a.id}','pend',this.value)"
+          onfocus="this.select()"
+          style="max-width:110px">
+      </td>
+      <td>
+        <input class="inp-num" type="number" min="0" placeholder="0"
+          value="${pol||''}" id="pol-${a.id}"
+          oninput="setVal('${a.id}','pol',this.value)"
+          onfocus="this.select()"
+          style="max-width:60px">
+      </td>
+      <td>
+        <div class="alcance-pct" style="color:${alcSm.c}">${alcPct}%</div>
+        <div class="sm-bar"><div class="sm-bar-f" style="width:${clamp(alcPct,0,100)}%;background:${alcSm.c}"></div></div>
+        <div style="font-size:9px;color:${alcSm.c}">${alcSm.txt}</div>
+      </td>
+      <td>
+        <div style="font-size:12px;font-weight:700;color:var(--navy)">${fmt(proyRitmo)}</div>
+        <div style="font-size:10px;color:var(--g400)">${pct(proyRitmo,a.obj)}% del obj.</div>
+        ${!emit&&!pend?'<div style="font-size:9px;color:var(--red);font-weight:700">⚠ Sin datos</div>':''}
+      </td>
+      <td>
+        <div style="font-size:12px;font-weight:700;color:${brecha>0?'var(--red)':'var(--green)'}">
+          ${brecha>0?`-${fmt(brecha)}`:"✅"}
+        </div>
+        ${emit>0||pend>0?`<div style="font-size:9px;color:var(--g400)">Part: ${partCanal}% canal · ${partTotal}% equipo</div>`:''}
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+// ════════════════════════════════════════════════════════════
+// ACCIONES
+// ════════════════════════════════════════════════════════════
+function setVal(id,campo,val){
+  if(!DATA[id]) DATA[id]={};
+  DATA[id][campo]=Number(val)||0;
+  // Update input style
+  const inp=document.getElementById(`${campo}-${id}`);
+  if(inp){
+    if(campo==="emit") inp.className="inp-num "+(DATA[id][campo]>0?"has-value":"");
+    if(campo==="pend") inp.className="inp-num "+(DATA[id][campo]>0?"has-pend":"");
+  }
+  recalcular();
+  autoguardar();
+}
+
+function setCanalSel(c){
+  CANAL_SEL=c;
+  document.querySelectorAll(".ctab").forEach(b=>{
+    b.classList.toggle("active",b.textContent.replace("C. Digital","CANALES DIGITALES")===c||
+      (c==="TODOS"&&b.textContent==="TODOS"));
+  });
+  const diasPas=Number(document.getElementById("dias-pas").value)||16;
+  const diasTot=Number(document.getElementById("dias-tot").value)||21;
+  renderTabla(diasPas,diasTot);
+}
+
+let autoguardTimer=null;
+function autoguardar(){
+  clearTimeout(autoguardTimer);
+  autoguardTimer=setTimeout(()=>{
+    guardarTodo(true);
+  },1500);
+}
+
+function guardarTodo(silencioso=false){
+  try{localStorage.setItem("carga_manual_mayo26",JSON.stringify(DATA));}catch(e){}
+  // Guardar config
+  try{localStorage.setItem("carga_cfg",JSON.stringify({
+    obj:  document.getElementById("obj-prima").value,
+    pol:  document.getElementById("obj-pol").value,
+    diasPas:document.getElementById("dias-pas").value,
+    diasTot:document.getElementById("dias-tot").value,
+  }));}catch(e){}
+
+  // Sincronizar con panel-gerencia via localStorage compartido
+  const ventasParaGerencia={};
+  ASESORES.forEach(a=>{
+    const d=DATA[a.id]||{};
+    if(d.emit||d.pend||d.pol){
+      ventasParaGerencia[a.id]={e:Number(d.emit||0),p:Number(d.pend||0),pol:Number(d.pol||0)};
+    }
+  });
+  try{localStorage.setItem("crm_ventas",JSON.stringify(ventasParaGerencia));}catch(e){}
+
+  if(!silencioso) toast("💾 Guardado correctamente");
+  actualizarUltimaGuarda();
+}
+
+function actualizarUltimaGuarda(){
+  const keys=Object.keys(DATA).filter(k=>DATA[k].emit||DATA[k].pend||DATA[k].pol);
+  document.getElementById("ultima-guarda").textContent=
+    keys.length>0?`${keys.length} asesores con datos · ${new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}`:"";
+}
+
+function exportarExcel(){
+  // Crear tabla para Excel
+  const rows=[["Asesor","Canal","Zona","Ant.","Obj Prima","Emitido","Pend. Emisión","Pólizas","Alcance %","Proyectado","Brecha"]];
+  const diasPas=Number(document.getElementById("dias-pas").value)||16;
+  const diasTot=Number(document.getElementById("dias-tot").value)||21;
+  ASESORES.forEach(a=>{
+    const d=DATA[a.id]||{};
+    const emit=Number(d.emit||0), pend=Number(d.pend||0), pol=Number(d.pol||0);
+    const proy=proyS(emit,diasPas,diasTot)+pend;
+    rows.push([a.n,a.c,a.z,a.a,a.obj,emit,pend,pol,pct(emit+pend,a.obj),proy,Math.max(0,a.obj-emit-pend)]);
+  });
+  // Totales
+  const tE=ASESORES.reduce((s,a)=>s+Number((DATA[a.id]||{}).emit||0),0);
+  const tP=ASESORES.reduce((s,a)=>s+Number((DATA[a.id]||{}).pend||0),0);
+  const tPol=ASESORES.reduce((s,a)=>s+Number((DATA[a.id]||{}).pol||0),0);
+  const objT=Number(document.getElementById("obj-prima").value)||0;
+  rows.push(["TOTAL EQUIPO","","","",objT,tE,tP,tPol,pct(tE+tP,objT),"",Math.max(0,objT-tE-tP)]);
+
+  // Descargar como CSV (sin librería)
+  const csv=rows.map(r=>r.map(v=>`"${v}"`).join(",")).join("\n");
+  const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`CRM_VIDA_Mayo2026_${new Date().toLocaleDateString("es-AR").replace(/\//g,"-")}.csv`;
+  a.click();
+  toast("⬇ Excel exportado");
+}
+
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),3000);
+}
+</script>
+</body>
+</html>
