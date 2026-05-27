@@ -210,11 +210,11 @@ tbody td{padding:6px 7px;vertical-align:middle;font-size:12px;}
   <div class="cfg-grid">
     <div class="cfg-item">
       <div class="cfg-lbl">Objetivo total Prima $</div>
-      <input class="cfg-inp" id="cfg-obj" type="number" value="18675000" oninput="recalcular()">
+      <input class="cfg-inp" id="cfg-obj" type="number" value="19803546" oninput="recalcular()">
     </div>
     <div class="cfg-item">
       <div class="cfg-lbl">Objetivo total Pólizas</div>
-      <input class="cfg-inp" id="cfg-pol" type="number" value="215" oninput="recalcular()">
+      <input class="cfg-inp" id="cfg-pol" type="number" value="210" oninput="recalcular()">
     </div>
     <div class="cfg-item">
       <div class="cfg-lbl">Días laborales transcurridos</div>
@@ -253,7 +253,7 @@ tbody td{padding:6px 7px;vertical-align:middle;font-size:12px;}
   <div id="linea-chart" style="overflow-x:auto;min-height:60px;"></div>
   <!-- Tabla comparativa -->
   <div style="overflow-x:auto;margin-top:14px;">
-    <table style="font-size:11px;">
+    <table style="font-size:11px;min-width:1200px;">
       <thead>
         <tr id="comp-header">
           <th>Asesor</th><th>Canal</th>
@@ -296,7 +296,7 @@ tbody td{padding:6px 7px;vertical-align:middle;font-size:12px;}
   </div>
 
   <div class="card" style="padding:0;overflow:hidden;margin-top:14px;">
-    <table style="font-size:11px;">
+    <table style="font-size:11px;min-width:1200px;">
       <thead>
         <tr>
           <th style="min-width:160px">Asesor</th>
@@ -343,52 +343,52 @@ tbody td{padding:6px 7px;vertical-align:middle;font-size:12px;}
 // ════════════════════════════════════════════════════════════
 const ASESORES=[
   // AMBA CENTRO — todos Sr/Semi confirmados
-  {id:"cuckovich",     n:"CUCKOVICH, VERONICA CECILIA",       c:"AMBA CENTRO",       z:"Caballito",      a:"Semi",objPrima:450000,objPol:5},
-  {id:"aguilar",       n:"AGUILAR, ANALIA HAYDEE",            c:"AMBA CENTRO",       z:"La Plata",       a:"Sr",  objPrima:450000,objPol:5},
-  {id:"sanchez_mc",    n:"SANCHEZ, MERCEDES CAMILA",          c:"AMBA CENTRO",       z:"La Plata",       a:"Semi",objPrima:450000,objPol:5},
-  {id:"manteiga",      n:"MANTEIGA, MIRIAM MABEL",            c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Sr",  objPrima:450000,objPol:5},
-  {id:"rios",          n:"RIOS, ERICA ELIZABET",              c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Semi",objPrima:450000,objPol:5},
-  {id:"quispe",        n:"QUISPE, NOELIA CARINA",             c:"AMBA CENTRO",       z:"Microcentro",    a:"Semi",objPrima:450000,objPol:5},
-  {id:"witel",         n:"WITEL, LAURA DANIELA",              c:"AMBA CENTRO",       z:"Microcentro",    a:"Semi",objPrima:450000,objPol:5},
-  {id:"garcia_sanchez",n:"GARCIA SANCHEZ, BRENDA ELIZABETH",  c:"AMBA CENTRO",       z:"San Isidro",     a:"Semi",objPrima:450000,objPol:5},
-  {id:"morello",       n:"MORELLO, MARCELO ROQUE",            c:"AMBA CENTRO",       z:"San Isidro",     a:"Sr",  objPrima:450000,objPol:5},
+  {id:"cuckovich",     n:"CUCKOVICH, VERONICA CECILIA",       c:"AMBA CENTRO",       z:"Caballito",      a:"Sr",objPrima:485381,objPol:5},
+  {id:"aguilar",       n:"AGUILAR, ANALIA HAYDEE",            c:"AMBA CENTRO",       z:"La Plata",       a:"Sr",  objPrima:485381,objPol:5},
+  {id:"sanchez_mc",    n:"SANCHEZ, MERCEDES CAMILA",          c:"AMBA CENTRO",       z:"La Plata",       a:"Sr",objPrima:485381,objPol:5},
+  {id:"manteiga",      n:"MANTEIGA, MIRIAM MABEL",            c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Sr",  objPrima:485381,objPol:5},
+  {id:"rios",          n:"RIOS, ERICA ELIZABET",              c:"AMBA CENTRO",       z:"Lomas de Zamora",a:"Sr",objPrima:485381,objPol:5},
+  {id:"quispe",        n:"QUISPE, NOELIA CARINA",             c:"AMBA CENTRO",       z:"Microcentro",    a:"Sr",objPrima:485381,objPol:5},
+  {id:"witel",         n:"WITEL, LAURA DANIELA",              c:"AMBA CENTRO",       z:"Microcentro",    a:"Sr",objPrima:485381,objPol:5},
+  {id:"garcia_sanchez",n:"GARCIA SANCHEZ, BRENDA ELIZABETH",  c:"AMBA CENTRO",       z:"San Isidro",     a:"Sr",objPrima:485381,objPol:5},
+  {id:"morello",       n:"MORELLO, MARCELO ROQUE",            c:"AMBA CENTRO",       z:"San Isidro",     a:"Sr",  objPrima:485381,objPol:5},
   // AMBA METRO
-  {id:"flores_i",      n:"FLORES, IVANA CAROLINA NORMA",      c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",  objPrima:450000,objPol:5},
-  {id:"prieto",        n:"PRIETO, BLANCA",                    c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",  objPrima:450000,objPol:5},
-  {id:"barroso",       n:"BARROSO CARPINTERO, RAFAEL ARMANDO",c:"AMBA METRO",        z:"Nordelta",       a:"Sr",  objPrima:450000,objPol:5},
-  {id:"briozzo",       n:"BRIOZZO, ANDREA LETICIA",           c:"AMBA METRO",        z:"Nordelta",       a:"Sr",  objPrima:450000,objPol:5},
-  {id:"varela",        n:"VARELA, SOFIA AYLEN",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Semi",objPrima:450000,objPol:5},
-  {id:"salas",         n:"SALAS, MAGALI PAULA",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Semi",objPrima:450000,objPol:5},
-  {id:"perez_g",       n:"PEREZ, GUSTAVO MARCELO",            c:"AMBA METRO",        z:"Zárate",         a:"Sr",  objPrima:450000,objPol:5},
-  {id:"medina_g",      n:"MEDINA, GIULIANA BEATRIZ",          c:"AMBA METRO",        z:"Zárate",         a:"Semi",objPrima:450000,objPol:5},
+  {id:"flores_i",      n:"FLORES, IVANA CAROLINA NORMA",      c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",  objPrima:485381,objPol:5},
+  {id:"prieto",        n:"PRIETO, BLANCA",                    c:"AMBA METRO",        z:"Barrio Norte",   a:"Sr",  objPrima:485381,objPol:5},
+  {id:"barroso",       n:"BARROSO CARPINTERO, RAFAEL ARMANDO",c:"AMBA METRO",        z:"Nordelta",       a:"Sr",  objPrima:485381,objPol:5},
+  {id:"briozzo",       n:"BRIOZZO, ANDREA LETICIA",           c:"AMBA METRO",        z:"Nordelta",       a:"Sr",  objPrima:485381,objPol:5},
+  {id:"varela",        n:"VARELA, SOFIA AYLEN",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Sr",objPrima:485381,objPol:5},
+  {id:"salas",         n:"SALAS, MAGALI PAULA",               c:"AMBA METRO",        z:"Ramos Mejía",    a:"Sr",objPrima:485381,objPol:5},
+  {id:"perez_g",       n:"PEREZ, GUSTAVO MARCELO",            c:"AMBA METRO",        z:"Zárate",         a:"Sr",  objPrima:485381,objPol:5},
+  {id:"medina_g",      n:"MEDINA, GIULIANA BEATRIZ",          c:"AMBA METRO",        z:"Zárate",         a:"Sr",objPrima:485381,objPol:5},
   // CANALES DIGITALES — Jr: gomez_g, finocchiaro
-  {id:"magallanes",    n:"MAGALLANES, MARIA LAURA",           c:"CANALES DIGITALES", z:"Brigada 1",      a:"Sr",  objPrima:450000,objPol:5},
-  {id:"gomez_g",       n:"GOMEZ, GEORGINA FERNANDA",          c:"CANALES DIGITALES", z:"Brigada 8",      a:"Jr",  objPrima:315000,objPol:5},
-  {id:"benitez",       n:"BENITEZ MOMBELLI, LEANDRO EZEQUIEL",c:"CANALES DIGITALES", z:"Brigada 2",      a:"Semi",objPrima:450000,objPol:5},
-  {id:"bastidas",      n:"BASTIDAS HERRERA, CLAUDIA CECILIA", c:"CANALES DIGITALES", z:"Brigada 4",      a:"Semi",objPrima:450000,objPol:5},
-  {id:"finocchiaro",   n:"FINOCCHIARO, LAURA LORENA",         c:"CANALES DIGITALES", z:"Brigada 4",      a:"Jr",  objPrima:315000,objPol:5},
-  {id:"carrasco",      n:"CARRASCO, SILVIA GRACIELA",         c:"CANALES DIGITALES", z:"Brigada 5",      a:"Sr",  objPrima:450000,objPol:5},
-  {id:"avila",         n:"AVILA, JAVIER ALEJANDRO",           c:"CANALES DIGITALES", z:"Brigada 6",      a:"Semi",objPrima:450000,objPol:5},
-  {id:"rosen",         n:"ROSEN, BARBARA DAIANA",             c:"CANALES DIGITALES", z:"Brigada 7",      a:"Semi",objPrima:450000,objPol:5},
+  {id:"magallanes",    n:"MAGALLANES, MARIA LAURA",           c:"CANALES DIGITALES", z:"Brigada 1",      a:"Sr",  objPrima:485381,objPol:5},
+  {id:"gomez_g",       n:"GOMEZ, GEORGINA FERNANDA",          c:"CANALES DIGITALES", z:"Brigada 8",      a:"Jr",  objPrima:339767,objPol:5},
+  {id:"benitez",       n:"BENITEZ MOMBELLI, LEANDRO EZEQUIEL",c:"CANALES DIGITALES", z:"Brigada 2",      a:"Sr",objPrima:485381,objPol:5},
+  {id:"bastidas",      n:"BASTIDAS HERRERA, CLAUDIA CECILIA", c:"CANALES DIGITALES", z:"Brigada 4",      a:"Sr",objPrima:485381,objPol:5},
+  {id:"finocchiaro",   n:"FINOCCHIARO, LAURA LORENA",         c:"CANALES DIGITALES", z:"Brigada 4",      a:"Jr",  objPrima:339767,objPol:5},
+  {id:"carrasco",      n:"CARRASCO, SILVIA GRACIELA",         c:"CANALES DIGITALES", z:"Brigada 5",      a:"Sr",  objPrima:485381,objPol:5},
+  {id:"avila",         n:"AVILA, JAVIER ALEJANDRO",           c:"CANALES DIGITALES", z:"Brigada 6",      a:"Sr",objPrima:485381,objPol:5},
+  {id:"rosen",         n:"ROSEN, BARBARA DAIANA",             c:"CANALES DIGITALES", z:"Brigada 7",      a:"Sr",objPrima:485381,objPol:5},
   // INTERIOR — Jr: passeri, aguirre
-  {id:"berlocq",       n:"BERLOCQ, MARIA FLORENCIA",          c:"INTERIOR",          z:"Bs As Sur",      a:"Semi",objPrima:450000,objPol:5},
-  {id:"passeri",       n:"PASSERI, JOSE RAUL",                c:"INTERIOR",          z:"Bs As Sur",      a:"Jr",  objPrima:315000,objPol:5},
-  {id:"armand",        n:"ARMAND, LUCAS",                     c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:450000,objPol:5},
-  {id:"lopez_e",       n:"LOPEZ, ERNESTO MARTIN",             c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:450000,objPol:5},
-  {id:"pierlucca",     n:"PIERLUCCA, JULIA ELISABETH",        c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:450000,objPol:5},
-  {id:"nunez",         n:"NUÑEZ, MIGUEL ANGEL",               c:"INTERIOR",          z:"Córdoba",        a:"Sr",  objPrima:450000,objPol:5},
-  {id:"rivero",        n:"RIVERO, NADIA",                     c:"INTERIOR",          z:"Córdoba",        a:"Semi",objPrima:450000,objPol:5},
-  {id:"flores_lg",     n:"FLORES, LUCAS GASTON",              c:"INTERIOR",          z:"Mendoza",        a:"Sr",  objPrima:450000,objPol:5},
-  {id:"blanco",        n:"BLANCO, RICARDO FABIAN",            c:"INTERIOR",          z:"Neuquén",        a:"Sr",  objPrima:450000,objPol:5},
-  {id:"dominguez",     n:"DOMINGUEZ, ANA LAURA",              c:"INTERIOR",          z:"Neuquén",        a:"Sr",  objPrima:450000,objPol:5},
-  {id:"beltran",       n:"BELTRAN, DELMA RINA",               c:"INTERIOR",          z:"Salta",          a:"Semi",objPrima:450000,objPol:5},
-  {id:"aguirre",       n:"AGUIRRE ALEN, AGUSTINA",            c:"INTERIOR",          z:"Salta",          a:"Jr",  objPrima:315000,objPol:5},
-  {id:"bagnasco",      n:"BAGNASCO GENTILE, KARINA PAOLA",    c:"INTERIOR",          z:"Salta",          a:"Semi",objPrima:450000,objPol:5},
+  {id:"berlocq",       n:"BERLOCQ, MARIA FLORENCIA",          c:"INTERIOR",          z:"Bs As Sur",      a:"Sr",objPrima:485381,objPol:5},
+  {id:"passeri",       n:"PASSERI, JOSE RAUL",                c:"INTERIOR",          z:"Bs As Sur",      a:"Jr",  objPrima:339767,objPol:5},
+  {id:"armand",        n:"ARMAND, LUCAS",                     c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:485381,objPol:5},
+  {id:"lopez_e",       n:"LOPEZ, ERNESTO MARTIN",             c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:485381,objPol:5},
+  {id:"pierlucca",     n:"PIERLUCCA, JULIA ELISABETH",        c:"INTERIOR",          z:"Chaco",          a:"Sr",  objPrima:485381,objPol:5},
+  {id:"nunez",         n:"NUÑEZ, MIGUEL ANGEL",               c:"INTERIOR",          z:"Córdoba",        a:"Sr",  objPrima:485381,objPol:5},
+  {id:"rivero",        n:"RIVERO, NADIA",                     c:"INTERIOR",          z:"Córdoba",        a:"Sr",objPrima:485381,objPol:5},
+  {id:"flores_lg",     n:"FLORES, LUCAS GASTON",              c:"INTERIOR",          z:"Mendoza",        a:"Sr",  objPrima:485381,objPol:5},
+  {id:"blanco",        n:"BLANCO, RICARDO FABIAN",            c:"INTERIOR",          z:"Neuquén",        a:"Sr",  objPrima:485381,objPol:5},
+  {id:"dominguez",     n:"DOMINGUEZ, ANA LAURA",              c:"INTERIOR",          z:"Neuquén",        a:"Sr",  objPrima:485381,objPol:5},
+  {id:"beltran",       n:"BELTRAN, DELMA RINA",               c:"INTERIOR",          z:"Salta",          a:"Sr",objPrima:485381,objPol:5},
+  {id:"aguirre",       n:"AGUIRRE ALEN, AGUSTINA",            c:"INTERIOR",          z:"Salta",          a:"Jr",  objPrima:339767,objPol:5},
+  {id:"bagnasco",      n:"BAGNASCO GENTILE, KARINA PAOLA",    c:"INTERIOR",          z:"Salta",          a:"Sr",objPrima:485381,objPol:5},
   // MIXTO
-  {id:"michellis",     n:"MICHELLIS, SUSANA BEATRIZ",         c:"MIXTO",             z:"Brigada 9",      a:"Sr",  objPrima:450000,objPol:5},
-  {id:"bruno",         n:"BRUNO, MARIA SILVINA",              c:"MIXTO",             z:"Rosario 1",      a:"Sr",  objPrima:450000,objPol:5},
-  {id:"gerez",         n:"GEREZ, CARLOS",                     c:"MIXTO",             z:"Brigada 3",      a:"Semi",objPrima:450000,objPol:5},
-  {id:"silva",         n:"SILVA, ANA ROSA",                   c:"MIXTO",             z:"Equipo Pyme",    a:"Semi",objPrima:450000,objPol:5},
+  {id:"michellis",     n:"MICHELLIS, SUSANA BEATRIZ",         c:"MIXTO",             z:"Brigada 9",      a:"Sr",  objPrima:485381,objPol:5},
+  {id:"bruno",         n:"BRUNO, MARIA SILVINA",              c:"MIXTO",             z:"Rosario 1",      a:"Sr",  objPrima:485381,objPol:5},
+  {id:"gerez",         n:"GEREZ, CARLOS",                     c:"MIXTO",             z:"Brigada 3",      a:"Sr",objPrima:485381,objPol:5},
+  {id:"silva",         n:"SILVA, ANA ROSA",                   c:"MIXTO",             z:"Equipo Pyme",    a:"Sr",objPrima:485381,objPol:5},
 ];
 
 // DATOS ABRIL 2026 (del Excel real que me pasaron)
@@ -449,7 +449,7 @@ const MAYO_2026={
   rios:         {e:402000,  p:80000,   pol:6},
   quispe:       {e:200000,  p:50000,   pol:3},
   witel:        {e:99787,   p:138210,  pol:1},
-  garcia_sanchez:{e:55800,  p:150000,  pol:1},
+  garcia_sanchez:{e:256000, p:126000,  pol:4},
   morello:      {e:449000,  p:200000,  pol:5},
   flores_i:     {e:958380,  p:150000,  pol:9},
   prieto:       {e:322000,  p:115000,  pol:3},
@@ -488,8 +488,8 @@ const MAYO_2026={
 
 const CANALES=["AMBA CENTRO","AMBA METRO","CANALES DIGITALES","INTERIOR","MIXTO"];
 const MESES=["","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-const ANT_C={"Sr":"#2563EB","Semi":"#7C3AED","Jr":"#94A3B8"};
-const ANT_B={"Sr":"#EFF6FF","Semi":"#EDE9FE","Jr":"#F1F5F9"};
+const ANT_C={"Sr":"#2563EB","Jr":"#EA580C"};
+const ANT_B={"Sr":"#EFF6FF","Jr":"#FFF7ED"};
 
 // ════════════════════════════════════════════════════════════
 // ESTADO
@@ -507,6 +507,13 @@ let autoTimer=null;
 const fmt=n=>{
   if(!n||n===0) return "$0";
   return "$"+Math.round(n).toLocaleString("es-AR");
+};
+// Para ejes de gráficos (abreviado)
+const fmtC=n=>{
+  if(!n||n===0) return "$0";
+  if(n>=1000000) return "$"+(n/1000000).toFixed(1)+"M";
+  if(n>=1000) return "$"+(n/1000).toFixed(0)+"K";
+  return "$"+Math.round(n);
 };
 const pct=(v,t)=>t===0?0:Math.round(v/t*100);
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
