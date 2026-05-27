@@ -106,6 +106,17 @@ tbody td{padding:6px 8px;vertical-align:middle;}
 .cr-bar{height:6px;border-radius:3px;background:var(--g100);overflow:hidden;display:flex;margin-bottom:4px;}
 .cr-stats{font-size:10px;color:var(--g400);}
 
+/* LÍNEA DE TIEMPO */
+.linea-wrap{overflow-x:auto;}
+.mes-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-right:4px;cursor:pointer;}
+.mes-badge.activo{border:2px solid currentColor;}
+.hist-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px;}
+.hist-table th{padding:7px 10px;background:var(--g50);font-size:10px;font-weight:700;color:var(--g400);text-align:left;border-bottom:2px solid var(--g200);}
+.hist-table td{padding:6px 10px;border-bottom:1px solid var(--g100);}
+.comp-mejor{color:var(--green);font-weight:700;}
+.comp-peor{color:var(--red);font-weight:700;}
+.comp-igual{color:var(--g400);}
+
 /* TOAST */
 .toast{position:fixed;bottom:20px;right:20px;background:var(--navy);color:#fff;
   padding:10px 18px;border-radius:10px;font-size:12px;font-weight:600;
@@ -165,6 +176,23 @@ tbody td{padding:6px 8px;vertical-align:middle;}
     <div class="sec">🎯 Objetivo global del equipo — editá para recalcular todo</div>
     <div class="obj-grid">
       <div class="obj-item">
+        <label class="obj-lbl">📅 Mes en curso</label>
+        <select class="obj-inp" id="mes-sel" onchange="cambiarMes()" style="font-size:13px;padding:8px 10px;">
+          <option value="1">Enero 2026</option>
+          <option value="2">Febrero 2026</option>
+          <option value="3">Marzo 2026</option>
+          <option value="4">Abril 2026</option>
+          <option value="5" selected>Mayo 2026</option>
+          <option value="6">Junio 2026</option>
+          <option value="7">Julio 2026</option>
+          <option value="8">Agosto 2026</option>
+          <option value="9">Septiembre 2026</option>
+          <option value="10">Octubre 2026</option>
+          <option value="11">Noviembre 2026</option>
+          <option value="12">Diciembre 2026</option>
+        </select>
+      </div>
+      <div class="obj-item">
         <label class="obj-lbl">Objetivo total Prima $</label>
         <input class="obj-inp" id="obj-prima" type="number" value="16000000" oninput="recalcular()">
         <div style="font-size:10px;color:var(--g400);margin-top:2px">Suma de todos los asesores</div>
@@ -189,6 +217,31 @@ tbody td{padding:6px 8px;vertical-align:middle;}
   <div class="card">
     <div class="sec">Alcance por Canal</div>
     <div class="canal-resumen" id="canal-resumen"></div>
+  </div>
+
+  <!-- LÍNEA DE TIEMPO MENSUAL -->
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+      <div class="sec" style="margin-bottom:0">📈 Línea de tiempo — evolución mensual del equipo</div>
+      <div style="font-size:11px;color:var(--g400)">Cada mes que cargás queda guardado automáticamente</div>
+    </div>
+    <!-- SVG gráfico de línea -->
+    <div class="linea-wrap" id="linea-chart" style="margin-bottom:16px;"></div>
+    <!-- Tabla comparativa -->
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
+      <div style="font-size:11px;font-weight:700;color:var(--navy)">Comparación mensual:</div>
+      <div id="mes-badges"></div>
+    </div>
+    <div style="overflow-x:auto;"><table class="hist-table" id="hist-table">
+      <thead><tr>
+        <th>Asesor</th><th>Canal</th>
+        <th id="col-mes-ant2">—</th>
+        <th id="col-mes-ant1">—</th>
+        <th id="col-mes-act">—</th>
+        <th>Variación</th>
+      </tr></thead>
+      <tbody id="hist-tbody"></tbody>
+    </table></div>
   </div>
 
   <!-- FILTRO POR CANAL -->
@@ -274,12 +327,15 @@ const ASESORES = [
 const CANALES=["AMBA CENTRO","AMBA METRO","CANALES DIGITALES","INTERIOR","MIXTO"];
 const ANT_COLS={"Sr":"#2563EB","Semi":"#CA8A04","Jr":"#EA580C"};
 const ANT_BGS ={"Sr":"#EFF6FF","Semi":"#FEF9C3","Jr":"#FFEDD5"};
+const MESES_N=["","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
 // ════════════════════════════════════════════════════════════
 // ESTADO
 // ════════════════════════════════════════════════════════════
-let DATA = {}; // {id: {emit, pend, pol}}
+let DATA = {};       // datos del mes en curso {id:{emit,pend,pol}}
+let HISTORICO_CM={}; // histórico por mes: {5:{id:{emit,pol}}, 4:{...}, ...}
 let CANAL_SEL = "TODOS";
+let MES_ACT = 5;     // mes actualmente seleccionado
 
 // ════════════════════════════════════════════════════════════
 // HELPERS
@@ -303,17 +359,21 @@ const hoy = ()=>new Date().toISOString().slice(0,10);
 // INIT
 // ════════════════════════════════════════════════════════════
 window.addEventListener("DOMContentLoaded",()=>{
-  // Cargar datos guardados
-  try{DATA=JSON.parse(localStorage.getItem("carga_manual_mayo26")||"{}");}catch(e){}
+  // Cargar histórico completo
+  try{HISTORICO_CM=JSON.parse(localStorage.getItem("crm_hist_manual")||"{}");}catch(e){}
 
-  // Cargar objetivos guardados
+  // Cargar mes activo
   try{
     const cfg=JSON.parse(localStorage.getItem("carga_cfg")||"{}");
-    if(cfg.obj)       document.getElementById("obj-prima").value=cfg.obj;
-    if(cfg.pol)       document.getElementById("obj-pol").value=cfg.pol;
-    if(cfg.diasPas)   document.getElementById("dias-pas").value=cfg.diasPas;
-    if(cfg.diasTot)   document.getElementById("dias-tot").value=cfg.diasTot;
+    if(cfg.mes) { MES_ACT=Number(cfg.mes); document.getElementById("mes-sel").value=MES_ACT; }
+    if(cfg.obj)     document.getElementById("obj-prima").value=cfg.obj;
+    if(cfg.pol)     document.getElementById("obj-pol").value=cfg.pol;
+    if(cfg.diasPas) document.getElementById("dias-pas").value=cfg.diasPas;
+    if(cfg.diasTot) document.getElementById("dias-tot").value=cfg.diasTot;
   }catch(e){}
+
+  // Cargar datos del mes activo
+  DATA = HISTORICO_CM[MES_ACT] || {};
 
   // Tabs canal
   const tabsDiv=document.getElementById("canal-tabs");
@@ -326,6 +386,7 @@ window.addEventListener("DOMContentLoaded",()=>{
   });
 
   recalcular();
+  renderLinea();
   actualizarUltimaGuarda();
 });
 
@@ -487,6 +548,207 @@ function renderTabla(diasPas,diasTot){
 // ════════════════════════════════════════════════════════════
 // ACCIONES
 // ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
+// GESTIÓN DE MESES
+// ════════════════════════════════════════════════════════════
+function cambiarMes(){
+  const nuevoMes=Number(document.getElementById("mes-sel").value);
+  // Guardar mes actual antes de cambiar
+  HISTORICO_CM[MES_ACT]={...DATA};
+  try{localStorage.setItem("crm_hist_manual",JSON.stringify(HISTORICO_CM));}catch(e){}
+  // Cambiar al nuevo mes
+  MES_ACT=nuevoMes;
+  DATA=HISTORICO_CM[MES_ACT]||{};
+  // Recargar tabla con datos del nuevo mes
+  const diasPas=Number(document.getElementById("dias-pas").value)||16;
+  const diasTot=Number(document.getElementById("dias-tot").value)||21;
+  renderTabla(diasPas,diasTot);
+  recalcular();
+  renderLinea();
+  toast(`📅 Cambiado a ${MESES_N[MES_ACT]} 2026`);
+}
+
+// ════════════════════════════════════════════════════════════
+// LÍNEA DE TIEMPO
+// ════════════════════════════════════════════════════════════
+function renderLinea(){
+  const mesesConDatos=Object.keys(HISTORICO_CM)
+    .map(Number)
+    .filter(m=>Object.values(HISTORICO_CM[m]||{}).some(d=>d.emit||d.pol))
+    .sort((a,b)=>a-b);
+
+  // Incluir mes actual si tiene datos
+  const mesActTotEmit=Object.values(DATA||{}).reduce((s,d)=>s+Number(d.emit||0),0);
+  if(mesActTotEmit>0&&!mesesConDatos.includes(MES_ACT)) mesesConDatos.push(MES_ACT);
+  mesesConDatos.sort((a,b)=>a-b);
+
+  // Calcular totales por mes
+  const serieEmit=mesesConDatos.map(m=>{
+    const d=m===MES_ACT?DATA:(HISTORICO_CM[m]||{});
+    return Object.values(d).reduce((s,x)=>s+Number(x.emit||0),0);
+  });
+  const seriePend=mesesConDatos.map(m=>{
+    const d=m===MES_ACT?DATA:(HISTORICO_CM[m]||{});
+    return Object.values(d).reduce((s,x)=>s+Number(x.pend||0),0);
+  });
+  const serieObj=mesesConDatos.map(()=>Number(document.getElementById("obj-prima").value)||0);
+  const seriePol=mesesConDatos.map(m=>{
+    const d=m===MES_ACT?DATA:(HISTORICO_CM[m]||{});
+    return Object.values(d).reduce((s,x)=>s+Number(x.pol||0),0);
+  });
+
+  if(mesesConDatos.length<2){
+    document.getElementById("linea-chart").innerHTML=
+      `<div style="text-align:center;padding:24px;color:var(--g400);font-size:12px">
+        📊 Cargá datos de al menos 2 meses para ver la línea de evolución.<br>
+        <span style="font-size:10px">Cada mes que guardás queda registrado automáticamente.</span>
+      </div>`;
+    renderTablaComparativa(mesesConDatos);
+    return;
+  }
+
+  const W=580,H=200,PAD={t:24,r:30,b:40,l:70};
+  const maxV=Math.max(...serieEmit,...seriePend.map((p,i)=>serieEmit[i]+p),...serieObj,1)*1.15;
+  const xStep=(W-PAD.l-PAD.r)/Math.max(mesesConDatos.length-1,1);
+  const yS=v=>H-PAD.b-(v/maxV)*(H-PAD.t-PAD.b);
+  const xP=i=>PAD.l+i*xStep;
+
+  let svg="";
+
+  // Grid horizontal
+  [0,.25,.5,.75,1].forEach(p=>{
+    const y=yS(maxV*p);
+    svg+=`<line x1="${PAD.l}" y1="${y}" x2="${W-PAD.r}" y2="${y}" stroke="#F1F5F9" stroke-width="1"/>`;
+    svg+=`<text x="${PAD.l-6}" y="${y+4}" text-anchor="end" font-size="9" fill="#94A3B8">${fmt(maxV*p)}</text>`;
+  });
+
+  // Eje X
+  mesesConDatos.forEach((m,i)=>{
+    const isAct=m===MES_ACT;
+    svg+=`<text x="${xP(i)}" y="${H-8}" text-anchor="middle" font-size="10"
+      fill="${isAct?"var(--navy)":"#475569"}" font-weight="${isAct?700:400}">${MESES_N[m].slice(0,3)}</text>`;
+    if(isAct) svg+=`<line x1="${xP(i)}" y1="${PAD.t}" x2="${xP(i)}" y2="${H-PAD.b}" stroke="var(--sky)" stroke-width="1" stroke-dasharray="3 2"/>`;
+  });
+
+  // Área emitido
+  const areaEmit=`${xP(0)},${H-PAD.b} ${serieEmit.map((v,i)=>`${xP(i)},${yS(v)}`).join(" ")} ${xP(mesesConDatos.length-1)},${H-PAD.b}`;
+  svg+=`<polygon points="${areaEmit}" fill="#16A34A" opacity=".1"/>`;
+
+  // Línea objetivo
+  const objPts=serieObj.map((v,i)=>`${xP(i)},${yS(v)}`).join(" ");
+  svg+=`<polyline points="${objPts}" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5 4"/>`;
+
+  // Línea emitido+pendiente (proyectado)
+  const proyPts=serieEmit.map((v,i)=>`${xP(i)},${yS(v+seriePend[i])}`).join(" ");
+  svg+=`<polyline points="${proyPts}" fill="none" stroke="#CA8A04" stroke-width="2" stroke-dasharray="4 3" stroke-linejoin="round"/>`;
+
+  // Línea emitido
+  const emitPts=serieEmit.map((v,i)=>`${xP(i)},${yS(v)}`).join(" ");
+  svg+=`<polyline points="${emitPts}" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linejoin="round"/>`;
+
+  // Puntos y valores
+  serieEmit.forEach((v,i)=>{
+    const isAct=mesesConDatos[i]===MES_ACT;
+    svg+=`<circle cx="${xP(i)}" cy="${yS(v)}" r="${isAct?6:4}" fill="#16A34A" stroke="white" stroke-width="2"/>`;
+    svg+=`<text x="${xP(i)}" y="${yS(v)-10}" text-anchor="middle" font-size="9" font-weight="700" fill="#16A34A">${fmt(v)}</text>`;
+    if(seriePend[i]>0){
+      svg+=`<circle cx="${xP(i)}" cy="${yS(v+seriePend[i])}" r="3" fill="#CA8A04" stroke="white" stroke-width="1.5"/>`;
+    }
+  });
+
+  // Leyenda
+  const leyItems=[
+    {c:"#16A34A",dash:"",lbl:"Prima emitida"},
+    {c:"#CA8A04",dash:"4 3",lbl:"Con pendientes"},
+    {c:"#94A3B8",dash:"5 4",lbl:"Objetivo"},
+  ];
+  leyItems.forEach((l,i)=>{
+    svg+=`<line x1="${PAD.l+i*110}" y1="10" x2="${PAD.l+i*110+20}" y2="10" stroke="${l.c}" stroke-width="2" stroke-dasharray="${l.dash}"/>`;
+    svg+=`<text x="${PAD.l+i*110+24}" y="14" font-size="9" fill="#475569">${l.lbl}</text>`;
+  });
+
+  document.getElementById("linea-chart").innerHTML=
+    `<svg width="100%" viewBox="0 0 ${W} ${H}" style="max-width:${W}px">${svg}</svg>`;
+
+  // Badges de mes
+  document.getElementById("mes-badges").innerHTML=mesesConDatos.map(m=>`
+    <span class="mes-badge ${m===MES_ACT?"activo":""}"
+      style="color:${m===MES_ACT?"var(--navy)":"var(--g400)"};background:${m===MES_ACT?"var(--g100)":"transparent"};border-color:${m===MES_ACT?"var(--navy)":"transparent"}">
+      ${MESES_N[m]}
+    </span>`).join("");
+
+  renderTablaComparativa(mesesConDatos);
+}
+
+function renderTablaComparativa(meses){
+  if(meses.length<2){
+    document.getElementById("hist-tbody").innerHTML=
+      `<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--g400);font-size:11px">Cargá al menos 2 meses para ver la comparación</td></tr>`;
+    return;
+  }
+  const m1=meses[meses.length-3]||null; // 2 meses atrás
+  const m2=meses[meses.length-2];       // mes anterior
+  const m3=meses[meses.length-1];       // mes actual (o más reciente)
+
+  // Headers
+  document.getElementById("col-mes-ant2").textContent=m1?MESES_N[m1]:"—";
+  document.getElementById("col-mes-ant1").textContent=MESES_N[m2];
+  document.getElementById("col-mes-act").textContent=MESES_N[m3]+" (actual)";
+
+  const getEmit=(m,id)=>{
+    if(!m) return 0;
+    const d=m===MES_ACT?DATA:(HISTORICO_CM[m]||{});
+    return Number((d[id]||{}).emit||0);
+  };
+
+  // Filtrar solo asesores con algún dato en los últimos meses
+  const filas=ASESORES.map(a=>{
+    const e1=getEmit(m1,a.id), e2=getEmit(m2,a.id), e3=getEmit(m3,a.id);
+    if(!e1&&!e2&&!e3) return null;
+    const var1=e2>0&&e1>0?Math.round((e2-e1)/e1*100):null;
+    const var2=e3>0&&e2>0?Math.round((e3-e2)/e2*100):null;
+    const tendencia=var2===null?"—":var2>0?`▲ +${var2}%`:var2<0?`▼ ${var2}%`:"= 0%";
+    const tendCls=var2===null?"comp-igual":var2>0?"comp-mejor":var2<0?"comp-peor":"comp-igual";
+    return {a,e1,e2,e3,tendencia,tendCls};
+  }).filter(Boolean).sort((a,b)=>b.e3-a.e3);
+
+  if(!filas.length){
+    document.getElementById("hist-tbody").innerHTML=
+      `<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--g400);font-size:11px">Sin datos de producción todavía</td></tr>`;
+    return;
+  }
+
+  // Fila de totales
+  const tot1=filas.reduce((s,f)=>s+f.e1,0);
+  const tot2=filas.reduce((s,f)=>s+f.e2,0);
+  const tot3=filas.reduce((s,f)=>s+f.e3,0);
+  const varT=tot2>0&&tot3>0?Math.round((tot3-tot2)/tot2*100):null;
+
+  document.getElementById("hist-tbody").innerHTML=
+    // Fila totales sticky
+    `<tr style="background:var(--navy);font-weight:700;">
+      <td style="color:#fff;font-weight:800;padding:8px 10px">TOTAL EQUIPO</td>
+      <td style="color:#94A3B8"></td>
+      <td style="color:rgba(255,255,255,.7)">${tot1>0?fmt(tot1):"—"}</td>
+      <td style="color:rgba(255,255,255,.7)">${tot2>0?fmt(tot2):"—"}</td>
+      <td style="color:#86EFAC">${tot3>0?fmt(tot3):"—"}</td>
+      <td style="color:${varT===null?"#94A3B8":varT>=0?"#86EFAC":"#FCA5A5"};font-weight:800">
+        ${varT===null?"—":varT>=0?`▲ +${varT}%`:`▼ ${varT}%`}
+      </td>
+    </tr>`+
+    filas.map((f,i)=>{
+      const bg=i%2===0?"#fff":"#F8FAFC";
+      return `<tr style="background:${bg}">
+        <td style="font-weight:700;color:var(--navy);font-size:11px">${f.a.n.split(",")[0]}</td>
+        <td style="font-size:10px;color:var(--g400)">${f.a.c.replace("CANALES DIGITALES","C.Dig")}</td>
+        <td style="color:var(--g600)">${f.e1>0?fmt(f.e1):"—"}</td>
+        <td style="color:var(--g600)">${f.e2>0?fmt(f.e2):"—"}</td>
+        <td style="font-weight:700;color:var(--green)">${f.e3>0?fmt(f.e3):"—"}</td>
+        <td class="${f.tendCls}">${f.tendencia}</td>
+      </tr>`;
+    }).join("");
+}
+
 function setVal(id,campo,val){
   if(!DATA[id]) DATA[id]={};
   DATA[id][campo]=Number(val)||0;
@@ -520,14 +782,20 @@ function autoguardar(){
 }
 
 function guardarTodo(silencioso=false){
+  // Guardar datos del mes actual en el histórico
+  HISTORICO_CM[MES_ACT]={...DATA};
+  try{localStorage.setItem("crm_hist_manual",JSON.stringify(HISTORICO_CM));}catch(e){}
   try{localStorage.setItem("carga_manual_mayo26",JSON.stringify(DATA));}catch(e){}
-  // Guardar config
+  // Guardar config con mes activo
   try{localStorage.setItem("carga_cfg",JSON.stringify({
+    mes:  MES_ACT,
     obj:  document.getElementById("obj-prima").value,
     pol:  document.getElementById("obj-pol").value,
     diasPas:document.getElementById("dias-pas").value,
     diasTot:document.getElementById("dias-tot").value,
   }));}catch(e){}
+  // Actualizar línea de tiempo
+  renderLinea();
 
   // Sincronizar con panel-gerencia via localStorage compartido
   const ventasParaGerencia={};
