@@ -302,6 +302,13 @@ tbody td{padding:8px 10px;vertical-align:middle;}
     <div class="zonas-grid" id="zonas-grid"></div>
   </div>
 
+  <!-- EVOLUCIÓN MENSUAL POR ZONA -->
+  <div class="card">
+    <div class="sec">Evolución mensual — producción acumulada por canal</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;" id="evol-zona-tabs"></div>
+    <div id="evol-zona-chart" style="overflow-x:auto;"></div>
+  </div>
+
   <!-- ALERTAS: bajo objetivo + sobre objetivo + en cero -->
   <div class="alerta-grid">
     <div class="alerta-col" style="background:var(--rBg);border:1.5px solid var(--red)">
@@ -512,7 +519,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
       <div class="carga-ico" style="background:var(--gBg)">💰</div>
       <div class="carga-ttl">Ventas del Mes</div>
       <div class="carga-desc">Producción emitida, pendiente y pólizas por asesor. Reemplaza los datos del mes actual.</div>
-      <div class="carga-cols"><strong style="display:block;margin-bottom:3px;color:var(--g600)">Columnas:</strong>Asesor · Emitido · Pendiente · Polizas</div>
+      <div class="carga-cols"><strong style="display:block;margin-bottom:3px;color:var(--g600)">Columnas:</strong>Asesor · Emitido · Pendiente · Polizas · MesAnterior (opt.) · MesAnterior2 (opt.)</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn btn-primary" style="background:var(--green)" onclick="document.getElementById('file-ventas').click()">📤 Subir Excel</button>
         <button class="btn btn-ghost" onclick="dlTemplate(['Asesor','Emitido','Pendiente','Polizas'],'ventas')">⬇ Template</button>
@@ -612,8 +619,9 @@ const CANALES = ["AMBA CENTRO","AMBA METRO","CANALES DIGITALES","INTERIOR","MIXT
 // ════════════════════════════════════════════════════════════
 // ESTADO
 // ════════════════════════════════════════════════════════════
-let OBJ = {}; // objetivos por asesor ID
-let VENTAS = {}; // emitido/pendiente/polizas por asesor ID
+let OBJ = {};
+let VENTAS = {};
+let HISTORICO = []; // [{asesor, canal, zona, emitido, polizas, mes, anio}]
 let CARTERA = [];
 let PROFESIONALES = [];
 let SORT_BY = "alc"; let SORT_DIR = -1;
@@ -690,6 +698,7 @@ const filtrarAsesores=()=>{
 window.addEventListener("DOMContentLoaded",()=>{
   OBJ = initObj();
   try{const v=JSON.parse(localStorage.getItem("crm_ventas")||"{}");VENTAS=v;}catch(e){}
+  try{HISTORICO=JSON.parse(localStorage.getItem("crm_hist")||"[]");}catch(e){}
   try{CARTERA=JSON.parse(localStorage.getItem("crm_cartera")||"[]");}catch(e){}
   try{PROFESIONALES=JSON.parse(localStorage.getItem("crm_prof")||"[]");}catch(e){}
 
@@ -724,6 +733,7 @@ function renderTodo(){
   renderAlertas(data);
   renderTabla(data);
   renderParticipacion(data);
+  renderEvolucion();
   renderRanking();
 }
 
@@ -1018,6 +1028,117 @@ function renderParticipacion(data){
 }
 
 // ════════════════════════════════════════════════════════════
+// EVOLUCIÓN MENSUAL
+// ════════════════════════════════════════════════════════════
+let EVOL_ZONA_SEL = "TODOS";
+
+function renderEvolucion(){
+  const MESES_N={1:"Ene",2:"Feb",3:"Mar",4:"Abr",5:"May",6:"Jun",7:"Jul",8:"Ago",9:"Sep",10:"Oct",11:"Nov",12:"Dic"};
+  const CANAL_COLS={"AMBA CENTRO":"#2563EB","AMBA METRO":"#7C3AED","CANALES DIGITALES":"#EA580C","INTERIOR":"#16A34A","MIXTO":"#CA8A04","TODOS":"#0B1F4B"};
+
+  // Build tabs
+  const tabs=["TODOS",...CANALES];
+  const tabsDiv=document.getElementById("evol-zona-tabs");
+  if(tabsDiv) tabsDiv.innerHTML=tabs.map(t=>`
+    <button onclick="setEvolZona('${t}')" style="padding:5px 13px;border-radius:20px;font-size:11px;cursor:pointer;font-weight:${EVOL_ZONA_SEL===t?700:500};
+      background:${EVOL_ZONA_SEL===t?CANAL_COLS[t]||"var(--navy)":"var(--g100)"};
+      color:${EVOL_ZONA_SEL===t?"#fff":"var(--g600)"};
+      border:1px solid ${EVOL_ZONA_SEL===t?CANAL_COLS[t]||"var(--navy)":"var(--g200)"}">
+      ${t.replace("CANALES DIGITALES","C.Digital").replace("AMBA CENTRO","A.Centro").replace("AMBA METRO","A.Metro")}
+    </button>`).join("");
+
+  // Meses presentes en historico + mes actual (5)
+  const mesesPresentes=[...new Set([...HISTORICO.map(h=>Number(h.mes||0)),...[5]])].filter(m=>m>0).sort((a,b)=>a-b);
+  if(mesesPresentes.length<2){
+    const div=document.getElementById("evol-zona-chart");
+    if(div) div.innerHTML=`<div style="font-size:12px;color:var(--g400);padding:16px;text-align:center">
+      Cargá el Excel de ventas con columnas MesAnterior para ver la evolución histórica.<br>
+      <span style="font-size:10px">Ejemplo: añadí "MesAnterior" con la prima de Abril para cada asesor</span>
+    </div>`;
+    return;
+  }
+
+  // Calcular emitido por canal y por mes
+  const serieData={};
+  const canalesAMostrar=EVOL_ZONA_SEL==="TODOS"?["TODOS"]:["TODOS",EVOL_ZONA_SEL];
+  ["TODOS",...CANALES].forEach(c=>{serieData[c]={};});
+
+  mesesPresentes.forEach(mes=>{
+    // Histórico
+    HISTORICO.filter(h=>Number(h.mes)===mes).forEach(h=>{
+      const canal=h.canal||"";
+      const emit=Number(h.emitido||0);
+      serieData["TODOS"][mes]=(serieData["TODOS"][mes]||0)+emit;
+      if(canal) serieData[canal][mes]=(serieData[canal][mes]||0)+emit;
+    });
+    // Mes actual (mayo=5)
+    if(mes===5){
+      ASESORES.forEach(a=>{
+        const emit=VENTAS[a.id]?.e||0;
+        serieData["TODOS"][5]=(serieData["TODOS"][5]||0)+emit;
+        serieData[a.c][5]=(serieData[a.c][5]||0)+emit;
+      });
+    }
+  });
+
+  // SVG line chart
+  const W=560,H=180,PAD={t:20,r:20,b:30,l:65};
+  const toShow=EVOL_ZONA_SEL==="TODOS"?["TODOS"]:["TODOS",EVOL_ZONA_SEL];
+  const allVals=toShow.flatMap(c=>mesesPresentes.map(m=>serieData[c][m]||0));
+  const maxV=Math.max(...allVals,1)*1.2;
+  const xStep=(W-PAD.l-PAD.r)/Math.max(mesesPresentes.length-1,1);
+  const yScale=v=>H-PAD.b-(v/maxV)*(H-PAD.t-PAD.b);
+  const xPos  =i=>PAD.l+i*xStep;
+
+  let svgContent="";
+  // Grid
+  [0,.25,.5,.75,1].forEach(p=>{
+    const y=yScale(maxV*p);
+    svgContent+=`<line x1="${PAD.l}" y1="${y}" x2="${W-PAD.r}" y2="${y}" stroke="#F1F5F9" stroke-width="1"/>`;
+    svgContent+=`<text x="${PAD.l-4}" y="${y+4}" text-anchor="end" font-size="9" fill="#94A3B8">${fmt(maxV*p)}</text>`;
+  });
+  // Eje X
+  mesesPresentes.forEach((m,i)=>{
+    svgContent+=`<text x="${xPos(i)}" y="${H-4}" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">${MESES_N[m]}</text>`;
+  });
+  // Línea objetivo (obj total / 5 canales ponderado)
+  const tObj=ASESORES.reduce((s,a)=>s+OBJ[a.id].prima,0);
+  const objY=yScale(tObj);
+  svgContent+=`<line x1="${PAD.l}" y1="${objY}" x2="${W-PAD.r}" y2="${objY}" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+  svgContent+=`<text x="${W-PAD.r+2}" y="${objY+4}" font-size="9" fill="#94A3B8">Obj</text>`;
+
+  // Líneas de datos
+  toShow.forEach((c,ci)=>{
+    const col=CANAL_COLS[c]||"#94A3B8";
+    const points=mesesPresentes.map((m,i)=>`${xPos(i)},${yScale(serieData[c][m]||0)}`).join(" ");
+    svgContent+=`<polyline points="${points}" fill="none" stroke="${col}" stroke-width="${c==="TODOS"?2.5:1.8}" stroke-linejoin="round" opacity="${c==="TODOS"?1:0.85}"/>`;
+    mesesPresentes.forEach((m,i)=>{
+      const v=serieData[c][m]||0;
+      if(v>0){
+        svgContent+=`<circle cx="${xPos(i)}" cy="${yScale(v)}" r="${c==="TODOS"?4:3}" fill="${col}" stroke="white" stroke-width="1.5"/>`;
+        if(c==="TODOS"||EVOL_ZONA_SEL!=="TODOS")
+          svgContent+=`<text x="${xPos(i)}" y="${yScale(v)-8}" text-anchor="middle" font-size="9" font-weight="700" fill="${col}">${fmt(v)}</text>`;
+      }
+    });
+  });
+
+  // Leyenda
+  toShow.forEach((c,i)=>{
+    const col=CANAL_COLS[c]||"#94A3B8";
+    svgContent+=`<line x1="${PAD.l+i*100}" y1="${H-14}" x2="${PAD.l+i*100+20}" y2="${H-14}" stroke="${col}" stroke-width="2.5"/>`;
+    svgContent+=`<text x="${PAD.l+i*100+24}" y="${H-10}" font-size="9" fill="${col}" font-weight="600">${c.replace("CANALES DIGITALES","C.Dig").replace("AMBA CENTRO","A.Cen").replace("AMBA METRO","A.Met")}</text>`;
+  });
+
+  const div=document.getElementById("evol-zona-chart");
+  if(div) div.innerHTML=`<svg width="100%" viewBox="0 0 ${W} ${H}" style="max-width:${W}px">${svgContent}</svg>`;
+}
+
+function setEvolZona(zona){
+  EVOL_ZONA_SEL=zona;
+  renderEvolucion();
+}
+
+// ════════════════════════════════════════════════════════════
 // RANKING VIERNES
 // ════════════════════════════════════════════════════════════
 function renderRanking(){
@@ -1194,10 +1315,10 @@ function cargarExcel(tipo, input){
     const rows=XLSX.utils.sheet_to_json(ws,{defval:""});
     if(tipo==="ventas"){
       const nuevo={};
+      const nuevoHist=[];
       rows.forEach(r=>{
         const nombreRaw=(r.Asesor||r.asesor||"").toString().trim();
         if(!nombreRaw) return;
-        // Buscar por nombre normalizado
         const aBase=ASESORES.find(a=>{
           const an=a.n.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
           const rn=nombreRaw.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
@@ -1209,8 +1330,19 @@ function cargarExcel(tipo, input){
           p:  Number(r.Pendiente ||r.pendiente  ||r["Pend. Emisión"]||0),
           pol:Number(r.Polizas   ||r.polizas    ||r.Pólizas||r["Pólizas"]||0),
         };
+        // Soporte para columnas históricas: MesAnterior, MesAnterior2, etc.
+        ["MesAnterior","MesAnterior2","MesAnterior3"].forEach((col,idx)=>{
+          const emit=Number(r[col]||r[col.toLowerCase()]||0);
+          const mes =Number(r[col+"Mes"]||r[(col+"mes").toLowerCase()]||(5-(idx+1)));
+          if(emit>0&&id) nuevoHist.push({asesor:aBase?.n||nombreRaw,canal:aBase?.c||"",zona:aBase?.z||"",
+            emitido:emit,polizas:Number(r[col+"Pol"]||r[(col+"pol").toLowerCase()]||0),mes,anio:2026});
+        });
       });
       VENTAS={...VENTAS,...nuevo};
+      if(nuevoHist.length){
+        HISTORICO=[...HISTORICO.filter(h=>!nuevoHist.find(n=>n.asesor===h.asesor&&n.mes===h.mes)),...nuevoHist];
+        try{localStorage.setItem("crm_hist",JSON.stringify(HISTORICO));}catch(e){}
+      }
       try{localStorage.setItem("crm_ventas",JSON.stringify(VENTAS));}catch(e){}
       document.getElementById("cnt-ventas").textContent=Object.keys(nuevo).length;
       document.getElementById("ok-ventas").style.display="block";
