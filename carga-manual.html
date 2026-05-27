@@ -897,7 +897,15 @@ function subirExcel(input){
     let cargados=0;
     rows.forEach(r=>{
       // Detectar nombre del asesor en cualquier columna que diga "asesor" o sea la primera columna con nombre
-      const nombre=String(r.ASESOR||r.Asesor||r.asesor||r["ASESOR\n"]||Object.values(r)[2]||"").trim();
+      // Buscar nombre en varias columnas posibles
+      const nombre=String(
+        r.ASESOR||r.Asesor||r.asesor||r["ASESOR
+"]||
+        r["ASESOR "]||r[" ASESOR"]||
+        // Fallback: buscar cualquier clave que diga "asesor"
+        (()=>{const k=Object.keys(r).find(x=>norm(x)==="asesor"||norm(x).includes("asesor"));return k?r[k]:""})()
+        ||Object.values(r)[2]||""
+      ).trim();
       if(!nombre||nombre.length<3)return;
       // Buscar asesor por nombre normalizado
       const a=ASESORES.find(x=>{
@@ -906,18 +914,35 @@ function subirExcel(input){
       });
       if(!a)return;
       // Detectar columnas de producción — buscar la más parecida al formato del Excel
-      const emit=Number(
-        r["PROD. MES $\n(última sem.)"]||r["PROD. MES $"]||r["Producción $ acum."]||
-        r["PRODUCCION"]||r["Produccion"]||r["Prima emitida"]||r["Emitido"]||0
-      )||0;
-      const pol=Number(
-        r["TOTAL MES\n(última sem.)"]||r["TOTAL MES"]||r["Pólizas acum."]||
-        r["POLIZAS"]||r["Polizas"]||r["Pólizas"]||0
-      )||0;
-      const pend=Number(
-        r["PENDIENTE EMISION"]||r["Pendiente emisión"]||r["Pend. Emisión"]||
-        r["Pendiente"]||r["pendiente"]||0
-      )||0;
+      // Detección flexible de columnas — busca por nombre normalizado
+      const findCol=(keys,obj)=>{
+        for(const k of keys){
+          const v=Number(obj[k]);
+          if(v>0)return v;
+        }
+        // Búsqueda fuzzy: cualquier clave que contenga alguna palabra clave
+        const ks=Object.keys(obj);
+        for(const k of keys){
+          const kn=norm(k);
+          const match=ks.find(x=>norm(x).includes(kn.slice(0,6)));
+          if(match&&Number(obj[match])>0)return Number(obj[match]);
+        }
+        return 0;
+      };
+      const emit=findCol([
+        "PROD. MES $
+(última sem.)","PROD. MES $","PRODUCCION $","Producción $ acum.",
+        "Prima emitida","Emitido","EMITIDO","produccion","Produccion"
+      ],r);
+      const pol=findCol([
+        "TOTAL MES
+(última sem.)","TOTAL MES","Pólizas acum.","POLIZAS","Polizas",
+        "Pólizas","polizas","TOTAL","Total"
+      ],r);
+      const pend=findCol([
+        "PENDIENTE EMISION","Pendiente emisión","Pend. Emisión","Pendiente",
+        "pendiente","PENDIENTE","pend emision"
+      ],r);
       if(!DATA[a.id])DATA[a.id]={};
       DATA[a.id].e=emit;
       DATA[a.id].p=pend;
@@ -925,10 +950,21 @@ function subirExcel(input){
       cargados++;
     });
     if(cargados>0){
-      guardarTodo(true);
+      // Guardar en el mes actualmente seleccionado
+      HIST[MES_ACT]=JSON.parse(JSON.stringify(DATA));
+      try{localStorage.setItem("bocaurna_hist",JSON.stringify(HIST));}catch(e){}
+      // Sincronizar con panel-gerencia
+      const vg={};
+      ASESORES.forEach(a=>{
+        const d=DATA[a.id]||{};
+        if(d.e||d.p||d.pol) vg[a.id]={e:Number(d.e||0),p:Number(d.p||0),pol:Number(d.pol||0)};
+      });
+      try{localStorage.setItem("crm_ventas",JSON.stringify(vg));}catch(e){}
       recalcular();
       renderLinea();
-      toast(`✅ ${cargados} asesores cargados desde Excel`);
+      toast(`✅ ${cargados} asesores cargados en ${MESES[MES_ACT]} 2026`);
+      document.getElementById("lbl-guardado").textContent=
+        `Guardado ${new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}`;
     } else {
       toast("⚠ No se encontraron datos. Revisá el formato del archivo.");
     }
